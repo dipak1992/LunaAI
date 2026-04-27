@@ -22,6 +22,17 @@
   --color-luna-warning:     #FFB4A2;
   --color-luna-storm-alert: #C9ADA7;
 
+  /* ── Marketing palette (Celestial Bloom v2) ── */
+  --color-luna-ink:            #0B0B14;
+  --color-luna-night:          #12121F;
+  --color-luna-mist:           #1C1C2E;
+  --color-luna-cream:          #FAF7F2;
+  --color-luna-whisper:        #E8E4DC;
+  --color-luna-aurora-pink:    #FF9AAE;
+  --color-luna-aurora-lilac:   #C8A8E9;
+  --color-luna-aurora-blue:    #8FB8E8;
+  --color-luna-aurora-mint:    #A8D8C9;
+
   /* ── Fonts ── */
   --font-serif: var(--font-fraunces), Fraunces, Georgia, serif;
   --font-sans:  var(--font-inter), Inter, system-ui, sans-serif;

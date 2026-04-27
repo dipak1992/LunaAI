@@ -1,4 +1,4 @@
--- Forecasts table
+-- Forecasts table (idempotent)
 create table if not exists public.forecasts (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
@@ -10,6 +10,11 @@ create table if not exists public.forecasts (
   created_at timestamptz not null default now()
 );
 
+-- Add generated_at if the table already existed without it
+alter table public.forecasts
+  add column if not exists generated_at timestamptz not null default now();
+
+-- Index (uses generated_at — safe now that column is guaranteed to exist)
 create index if not exists forecasts_user_id_generated_at_idx
   on public.forecasts (user_id, generated_at desc);
 

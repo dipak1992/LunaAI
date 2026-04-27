@@ -8,7 +8,7 @@ import Logo from '@/components/brand/Logo';
 const NAV_LINKS = [
   { label: 'Story', href: '/about' },
   { label: 'Science', href: '/science' },
-  { label: 'Whispers', href: '/#whispers' },
+  { label: 'Whispers', href: '/whispers' },
   { label: 'Pricing', href: '/pricing' },
 ];
 

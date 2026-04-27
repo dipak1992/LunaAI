@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { VoiceCheckInModal } from '@/components/dashboard/VoiceCheckInModal';
 import Logo from '@/components/brand/Logo';
+import ForecastStrip from '@/components/forecast/ForecastStrip';
 import type { VoiceCheckInResult } from '@/types/voice';
 
 export default function DashboardPage() {
@@ -26,7 +27,7 @@ export default function DashboardPage() {
       </header>
 
       {/* Main */}
-      <main className="flex-1 flex flex-col items-center justify-center px-4 py-12 gap-10">
+      <main className="flex-1 flex flex-col items-center px-4 py-12 gap-10 max-w-2xl mx-auto w-full">
         {/* Greeting */}
         <motion.div
           className="text-center"
@@ -72,7 +73,7 @@ export default function DashboardPage() {
         {/* Last check-in result card */}
         {lastResult && (
           <motion.div
-            className="glass rounded-2xl p-6 max-w-sm w-full"
+            className="glass rounded-2xl p-6 w-full"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
@@ -90,7 +91,7 @@ export default function DashboardPage() {
               </span>
             </div>
             <p className="text-luna-mist/80 text-sm leading-relaxed italic font-fraunces">
-              "{lastResult.lunaResponse}"
+              &ldquo;{lastResult.lunaResponse}&rdquo;
             </p>
             {lastResult.triggers.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mt-3">
@@ -106,6 +107,16 @@ export default function DashboardPage() {
             )}
           </motion.div>
         )}
+
+        {/* 7-day forecast */}
+        <motion.div
+          className="w-full"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <ForecastStrip />
+        </motion.div>
       </main>
 
       {/* Voice Check-In Modal */}

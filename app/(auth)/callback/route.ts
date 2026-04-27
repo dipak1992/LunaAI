@@ -19,7 +19,7 @@ export async function GET(request: Request) {
           .from('profiles')
           .select('onboarding_completed')
           .eq('id', user.id)
-          .single<{ onboarding_completed: boolean }>();
+          .single();
 
         if (!profile || !profile.onboarding_completed) {
           return NextResponse.redirect(`${origin}/onboarding`);

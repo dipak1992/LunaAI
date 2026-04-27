@@ -10,6 +10,8 @@ import {
   validateExtraction,
 } from '@/lib/openai/prompts';
 import { checkVoiceCheckInRateLimit } from '@/lib/utils/rate-limit';
+import { scheduleMemoryExtraction } from '@/lib/memory/pinecone';
+import { scheduleForecastRefresh } from '@/lib/forecast/trigger-after-checkin';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60; // seconds
@@ -140,6 +142,15 @@ export async function POST(req: NextRequest) {
       console.error('[voice-checkin] Insert error:', insertError);
       // Still return the result even if DB write fails
     }
+
+    // Fire-and-forget: extract durable memories from transcript
+    const memoryText = [transcript, extracted.ai_summary].filter(Boolean).join('. ');
+    if (memoryText.trim().length > 10) {
+      scheduleMemoryExtraction(user.id, memoryText, 'checkin');
+    }
+
+    // Fire-and-forget: refresh 7-day forecast
+    scheduleForecastRefresh(user.id);
 
     return NextResponse.json(
       {

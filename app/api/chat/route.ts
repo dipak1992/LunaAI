@@ -2,6 +2,7 @@ import { openai } from '@ai-sdk/openai';
 import { streamText, convertToModelMessages, type UIMessage } from 'ai';
 import { createClient } from '@/lib/supabase/server';
 import { buildLunaSystemPrompt } from '@/lib/ai/luna-prompt';
+import { retrieveMemories, scheduleMemoryExtraction } from '@/lib/memory/pinecone';
 import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
@@ -24,10 +25,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid messages' }, { status: 400 });
     }
 
-    // Fetch user context in parallel
+    // Extract latest user message text for memory retrieval + persistence
+    const lastUserMsg = [...messages].reverse().find((m) => m.role === 'user');
+    const lastUserText = lastUserMsg
+      ? lastUserMsg.parts
+          .filter((p: any) => p.type === 'text')
+          .map((p: any) => (p as any).text)
+          .join('')
+      : '';
+
     const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
-    const [profileRes, symptomsRes, memoryRes] = await Promise.all([
+    // Fetch user context + vector memories in parallel
+    const [profileRes, symptomsRes, vectorMemories] = await Promise.all([
       (supabase as any)
         .from('profiles')
         .select('name, menopause_stage')
@@ -40,12 +50,10 @@ export async function POST(req: Request) {
         .gte('created_at', sevenDaysAgo)
         .order('created_at', { ascending: false })
         .limit(20),
-      (supabase as any)
-        .from('user_memory')
-        .select('content')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(10),
+      // Semantic memory retrieval — falls back to [] if Pinecone not configured
+      lastUserText
+        ? retrieveMemories(user.id, lastUserText, 5).catch(() => [])
+        : Promise.resolve([]),
     ]);
 
     const systemPrompt = buildLunaSystemPrompt({
@@ -61,20 +69,11 @@ export async function POST(req: Request) {
         severity: s.severity,
         note: s.notes,
       })),
-      memories: memoryRes.data ?? [],
+      memories: vectorMemories.map((m) => ({ content: m.content })),
     });
 
-    // Convert UI messages to model messages (async in v6)
+    // Convert UI messages to model messages (async in AI SDK v6)
     const modelMessages = await convertToModelMessages(messages);
-
-    // Extract latest user message text for persistence
-    const lastUserMsg = [...messages].reverse().find((m) => m.role === 'user');
-    const lastUserText = lastUserMsg
-      ? lastUserMsg.parts
-          .filter((p: any) => p.type === 'text')
-          .map((p: any) => (p as any).text)
-          .join('')
-      : '';
 
     const result = streamText({
       model: openai('gpt-4o'),
@@ -93,6 +92,11 @@ export async function POST(req: Request) {
           }
           if (rows.length) {
             await (supabase as any).from('chat_messages').insert(rows);
+          }
+
+          // Fire-and-forget: extract durable memories from the user's message
+          if (lastUserText.trim()) {
+            scheduleMemoryExtraction(user.id, lastUserText, 'chat');
           }
         } catch (err) {
           console.error('[chat] persist error', err);

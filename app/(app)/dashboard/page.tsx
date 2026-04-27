@@ -1,72 +1,165 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { BarChart2, BookMarked, MessageCircle } from 'lucide-react';
+import { BarChart2, BookMarked, MessageCircle, Settings, Menu, X } from 'lucide-react';
 import { VoiceCheckInModal } from '@/components/dashboard/VoiceCheckInModal';
 import Logo from '@/components/brand/Logo';
 import ForecastStrip from '@/components/forecast/ForecastStrip';
-import ManageSubscriptionButton from '@/components/subscription/ManageSubscriptionButton';
 import TodayHaiku from '@/components/haiku/TodayHaiku';
 import SeasonReportButton from '@/components/reports/SeasonReportButton';
 import SoundToggle from '@/components/settings/SoundToggle';
+import { createClient } from '@/lib/supabase/client';
 import type { VoiceCheckInResult } from '@/types/voice';
 
 export default function DashboardPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [lastResult, setLastResult] = useState<VoiceCheckInResult | null>(null);
+  const [userName, setUserName] = useState<string>('');
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    async function fetchUser() {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        // Try profile name first, then user_metadata
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('name')
+          .eq('id', user.id)
+          .single();
+        const name = profile?.name || user.user_metadata?.name || '';
+        setUserName(name);
+      }
+    }
+    fetchUser();
+  }, []);
 
   const handleComplete = (result: VoiceCheckInResult) => {
     setLastResult(result);
     setModalOpen(false);
   };
 
+  const greeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 17) return 'Good afternoon';
+    return 'Good evening';
+  };
+
   return (
     <div className="min-h-screen aurora-bg flex flex-col">
-      {/* Nav */}
-      <header className="flex items-center justify-between px-6 py-4 border-b border-white/5">
-        <Logo size={32} />
-        <nav className="flex items-center gap-3">
+      {/* Header */}
+      <header className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-white/5">
+        <Logo size={28} />
+
+        {/* Desktop nav */}
+        <nav className="hidden sm:flex items-center gap-2">
           <Link
             href="/chat"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-white/75 hover:text-white transition-all duration-200 text-[0.9375rem]"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full glass text-white/80 hover:text-white transition-all duration-200 text-[0.9375rem]"
           >
-            <MessageCircle size={15} />
+            <MessageCircle size={16} />
             <span>Chat</span>
           </Link>
           <Link
             href="/insights"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-white/75 hover:text-white transition-all duration-200 text-[0.9375rem]"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full glass text-white/80 hover:text-white transition-all duration-200 text-[0.9375rem]"
           >
-            <BarChart2 size={15} />
+            <BarChart2 size={16} />
             <span>Insights</span>
           </Link>
           <Link
             href="/haikus"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-white/75 hover:text-white transition-all duration-200 text-[0.9375rem]"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full glass text-white/80 hover:text-white transition-all duration-200 text-[0.9375rem]"
           >
-            <BookMarked size={15} />
-            <span className="hidden sm:inline">Haikus</span>
+            <BookMarked size={16} />
+            <span>Haikus</span>
           </Link>
           <SoundToggle />
-          <ManageSubscriptionButton />
+          <Link
+            href="/settings"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full glass text-white/80 hover:text-white transition-all duration-200 text-[0.9375rem]"
+            aria-label="Settings"
+          >
+            <Settings size={16} />
+            <span>Settings</span>
+          </Link>
         </nav>
+
+        {/* Mobile menu button */}
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="sm:hidden flex items-center justify-center w-9 h-9 rounded-lg text-white/80 hover:bg-white/5 transition-colors"
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+        >
+          {menuOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
       </header>
 
+      {/* Mobile nav drawer */}
+      {menuOpen && (
+        <motion.nav
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="sm:hidden border-b border-white/5 bg-luna-ink/95 backdrop-blur-xl px-4 py-3 flex flex-wrap gap-2"
+        >
+          <Link
+            href="/chat"
+            onClick={() => setMenuOpen(false)}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full glass text-white/80 hover:text-white text-[0.9375rem]"
+          >
+            <MessageCircle size={16} />
+            Chat
+          </Link>
+          <Link
+            href="/insights"
+            onClick={() => setMenuOpen(false)}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full glass text-white/80 hover:text-white text-[0.9375rem]"
+          >
+            <BarChart2 size={16} />
+            Insights
+          </Link>
+          <Link
+            href="/haikus"
+            onClick={() => setMenuOpen(false)}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full glass text-white/80 hover:text-white text-[0.9375rem]"
+          >
+            <BookMarked size={16} />
+            Haikus
+          </Link>
+          <Link
+            href="/settings"
+            onClick={() => setMenuOpen(false)}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full glass text-white/80 hover:text-white text-[0.9375rem]"
+          >
+            <Settings size={16} />
+            Settings
+          </Link>
+          <SoundToggle />
+        </motion.nav>
+      )}
+
       {/* Main */}
-      <main className="flex-1 flex flex-col items-center px-4 py-12 gap-10 max-w-2xl mx-auto w-full">
-        {/* Greeting */}
+      <main className="flex-1 flex flex-col items-center px-5 py-10 sm:py-12 gap-8 sm:gap-10 max-w-2xl mx-auto w-full">
+        {/* Welcome + Greeting */}
         <motion.div
-          className="text-center"
+          className="text-center w-full"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className="font-fraunces text-3xl md:text-4xl text-aurora mb-2">
+          {userName && (
+            <p className="text-white/70 text-base sm:text-lg mb-1">
+              {greeting()}, <span className="text-white/90 font-medium">{userName}</span>
+            </p>
+          )}
+          <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl text-aurora mb-2">
             How are you today?
           </h1>
-          <p className="text-luna-mist/75 text-[0.9375rem]">
+          <p className="text-white/75 text-base sm:text-[1.0625rem]">
             Tap the orb to begin your daily check-in with Luna
           </p>
         </motion.div>
@@ -74,7 +167,7 @@ export default function DashboardPage() {
         {/* Central orb trigger */}
         <motion.button
           onClick={() => setModalOpen(true)}
-          className="voice-orb w-36 h-36 rounded-full flex items-center justify-center cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-luna-pink focus-visible:ring-offset-2 focus-visible:ring-offset-luna-deep"
+          className="voice-orb w-32 h-32 sm:w-36 sm:h-36 rounded-full flex items-center justify-center cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-luna-pink focus-visible:ring-offset-2 focus-visible:ring-offset-luna-deep"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.2, type: 'spring', stiffness: 200 }}
@@ -83,8 +176,8 @@ export default function DashboardPage() {
           aria-label="Open voice check-in"
         >
           <svg
-            width={40}
-            height={40}
+            width={36}
+            height={36}
             viewBox="0 0 24 24"
             fill="none"
             stroke="white"
@@ -101,13 +194,13 @@ export default function DashboardPage() {
         {/* Last check-in result card */}
         {lastResult && (
           <motion.div
-            className="glass rounded-2xl p-6 w-full"
+            className="glass rounded-2xl p-5 sm:p-6 w-full"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
             <div className="flex items-center justify-between mb-3">
-              <p className="text-sm text-luna-mist/65 uppercase tracking-widest">
+              <p className="text-[0.875rem] text-white/70 uppercase tracking-widest">
                 Latest check-in
               </p>
               <span className="text-lg">
@@ -118,15 +211,15 @@ export default function DashboardPage() {
                   : '🌧️'}
               </span>
             </div>
-            <p className="text-luna-mist/90 text-[0.9375rem] leading-relaxed italic font-fraunces">
+            <p className="text-white/90 text-base leading-relaxed italic font-serif">
               &ldquo;{lastResult.lunaResponse}&rdquo;
             </p>
             {lastResult.triggers.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mt-3">
+              <div className="flex flex-wrap gap-2 mt-3">
                 {lastResult.triggers.slice(0, 3).map((t) => (
                   <span
                     key={t}
-                    className="px-2 py-0.5 rounded-full text-xs bg-luna-rose/20 text-luna-rose border border-luna-rose/30"
+                    className="px-2.5 py-1 rounded-full text-sm bg-luna-rose/20 text-luna-rose border border-luna-rose/30"
                   >
                     {t}
                   </span>

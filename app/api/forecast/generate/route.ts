@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { generateForecast } from '@/lib/forecast/generate';
+import { canUseForecast } from '@/lib/subscription/usage';
 
 export const runtime = 'nodejs';
 export const maxDuration = 45;
@@ -14,6 +15,16 @@ export async function POST(req: Request) {
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    if (!(await canUseForecast(user.id))) {
+      return NextResponse.json(
+        {
+          error: 'limit_reached',
+          message: 'Full Moon unlocks your 7-day forecast.',
+        },
+        { status: 402 },
+      );
     }
 
     const body = await req.json().catch(() => ({}));

@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { RefreshCw } from 'lucide-react';
 import WeatherIcon from './WeatherIcon';
 import StormAlert from './StormAlert';
+import UpgradeModal from '@/components/subscription/UpgradeModal';
+import { useUpgradeModal } from '@/lib/hooks/useUpgradeModal';
 import {
   type ForecastRecord,
   type ForecastDay,
@@ -23,18 +25,30 @@ export default function ForecastStrip() {
   const [generating, setGenerating] = useState(false);
   const [hoveredDay, setHoveredDay] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [forecastLocked, setForecastLocked] = useState(false);
+  const {
+    open: upgradeOpen,
+    feature: upgradeFeature,
+    prompt: promptUpgrade,
+    close: closeUpgrade,
+  } = useUpgradeModal();
 
   const loadLatest = useCallback(async () => {
     try {
       const res = await fetch('/api/forecast', { cache: 'no-store' });
       const json = await res.json();
+      if (res.status === 402 || json?.error === 'limit_reached') {
+        setForecastLocked(true);
+        promptUpgrade('forecast');
+        return;
+      }
       setData(json);
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [promptUpgrade]);
 
   const triggerGeneration = useCallback(
     async (force = false) => {
@@ -48,6 +62,11 @@ export default function ForecastStrip() {
           body: JSON.stringify({ force }),
         });
         const json = await res.json();
+        if (res.status === 402 || json?.error === 'limit_reached') {
+          setForecastLocked(true);
+          promptUpgrade('forecast');
+          return;
+        }
         if (!res.ok) {
           if (json.error === 'need_more_logs') {
             setError(json.message);
@@ -68,7 +87,7 @@ export default function ForecastStrip() {
         setGenerating(false);
       }
     },
-    [generating],
+    [generating, promptUpgrade],
   );
 
   useEffect(() => {
@@ -89,6 +108,29 @@ export default function ForecastStrip() {
 
   if (loading) {
     return <ForecastSkeleton />;
+  }
+
+  if (forecastLocked) {
+    return (
+      <>
+        <div className="flex flex-col items-center gap-4 rounded-2xl border border-luna-whisper/10 bg-luna-whisper/[0.02] px-6 py-8 text-center">
+          <p className="font-serif text-lg italic text-luna-cream">
+            Your 7-day sky is waiting.
+          </p>
+          <p className="max-w-sm text-sm leading-6 text-luna-whisper/60">
+            Full Moon unlocks forecasts, long-term memory, and unlimited space with Luna.
+          </p>
+          <button
+            type="button"
+            onClick={() => promptUpgrade('forecast')}
+            className="rounded-full bg-luna-cream px-5 py-2 text-sm font-medium text-luna-ink transition-transform hover:scale-[1.03]"
+          >
+            Unlock forecast
+          </button>
+        </div>
+        <UpgradeModal open={upgradeOpen} onClose={closeUpgrade} feature={upgradeFeature} />
+      </>
+    );
   }
 
   // Empty state — not enough logs

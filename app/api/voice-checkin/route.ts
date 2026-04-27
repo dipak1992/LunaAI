@@ -9,9 +9,9 @@ import {
   GPT_CONFIG,
   validateExtraction,
 } from '@/lib/openai/prompts';
-import { checkVoiceCheckInRateLimit } from '@/lib/utils/rate-limit';
 import { scheduleMemoryExtraction } from '@/lib/memory/pinecone';
 import { scheduleForecastRefresh } from '@/lib/forecast/trigger-after-checkin';
+import { checkCheckinUsage, recordUsage } from '@/lib/subscription/usage';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60; // seconds
@@ -29,21 +29,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // ── Rate limit ────────────────────────────────────────────────────────
-    const rateLimit = await checkVoiceCheckInRateLimit(user.id);
-    if (!rateLimit.allowed) {
+    // ── Subscription usage limit ──────────────────────────────────────────
+    const usage = await checkCheckinUsage(user.id);
+    if (!usage.allowed) {
       return NextResponse.json(
         {
-          error: `Daily check-in limit reached. Resets at midnight UTC.`,
-          resetAt: rateLimit.resetAt,
+          error: 'limit_reached',
+          message: "You've used this week's check-ins. Unlock unlimited with Full Moon.",
+          usage,
         },
-        {
-          status: 429,
-          headers: {
-            'X-RateLimit-Remaining': '0',
-            'X-RateLimit-Reset': rateLimit.resetAt,
-          },
-        },
+        { status: 402 },
       );
     }
 
@@ -141,6 +136,8 @@ export async function POST(req: NextRequest) {
     if (insertError) {
       console.error('[voice-checkin] Insert error:', insertError);
       // Still return the result even if DB write fails
+    } else {
+      await recordUsage(user.id, 'checkin');
     }
 
     // Fire-and-forget: extract durable memories from transcript
@@ -162,12 +159,6 @@ export async function POST(req: NextRequest) {
         triggers: extracted.triggers,
         remedies: extracted.remedies,
         logId: logRow?.id ?? null,
-      },
-      {
-        headers: {
-          'X-RateLimit-Remaining': String(rateLimit.remaining - 1),
-          'X-RateLimit-Reset': rateLimit.resetAt,
-        },
       },
     );
   } catch (err) {

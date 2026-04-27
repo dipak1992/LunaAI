@@ -3,6 +3,7 @@ import { streamText, convertToModelMessages, type UIMessage } from 'ai';
 import { createClient } from '@/lib/supabase/server';
 import { buildLunaSystemPrompt } from '@/lib/ai/luna-prompt';
 import { retrieveMemories, scheduleMemoryExtraction } from '@/lib/memory/pinecone';
+import { checkChatUsage, recordUsage } from '@/lib/subscription/usage';
 import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
@@ -17,6 +18,18 @@ export async function POST(req: Request) {
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const usage = await checkChatUsage(user.id);
+    if (!usage.allowed) {
+      return NextResponse.json(
+        {
+          error: 'limit_reached',
+          message: "You've used today's messages. Light your path with Full Moon.",
+          usage,
+        },
+        { status: 402 },
+      );
     }
 
     const { messages } = (await req.json()) as { messages: UIMessage[] };
@@ -92,6 +105,7 @@ export async function POST(req: Request) {
           }
           if (rows.length) {
             await (supabase as any).from('chat_messages').insert(rows);
+            await recordUsage(user.id, 'chat_message');
           }
 
           // Fire-and-forget: extract durable memories from the user's message

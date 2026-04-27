@@ -7,6 +7,7 @@ import { BarChart2, MessageCircle } from 'lucide-react';
 import { VoiceCheckInModal } from '@/components/dashboard/VoiceCheckInModal';
 import Logo from '@/components/brand/Logo';
 import ForecastStrip from '@/components/forecast/ForecastStrip';
+import ManageSubscriptionButton from '@/components/subscription/ManageSubscriptionButton';
 import type { VoiceCheckInResult } from '@/types/voice';
 
 export default function DashboardPage() {
@@ -38,6 +39,7 @@ export default function DashboardPage() {
             <BarChart2 size={14} />
             <span>Insights</span>
           </Link>
+          <ManageSubscriptionButton />
         </nav>
       </header>
 

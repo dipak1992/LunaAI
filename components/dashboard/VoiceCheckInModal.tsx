@@ -9,6 +9,8 @@ import { SparkleParticles, AmbientSparkles } from '@/components/dashboard/Sparkl
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { formatDuration } from '@/lib/utils/audio';
 import type { VoiceCheckInResult } from '@/types/voice';
+import UpgradeModal from '@/components/subscription/UpgradeModal';
+import { useUpgradeModal } from '@/lib/hooks/useUpgradeModal';
 
 interface VoiceCheckInModalProps {
   open: boolean;
@@ -29,6 +31,12 @@ export function VoiceCheckInModal({
   const [result, setResult] = useState<VoiceCheckInResult | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [showSparkles, setShowSparkles] = useState(false);
+  const {
+    open: upgradeOpen,
+    feature: upgradeFeature,
+    prompt: promptUpgrade,
+    close: closeUpgrade,
+  } = useUpgradeModal();
 
   const recorder = useVoiceRecorder();
 
@@ -67,6 +75,13 @@ export function VoiceCheckInModal({
 
       const data = await res.json();
 
+      if (res.status === 402 || data?.error === 'limit_reached') {
+        recorder.reset();
+        onClose();
+        promptUpgrade('checkin');
+        return;
+      }
+
       if (!res.ok) {
         throw new Error(data.error ?? `Server error ${res.status}`);
       }
@@ -81,7 +96,7 @@ export function VoiceCheckInModal({
       setSubmitError(message);
       setView('error');
     }
-  }, [onComplete]);
+  }, [onClose, onComplete, promptUpgrade, recorder]);
 
   const handleOrbClick = useCallback(() => {
     if (recorder.state === 'idle' || recorder.state === 'error') {
@@ -103,14 +118,15 @@ export function VoiceCheckInModal({
   }, [recorder]);
 
   return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      maxWidth="max-w-md"
-      ariaLabel="Voice check-in"
-      closeOnBackdrop={recorder.state === 'idle' || view === 'result' || view === 'error'}
-    >
-      <div className="relative overflow-hidden rounded-2xl">
+    <>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        maxWidth="max-w-md"
+        ariaLabel="Voice check-in"
+        closeOnBackdrop={recorder.state === 'idle' || view === 'result' || view === 'error'}
+      >
+        <div className="relative overflow-hidden rounded-2xl">
         {/* Ambient sparkles on result */}
         <AmbientSparkles active={view === 'result'} />
 
@@ -317,8 +333,10 @@ export function VoiceCheckInModal({
             )}
           </AnimatePresence>
         </div>
-      </div>
-    </Modal>
+        </div>
+      </Modal>
+      <UpgradeModal open={upgradeOpen} onClose={closeUpgrade} feature={upgradeFeature} />
+    </>
   );
 }
 

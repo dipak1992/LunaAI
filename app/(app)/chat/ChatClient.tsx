@@ -10,6 +10,8 @@ import Message from '@/components/chat/Message';
 import TypingIndicator from '@/components/chat/TypingIndicator';
 import ChatInput from '@/components/chat/ChatInput';
 import MoonGlyph from '@/components/chat/MoonGlyph';
+import UpgradeModal from '@/components/subscription/UpgradeModal';
+import { useUpgradeModal } from '@/lib/hooks/useUpgradeModal';
 
 interface Props {
   initialMessages: UIMessage[];
@@ -18,10 +20,21 @@ interface Props {
 export default function ChatClient({ initialMessages }: Props) {
   const [input, setInput] = useState('');
   const initialCount = useRef(initialMessages.length);
+  const {
+    open: upgradeOpen,
+    feature: upgradeFeature,
+    prompt: promptUpgrade,
+    close: closeUpgrade,
+  } = useUpgradeModal();
 
-  const { messages, sendMessage, status } = useChat({
+  const { messages, sendMessage, status, error, clearError } = useChat({
     transport: new TextStreamChatTransport({ api: '/api/chat' }),
     messages: initialMessages,
+    onError: (err) => {
+      if (err.message.includes('limit_reached') || err.message.includes('402')) {
+        promptUpgrade('chat');
+      }
+    },
   });
 
   const isLoading = status === 'streaming' || status === 'submitted';
@@ -32,6 +45,15 @@ export default function ChatClient({ initialMessages }: Props) {
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, [messages, isLoading]);
+
+  useEffect(() => {
+    if (!error) return;
+
+    if (error.message.includes('limit_reached') || error.message.includes('402')) {
+      promptUpgrade('chat');
+      clearError();
+    }
+  }, [clearError, error, promptUpgrade]);
 
   // Scroll to bottom on first mount without animation
   useEffect(() => {
@@ -143,6 +165,8 @@ export default function ChatClient({ initialMessages }: Props) {
           </p>
         </div>
       </div>
+
+      <UpgradeModal open={upgradeOpen} onClose={closeUpgrade} feature={upgradeFeature} />
     </div>
   );
 }

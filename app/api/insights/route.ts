@@ -29,7 +29,7 @@ export async function GET(req: Request) {
   const { data: rawLogs, error: logsError } = await (supabase as any)
     .from('symptom_logs')
     .select(
-      'log_date, weather_score, severity, energy_level, sleep_quality, triggers, emotional_tone, logged_at'
+      'log_date, weather_score, energy_level, sleep_quality, triggers, emotional_tone, logged_at'
     )
     .eq('user_id', user.id)
     .gte('log_date', from)
@@ -43,7 +43,6 @@ export async function GET(req: Request) {
   const logs: Array<{
     log_date: string;
     weather_score: number | null;
-    severity: number;
     energy_level: number | null;
     sleep_quality: number | null;
     triggers: string[];
@@ -87,7 +86,7 @@ export async function GET(req: Request) {
       log_date:          date,
       check_in_count:    n,
       avg_weather_score: avg(entries.map(e => e.weather_score)),
-      avg_severity:      avg(entries.map(e => e.severity)),
+      avg_severity:      null,
       avg_energy:        avg(entries.map(e => e.energy_level)),
       avg_sleep:         avg(entries.map(e => e.sleep_quality)),
       all_triggers:      allTriggers,

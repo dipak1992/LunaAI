@@ -46,7 +46,7 @@ export async function GET(req: Request) {
     severity: number | null;
     energy_level: number | null;
     sleep_quality: number | null;
-    triggers: string[];
+    triggers: string[] | null;   // jsonb array — Supabase deserialises to JS array
     emotional_tone: string | null;
     logged_at: string;
   }> = rawLogs ?? [];

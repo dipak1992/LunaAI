@@ -9,8 +9,8 @@ ALTER TABLE public.symptom_logs
   ADD COLUMN IF NOT EXISTS luna_response  text,
   ADD COLUMN IF NOT EXISTS weather_score  smallint,
   ADD COLUMN IF NOT EXISTS emotional_tone text,
-  ADD COLUMN IF NOT EXISTS triggers       text[]   DEFAULT '{}',
-  ADD COLUMN IF NOT EXISTS remedies       text[]   DEFAULT '{}',
+  ADD COLUMN IF NOT EXISTS triggers       jsonb    DEFAULT '[]'::jsonb,
+  ADD COLUMN IF NOT EXISTS remedies       jsonb    DEFAULT '[]'::jsonb,
   ADD COLUMN IF NOT EXISTS energy_level   smallint,
   ADD COLUMN IF NOT EXISTS sleep_quality  smallint,
   ADD COLUMN IF NOT EXISTS severity       smallint,
@@ -19,6 +19,7 @@ ALTER TABLE public.symptom_logs
 
 -- ============================================================
 -- Step 2: daily_summaries view
+-- triggers is jsonb, so use jsonb_array_elements_text()
 -- ============================================================
 CREATE OR REPLACE VIEW public.daily_summaries AS
 SELECT
@@ -30,8 +31,14 @@ SELECT
   ROUND(AVG(energy_level))::int   AS avg_energy,
   ROUND(AVG(sleep_quality))::int  AS avg_sleep,
   ARRAY(
-    SELECT DISTINCT unnest(triggers)
-    FROM symptom_logs sl2
+    SELECT DISTINCT t.val
+    FROM symptom_logs sl2,
+         jsonb_array_elements_text(
+           CASE jsonb_typeof(sl2.triggers)
+             WHEN 'array' THEN sl2.triggers
+             ELSE '[]'::jsonb
+           END
+         ) AS t(val)
     WHERE sl2.user_id = sl.user_id
       AND sl2.log_date = sl.log_date
   )                               AS all_triggers,
@@ -59,7 +66,16 @@ SELECT
   COUNT(*)::int AS occurrences,
   MAX(log_date) AS last_seen
 FROM (
-  SELECT user_id, log_date, unnest(triggers) AS trigger_name
-  FROM symptom_logs
-) t
+  SELECT
+    user_id,
+    log_date,
+    t.val AS trigger_name
+  FROM symptom_logs,
+       jsonb_array_elements_text(
+         CASE jsonb_typeof(triggers)
+           WHEN 'array' THEN triggers
+           ELSE '[]'::jsonb
+         END
+       ) AS t(val)
+) sub
 GROUP BY user_id, trigger_name;

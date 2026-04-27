@@ -1,14 +1,43 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Mic, Sparkles, CloudSun, Heart, Check } from 'lucide-react';
-import { useState } from 'react';
+/*
+ * Hero assets needed:
+ * - /public/videos/luna-hero-demo.mp4
+ * - /public/videos/luna-hero-demo.vtt
+ * - /public/images/luna-hero-poster.jpg
+ *
+ * TODO(video team): create the hero demo sequence:
+ * 0:00–0:03 → Woman's hand taps a glowing voice orb
+ * 0:03–0:07 → Voice waveform animates, subtitle: "I couldn't sleep again..."
+ * 0:07–0:11 → Luna's response streams: "That's three restless nights this week. Your body is in a cloudy stretch."
+ * 0:11–0:15 → 7-day weather forecast appears: "Cloudy Tue • Stormy Wed • Clearing Fri ☀️"
+ */
+
+import Image from 'next/image';
+import { motion, useReducedMotion } from 'framer-motion';
+import {
+  Mic,
+  Sparkles,
+  CloudSun,
+  Heart,
+  Check,
+  Lock,
+  Moon,
+  Play,
+  Stethoscope,
+  X,
+} from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import Header from '@/components/marketing/Header';
 import Footer from '@/components/marketing/Footer';
 import AuroraBackground from '@/components/marketing/AuroraBackground';
 import StarField from '@/components/marketing/StarField';
 import GlowButton from '@/components/ui/GlowButton';
 import FadeUp from '@/components/ui/FadeUp';
+
+const HERO_VIDEO_SRC = '/videos/luna-hero-demo.mp4';
+const HERO_VIDEO_POSTER = '/images/luna-hero-poster.jpg';
+const HERO_VIDEO_CAPTIONS = '/videos/luna-hero-demo.vtt';
 
 const FEATURES = [
   {
@@ -111,6 +140,48 @@ const PLANS = [
 
 export default function LandingPage() {
   const [orbPressed, setOrbPressed] = useState(false);
+  const [demoVideoReady, setDemoVideoReady] = useState(false);
+  const [demoModalOpen, setDemoModalOpen] = useState(false);
+  const demoCardRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const demoCard = demoCardRef.current;
+
+    if (!demoCard) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setDemoVideoReady(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '200px' }
+    );
+
+    observer.observe(demoCard);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!demoModalOpen) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setDemoModalOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [demoModalOpen]);
 
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-luna-ink text-luna-cream">
@@ -119,84 +190,182 @@ export default function LandingPage() {
       <Header />
 
       {/* ── HERO ── */}
-      <section className="relative flex min-h-screen flex-col items-center justify-center px-6 pt-24 pb-16 text-center">
-        {/* Breathing orb */}
-        <motion.div
-          className="relative mb-16 flex h-40 w-40 items-center justify-center rounded-full md:h-56 md:w-56"
-          animate={{ scale: [1, 1.06, 1] }}
-          transition={{ duration: 6, ease: 'easeInOut', repeat: Infinity }}
-        >
-          {/* Outer glow rings */}
-          <div
-            className="absolute inset-0 rounded-full opacity-30 blur-2xl"
-            style={{
-              background:
-                'radial-gradient(circle, #C8A8E9 0%, #FF9AAE 50%, transparent 100%)',
-            }}
-          />
-          <div
-            className="absolute inset-4 rounded-full opacity-60"
-            style={{
-              background:
-                'radial-gradient(circle at 35% 35%, #FFD4A3 0%, #FF9AAE 40%, #C8A8E9 70%, #8FB8E8 100%)',
-              boxShadow:
-                '0 0 60px rgba(200,168,233,0.5), 0 0 120px rgba(255,154,174,0.3), inset 0 0 30px rgba(255,255,255,0.2)',
-            }}
-          />
-          <Mic className="relative z-10 h-8 w-8 text-white/80" />
-        </motion.div>
+      <section className="relative flex min-h-screen items-center overflow-hidden px-6 py-20 pt-28">
+        <div className="mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-2">
+          <div className="text-left md:text-center lg:text-left">
+            <FadeUp delay={0}>
+              <p className="mb-5 text-sm tracking-widest text-luna-aurora-lilac uppercase opacity-80">
+                She is not a season ending. She is a sky rearranging.
+              </p>
+            </FadeUp>
 
-        <FadeUp delay={0.1}>
-          <p className="mb-4 text-sm tracking-[0.25em] uppercase text-white/65">
-            Introducing Luna
-          </p>
-        </FadeUp>
+            <FadeUp delay={0.15} initialVisible>
+              <h1 className="max-w-4xl font-serif text-5xl leading-tight font-normal text-luna-cream md:text-6xl lg:text-7xl">
+                Finally, a companion who understands your menopause.
+              </h1>
+            </FadeUp>
 
-        <FadeUp delay={0.25}>
-          <h1 className="mb-6 max-w-3xl font-serif text-5xl leading-tight md:text-7xl">
-            Your body&rsquo;s{' '}
-            <span
-              className="italic"
-              style={{
-                background:
-                  'linear-gradient(135deg, #FF9AAE 0%, #C8A8E9 50%, #8FB8E8 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
-            >
-              weather forecast,
-            </span>{' '}
-            decoded.
-          </h1>
-        </FadeUp>
+            <FadeUp delay={0.3}>
+              <p className="mt-7 max-w-2xl text-lg leading-relaxed font-normal text-white/85 md:mx-auto md:text-xl lg:mx-0">
+                Speak to Luna. She listens, remembers, and forecasts your body&apos;s weather
+                — so you never feel alone in the change.
+              </p>
+            </FadeUp>
 
-        <FadeUp delay={0.4}>
-          <p className="mb-10 max-w-xl text-lg text-white/80 font-normal leading-relaxed">
-            Menopause isn&rsquo;t a problem to solve. It&rsquo;s a season to understand.
-          </p>
-        </FadeUp>
+            <FadeUp delay={0.45}>
+              <div className="mt-10 flex flex-col gap-4 sm:flex-row md:justify-center lg:justify-start">
+                <div className="flex w-full flex-col items-stretch sm:w-auto sm:items-center">
+                  <GlowButton
+                    href="/dashboard?trial=true"
+                    variant="primary"
+                    className="min-h-11 w-full px-8 sm:w-auto"
+                  >
+                    Try Luna Free
+                  </GlowButton>
+                  <p className="mt-2 text-center text-xs text-white/60">
+                    No signup for your first check-in
+                  </p>
+                </div>
 
-        <FadeUp delay={0.55}>
-          <div className="flex flex-col items-center gap-4 sm:flex-row">
-            <GlowButton href="/signup" variant="primary">
-              Begin your story — free
-            </GlowButton>
-            <GlowButton href="#how" variant="ghost">
-              Watch the 60-second film →
-            </GlowButton>
+                <button
+                  type="button"
+                  onClick={() => setDemoModalOpen(true)}
+                  className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-luna-aurora-lilac/40 px-8 py-4 font-sans text-base font-medium text-luna-cream transition-all duration-500 hover:border-luna-aurora-mint/70 hover:bg-luna-cream/5 sm:w-auto"
+                >
+                  <Play className="h-4 w-4" aria-hidden />
+                  <span>Watch 30-sec demo</span>
+                </button>
+              </div>
+            </FadeUp>
+
+            <FadeUp delay={0.6}>
+              <div className="mt-9 flex max-w-3xl flex-col gap-4 text-sm text-white/70 md:mx-auto md:flex-row md:items-center md:justify-center md:gap-6 lg:mx-0 lg:justify-start">
+                <div className="flex items-center gap-2">
+                  <Stethoscope className="h-4 w-4 shrink-0 text-luna-aurora-mint" aria-hidden />
+                  <span>Built with OB-GYNs</span>
+                </div>
+                <span className="hidden md:inline" aria-hidden>
+                  •
+                </span>
+                <div className="flex items-center gap-2">
+                  <Lock className="h-4 w-4 shrink-0 text-luna-aurora-mint" aria-hidden />
+                  <span>Private by design — your voice never trains AI</span>
+                </div>
+                <span className="hidden md:inline" aria-hidden>
+                  •
+                </span>
+                <div className="flex items-center gap-2">
+                  <Moon className="h-4 w-4 shrink-0 text-luna-aurora-mint" aria-hidden />
+                  <span>Trusted by 5,000+ women</span>
+                </div>
+              </div>
+            </FadeUp>
           </div>
-        </FadeUp>
 
-        {/* Scroll hint */}
-        <motion.p
-          className="absolute bottom-8 text-sm tracking-[0.2em] text-white/40"
-          animate={{ opacity: [0.4, 0.8, 0.4] }}
-          transition={{ duration: 3, repeat: Infinity }}
-        >
-          scroll gently ↓
-        </motion.p>
+          <FadeUp delay={0.3} className="lg:justify-self-end">
+            <div
+              ref={demoCardRef}
+              className="glass-card relative mx-auto aspect-[9/16] w-full max-w-sm overflow-hidden rounded-3xl p-0 shadow-2xl shadow-luna-aurora-lilac/20 md:aspect-video md:max-w-3xl lg:max-w-xl"
+            >
+              <Image
+                src={HERO_VIDEO_POSTER}
+                alt="Luna voice check-in demo preview"
+                fill
+                sizes="(min-width: 1024px) 46vw, 100vw"
+                className="object-cover"
+                preload
+              />
+
+              {demoVideoReady && (
+                <video
+                  className="absolute inset-0 h-full w-full object-cover"
+                  aria-label="Demo of Luna voice check-in"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="none"
+                  poster={HERO_VIDEO_POSTER}
+                >
+                  {/* TODO(video team): replace placeholder with the final Luna hero demo cut. */}
+                  <source src={HERO_VIDEO_SRC} type="video/mp4" />
+                  <track
+                    kind="captions"
+                    src={HERO_VIDEO_CAPTIONS}
+                    srcLang="en"
+                    label="English captions"
+                    default
+                  />
+                </video>
+              )}
+
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[30%] bg-gradient-to-t from-luna-ink to-transparent" />
+
+              <div className="absolute top-4 left-4 inline-flex items-center gap-2 rounded-full border border-luna-aurora-mint/30 bg-luna-ink/50 px-3 py-2 text-xs tracking-widest text-luna-cream uppercase backdrop-blur-md">
+                <motion.span
+                  className="h-2 w-2 rounded-full bg-luna-aurora-mint"
+                  animate={
+                    prefersReducedMotion
+                      ? undefined
+                      : { opacity: [0.45, 1, 0.45], scale: [1, 1.25, 1] }
+                  }
+                  transition={
+                    prefersReducedMotion
+                      ? undefined
+                      : { duration: 2.4, ease: 'easeInOut', repeat: Infinity }
+                  }
+                />
+                Live demo
+              </div>
+            </div>
+          </FadeUp>
+        </div>
       </section>
+
+      {demoModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-luna-ink/90 px-4 py-8 backdrop-blur-md"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Luna demo video"
+          onClick={() => setDemoModalOpen(false)}
+        >
+          <div
+            className="glass-card relative aspect-video w-full max-w-4xl overflow-hidden rounded-3xl p-0 shadow-2xl shadow-luna-aurora-mint/20"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setDemoModalOpen(false)}
+              className="absolute top-4 right-4 z-10 inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-luna-cream/20 bg-luna-ink/60 text-luna-cream backdrop-blur-md transition-colors hover:bg-luna-cream/10"
+              aria-label="Close demo video"
+            >
+              <X className="h-5 w-5" aria-hidden />
+            </button>
+
+            <video
+              className="h-full w-full object-cover"
+              aria-label="Demo of Luna voice check-in"
+              autoPlay
+              loop
+              muted
+              playsInline
+              controls
+              poster={HERO_VIDEO_POSTER}
+            >
+              {/* TODO(video team): replace placeholder with the final Luna hero demo cut. */}
+              <source src={HERO_VIDEO_SRC} type="video/mp4" />
+              <track
+                kind="captions"
+                src={HERO_VIDEO_CAPTIONS}
+                srcLang="en"
+                label="English captions"
+                default
+              />
+            </video>
+          </div>
+        </div>
+      )}
 
       {/* ── WHY IT'S DIFFERENT ── */}
       <section id="story" className="relative px-6 py-32">

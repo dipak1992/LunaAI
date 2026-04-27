@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, type Variants } from 'framer-motion';
+import { motion, useReducedMotion, type Variants } from 'framer-motion';
 import { ReactNode } from 'react';
 
 interface FadeUpProps {
@@ -10,6 +10,7 @@ interface FadeUpProps {
   y?: number;
   className?: string;
   stagger?: boolean;
+  initialVisible?: boolean;
 }
 
 export default function FadeUp({
@@ -19,7 +20,14 @@ export default function FadeUp({
   y = 30,
   className = '',
   stagger = false,
+  initialVisible = false,
 }: FadeUpProps) {
+  const prefersReducedMotion = useReducedMotion();
+
+  if (prefersReducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
   const variants: Variants = {
     hidden: { opacity: 0, y },
     visible: {
@@ -38,7 +46,7 @@ export default function FadeUp({
     <motion.div
       className={className}
       variants={variants}
-      initial="hidden"
+      initial={initialVisible ? false : 'hidden'}
       whileInView="visible"
       viewport={{ once: true, margin: '-50px' }}
     >

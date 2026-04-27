@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { BarChart2, MessageCircle } from 'lucide-react';
 import { VoiceCheckInModal } from '@/components/dashboard/VoiceCheckInModal';
 import Logo from '@/components/brand/Logo';
 import ForecastStrip from '@/components/forecast/ForecastStrip';
@@ -21,8 +23,21 @@ export default function DashboardPage() {
       {/* Nav */}
       <header className="flex items-center justify-between px-6 py-4 border-b border-white/5">
         <Logo size={32} />
-        <nav className="flex items-center gap-4">
-          <span className="text-sm text-luna-mist/50">Dashboard</span>
+        <nav className="flex items-center gap-3">
+          <Link
+            href="/chat"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-white/50 hover:text-white/90 transition-all duration-200 text-sm"
+          >
+            <MessageCircle size={14} />
+            <span>Chat</span>
+          </Link>
+          <Link
+            href="/insights"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-white/50 hover:text-white/90 transition-all duration-200 text-sm"
+          >
+            <BarChart2 size={14} />
+            <span>Insights</span>
+          </Link>
         </nav>
       </header>
 

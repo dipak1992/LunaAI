@@ -12,6 +12,8 @@ import {
 import { scheduleMemoryExtraction } from '@/lib/memory/pinecone';
 import { scheduleForecastRefresh } from '@/lib/forecast/trigger-after-checkin';
 import { checkCheckinUsage, recordUsage } from '@/lib/subscription/usage';
+import { crisisResponse, detectCrisis } from '@/lib/safety/crisis-detection';
+import { logCrisisEvent } from '@/lib/safety/log-crisis';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60; // seconds
@@ -82,6 +84,26 @@ export async function POST(req: NextRequest) {
         { error: 'Could not transcribe audio. Please speak clearly and try again.' },
         { status: 422 },
       );
+    }
+
+    const assessment = detectCrisis(transcript);
+    if (assessment.level !== 'none') {
+      await logCrisisEvent({
+        user_id: user.id,
+        level: assessment.level,
+        category: assessment.category,
+        matched_terms: assessment.matched_terms,
+        message_preview: transcript,
+        source: 'checkin',
+      });
+
+      return NextResponse.json({
+        ok: true,
+        crisis: {
+          level: assessment.level,
+          message: crisisResponse(assessment),
+        },
+      });
     }
 
     // ── GPT-4o symptom extraction ─────────────────────────────────────────

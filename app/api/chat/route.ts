@@ -4,6 +4,8 @@ import { createClient } from '@/lib/supabase/server';
 import { buildLunaSystemPrompt } from '@/lib/ai/luna-prompt';
 import { retrieveMemories, scheduleMemoryExtraction } from '@/lib/memory/pinecone';
 import { checkChatUsage, recordUsage } from '@/lib/subscription/usage';
+import { crisisResponse, detectCrisis } from '@/lib/safety/crisis-detection';
+import { logCrisisEvent } from '@/lib/safety/log-crisis';
 import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
@@ -20,18 +22,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const usage = await checkChatUsage(user.id);
-    if (!usage.allowed) {
-      return NextResponse.json(
-        {
-          error: 'limit_reached',
-          message: "You've used today's messages. Light your path with Full Moon.",
-          usage,
-        },
-        { status: 402 },
-      );
-    }
-
     const { messages } = (await req.json()) as { messages: UIMessage[] };
 
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
@@ -46,6 +36,54 @@ export async function POST(req: Request) {
           .map((p: any) => (p as any).text)
           .join('')
       : '';
+
+    const assessment = detectCrisis(lastUserText);
+    if (assessment.level !== 'none') {
+      await logCrisisEvent({
+        user_id: user.id,
+        level: assessment.level,
+        category: assessment.category,
+        matched_terms: assessment.matched_terms,
+        message_preview: lastUserText,
+        source: 'chat',
+      });
+
+      const safeReply = crisisResponse(assessment);
+      await (supabase as any).from('chat_messages').insert([
+        { user_id: user.id, role: 'user', content: lastUserText },
+        { user_id: user.id, role: 'assistant', content: safeReply },
+      ]);
+
+      const encoder = new TextEncoder();
+      const stream = new ReadableStream<Uint8Array>({
+        async start(controller) {
+          for (const char of Array.from(safeReply)) {
+            controller.enqueue(encoder.encode(char));
+            await new Promise((resolve) => setTimeout(resolve, 8));
+          }
+          controller.close();
+        },
+      });
+
+      return new Response(stream, {
+        headers: {
+          'Content-Type': 'text/plain; charset=utf-8',
+          'x-luna-safety': assessment.level,
+        },
+      });
+    }
+
+    const usage = await checkChatUsage(user.id);
+    if (!usage.allowed) {
+      return NextResponse.json(
+        {
+          error: 'limit_reached',
+          message: "You've used today's messages. Light your path with Full Moon.",
+          usage,
+        },
+        { status: 402 },
+      );
+    }
 
     const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 

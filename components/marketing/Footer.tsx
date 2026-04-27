@@ -4,33 +4,31 @@ const COLUMNS = [
   {
     title: 'Luna',
     links: [
-      { label: 'Story', href: '#story' },
-      { label: 'How it works', href: '#how' },
-      { label: 'Pricing', href: '#pricing' },
+      { label: 'Story', href: '/about' },
+      { label: 'Science', href: '/science' },
+      { label: 'Pricing', href: '/pricing' },
     ],
   },
   {
     title: 'Care',
     links: [
-      { label: 'For partners', href: '#' },
-      { label: 'For clinicians', href: '#' },
-      { label: 'Help center', href: '#' },
+      { label: 'For clinicians', href: '/science' },
+      { label: 'Help center', href: 'mailto:hello@luna.app' },
+      { label: 'Crisis resources', href: '/privacy#crisis' },
     ],
   },
   {
     title: 'Legal',
     links: [
-      { label: 'Privacy', href: '#' },
-      { label: 'Terms', href: '#' },
-      { label: 'Cookies', href: '#' },
+      { label: 'Privacy', href: '/privacy' },
+      { label: 'Terms', href: '/terms' },
     ],
   },
   {
     title: 'Contact',
     links: [
       { label: 'hello@luna.app', href: 'mailto:hello@luna.app' },
-      { label: 'Press', href: '#' },
-      { label: 'Careers', href: '#' },
+      { label: 'privacy@luna.app', href: 'mailto:privacy@luna.app' },
     ],
   },
 ];

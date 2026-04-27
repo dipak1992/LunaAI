@@ -5,9 +5,9 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 const NAV_LINKS = [
-  { label: 'Story', href: '#story' },
-  { label: 'How it works', href: '#how' },
-  { label: 'Whispers', href: '#whispers' },
+  { label: 'Story', href: '/about' },
+  { label: 'Science', href: '/science' },
+  { label: 'Whispers', href: '/#whispers' },
   { label: 'Pricing', href: '/pricing' },
 ];
 

@@ -11,6 +11,7 @@ import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { formatDuration } from '@/lib/utils/audio';
 import type { VoiceCheckInResult } from '@/types/voice';
 import UpgradeModal from '@/components/subscription/UpgradeModal';
+import CrisisModal from '@/components/safety/CrisisModal';
 import { useUpgradeModal } from '@/lib/hooks/useUpgradeModal';
 import { useHaptics } from '@/lib/hooks/useHaptics';
 import { playSound } from '@/lib/sound/player';
@@ -36,6 +37,9 @@ export function VoiceCheckInModal({
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [showSparkles, setShowSparkles] = useState(false);
   const [sparkleKey, setSparkleKey] = useState(0);
+  const [crisisOpen, setCrisisOpen] = useState(false);
+  const [crisisMessage, setCrisisMessage] = useState('');
+  const [crisisLevel, setCrisisLevel] = useState<'yellow' | 'amber' | 'red'>('red');
   const {
     open: upgradeOpen,
     feature: upgradeFeature,
@@ -86,6 +90,15 @@ export function VoiceCheckInModal({
         recorder.reset();
         onClose();
         promptUpgrade('checkin');
+        return;
+      }
+
+      if (data?.crisis) {
+        recorder.reset();
+        setCrisisLevel(data.crisis.level ?? 'red');
+        setCrisisMessage(data.crisis.message ?? '');
+        setCrisisOpen(true);
+        onClose();
         return;
       }
 
@@ -349,6 +362,12 @@ export function VoiceCheckInModal({
         </div>
       </Modal>
       <UpgradeModal open={upgradeOpen} onClose={closeUpgrade} feature={upgradeFeature} />
+      <CrisisModal
+        open={crisisOpen}
+        level={crisisLevel}
+        message={crisisMessage}
+        onClose={() => setCrisisOpen(false)}
+      />
     </>
   );
 }

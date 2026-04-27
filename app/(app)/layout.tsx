@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import DashboardDisclaimer from '@/components/app/DashboardDisclaimer';
 import CursorGlow from '@/components/effects/CursorGlow';
 import { WhisperProvider } from '@/components/ui/WhisperToast';
 
@@ -12,6 +13,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <WhisperProvider>
       <CursorGlow />
       {children}
+      <DashboardDisclaimer />
     </WhisperProvider>
   );
 }

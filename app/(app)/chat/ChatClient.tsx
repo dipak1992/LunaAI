@@ -11,6 +11,8 @@ import TypingIndicator from '@/components/chat/TypingIndicator';
 import ChatInput from '@/components/chat/ChatInput';
 import MoonGlyph from '@/components/chat/MoonGlyph';
 import UpgradeModal from '@/components/subscription/UpgradeModal';
+import CrisisModal from '@/components/safety/CrisisModal';
+import { useCrisisDetection } from '@/lib/hooks/useCrisisDetection';
 import { useUpgradeModal } from '@/lib/hooks/useUpgradeModal';
 
 interface Props {
@@ -38,6 +40,7 @@ export default function ChatClient({ initialMessages }: Props) {
   });
 
   const isLoading = status === 'streaming' || status === 'submitted';
+  const crisis = useCrisisDetection(messages);
 
   const endRef = useRef<HTMLDivElement>(null);
 
@@ -167,6 +170,7 @@ export default function ChatClient({ initialMessages }: Props) {
       </div>
 
       <UpgradeModal open={upgradeOpen} onClose={closeUpgrade} feature={upgradeFeature} />
+      <CrisisModal open={crisis.open} onClose={crisis.close} message={crisis.message} />
     </div>
   );
 }

@@ -244,6 +244,19 @@ export default function DashboardPage() {
         <SeasonReportButton />
       </main>
 
+      {/* Floating Chat Button */}
+      <Link
+        href="/chat"
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full px-5 py-3.5 shadow-luna-lg transition-all duration-300 hover:scale-105 active:scale-95"
+        style={{
+          background: 'linear-gradient(135deg, #C8A8E9 0%, #FF9AAE 50%, #FFD4A3 100%)',
+          boxShadow: '0 8px 32px rgba(200,168,233,0.4), 0 4px 16px rgba(255,154,174,0.3)',
+        }}
+      >
+        <MessageCircle size={20} className="text-luna-ink" />
+        <span className="text-luna-ink font-medium text-[0.9375rem]">Talk to Luna</span>
+      </Link>
+
       {/* Voice Check-In Modal */}
       <VoiceCheckInModal
         open={modalOpen}

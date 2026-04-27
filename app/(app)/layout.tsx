@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import CursorGlow from '@/components/effects/CursorGlow';
+import { WhisperProvider } from '@/components/ui/WhisperToast';
 
 export const metadata: Metadata = {
   title: 'Dashboard — Luna',
@@ -6,5 +8,10 @@ export const metadata: Metadata = {
 };
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <WhisperProvider>
+      <CursorGlow />
+      {children}
+    </WhisperProvider>
+  );
 }

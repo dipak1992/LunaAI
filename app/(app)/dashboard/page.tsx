@@ -3,11 +3,14 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { BarChart2, MessageCircle } from 'lucide-react';
+import { BarChart2, BookMarked, MessageCircle } from 'lucide-react';
 import { VoiceCheckInModal } from '@/components/dashboard/VoiceCheckInModal';
 import Logo from '@/components/brand/Logo';
 import ForecastStrip from '@/components/forecast/ForecastStrip';
 import ManageSubscriptionButton from '@/components/subscription/ManageSubscriptionButton';
+import TodayHaiku from '@/components/haiku/TodayHaiku';
+import SeasonReportButton from '@/components/reports/SeasonReportButton';
+import SoundToggle from '@/components/settings/SoundToggle';
 import type { VoiceCheckInResult } from '@/types/voice';
 
 export default function DashboardPage() {
@@ -39,6 +42,14 @@ export default function DashboardPage() {
             <BarChart2 size={14} />
             <span>Insights</span>
           </Link>
+          <Link
+            href="/haikus"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-white/50 hover:text-white/90 transition-all duration-200 text-sm"
+          >
+            <BookMarked size={14} />
+            <span className="hidden sm:inline">Haikus</span>
+          </Link>
+          <SoundToggle />
           <ManageSubscriptionButton />
         </nav>
       </header>
@@ -134,6 +145,10 @@ export default function DashboardPage() {
         >
           <ForecastStrip />
         </motion.div>
+
+        <TodayHaiku />
+
+        <SeasonReportButton />
       </main>
 
       {/* Voice Check-In Modal */}

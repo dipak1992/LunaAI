@@ -6,11 +6,15 @@ import { Modal } from '@/components/ui/Modal';
 import { VoiceOrb } from '@/components/dashboard/VoiceOrb';
 import { WeatherScore } from '@/components/dashboard/WeatherScore';
 import { SparkleParticles, AmbientSparkles } from '@/components/dashboard/SparkleParticles';
+import SparkleBurst from '@/components/effects/SparkleBurst';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { formatDuration } from '@/lib/utils/audio';
 import type { VoiceCheckInResult } from '@/types/voice';
 import UpgradeModal from '@/components/subscription/UpgradeModal';
 import { useUpgradeModal } from '@/lib/hooks/useUpgradeModal';
+import { useHaptics } from '@/lib/hooks/useHaptics';
+import { playSound } from '@/lib/sound/player';
+import { useWhisper } from '@/components/ui/WhisperToast';
 
 interface VoiceCheckInModalProps {
   open: boolean;
@@ -31,6 +35,7 @@ export function VoiceCheckInModal({
   const [result, setResult] = useState<VoiceCheckInResult | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [showSparkles, setShowSparkles] = useState(false);
+  const [sparkleKey, setSparkleKey] = useState(0);
   const {
     open: upgradeOpen,
     feature: upgradeFeature,
@@ -39,6 +44,8 @@ export function VoiceCheckInModal({
   } = useUpgradeModal();
 
   const recorder = useVoiceRecorder();
+  const haptics = useHaptics();
+  const whisper = useWhisper();
 
   // Reset when modal opens
   useEffect(() => {
@@ -89,14 +96,19 @@ export function VoiceCheckInModal({
       setResult(data as VoiceCheckInResult);
       setView('result');
       setShowSparkles(true);
+      setSparkleKey(Date.now());
+      haptics('success');
+      playSound('chime', 0.25);
+      whisper('Your whisper is kept.', 'warm');
       setTimeout(() => setShowSparkles(false), 2000);
       onComplete?.(data as VoiceCheckInResult);
     } catch (err) {
+      haptics('error');
       const message = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
       setSubmitError(message);
       setView('error');
     }
-  }, [onClose, onComplete, promptUpgrade, recorder]);
+  }, [haptics, onClose, onComplete, promptUpgrade, recorder, whisper]);
 
   const handleOrbClick = useCallback(() => {
     if (recorder.state === 'idle' || recorder.state === 'error') {
@@ -127,6 +139,7 @@ export function VoiceCheckInModal({
         closeOnBackdrop={recorder.state === 'idle' || view === 'result' || view === 'error'}
       >
         <div className="relative overflow-hidden rounded-2xl">
+        <SparkleBurst trigger={sparkleKey} />
         {/* Ambient sparkles on result */}
         <AmbientSparkles active={view === 'result'} />
 

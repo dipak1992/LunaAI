@@ -21,10 +21,7 @@ import {
   CloudSun,
   Heart,
   Check,
-  Lock,
-  Moon,
   Play,
-  Stethoscope,
   X,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -32,6 +29,11 @@ import Header from '@/components/marketing/Header';
 import Footer from '@/components/marketing/Footer';
 import AuroraBackground from '@/components/marketing/AuroraBackground';
 import StarField from '@/components/marketing/StarField';
+import TrustStrip from '@/components/marketing/TrustStrip';
+import MedicalAdvisors from '@/components/marketing/MedicalAdvisors';
+import Testimonials from '@/components/marketing/Testimonials';
+import PrivacyPromise from '@/components/marketing/PrivacyPromise';
+import PressStrip from '@/components/marketing/PressStrip';
 import GlowButton from '@/components/ui/GlowButton';
 import FadeUp from '@/components/ui/FadeUp';
 
@@ -77,24 +79,6 @@ const STEPS = [
     icon: CloudSun,
     title: 'Understand your weather',
     desc: 'See your season. Prepare for tomorrow.',
-  },
-];
-
-const WHISPERS = [
-  {
-    text: 'For the first time, I felt heard without having to explain.',
-    name: 'Sofía, 47',
-    rotate: -3,
-  },
-  {
-    text: 'Luna told me a storm was coming. She was right — and I was ready.',
-    name: 'Anya, 52',
-    rotate: 2,
-  },
-  {
-    text: "It's not an app. It's someone who remembers me on hard days.",
-    name: 'Marie, 49',
-    rotate: -1,
   },
 ];
 
@@ -238,28 +222,7 @@ export default function LandingPage() {
               </div>
             </FadeUp>
 
-            <FadeUp delay={0.6}>
-              <div className="mt-9 flex max-w-3xl flex-col gap-4 text-sm text-white/70 md:mx-auto md:flex-row md:items-center md:justify-center md:gap-6 lg:mx-0 lg:justify-start">
-                <div className="flex items-center gap-2">
-                  <Stethoscope className="h-4 w-4 shrink-0 text-luna-aurora-mint" aria-hidden />
-                  <span>Built with OB-GYNs</span>
-                </div>
-                <span className="hidden md:inline" aria-hidden>
-                  •
-                </span>
-                <div className="flex items-center gap-2">
-                  <Lock className="h-4 w-4 shrink-0 text-luna-aurora-mint" aria-hidden />
-                  <span>Private by design — your voice never trains AI</span>
-                </div>
-                <span className="hidden md:inline" aria-hidden>
-                  •
-                </span>
-                <div className="flex items-center gap-2">
-                  <Moon className="h-4 w-4 shrink-0 text-luna-aurora-mint" aria-hidden />
-                  <span>Trusted by 5,000+ women</span>
-                </div>
-              </div>
-            </FadeUp>
+            <TrustStrip className="mt-9 md:mx-auto lg:mx-0" delay={0.6} />
           </div>
 
           <FadeUp delay={0.3} className="lg:justify-self-end">
@@ -367,37 +330,6 @@ export default function LandingPage() {
         </div>
       )}
 
-      {/* ── WHY IT'S DIFFERENT ── */}
-      <section id="story" className="relative px-6 py-32">
-        <div className="mx-auto max-w-6xl">
-          <FadeUp>
-            <div className="mb-16 text-center">
-              <p className="mb-4 text-sm tracking-[0.25em] uppercase text-white/60">
-                Why Luna
-              </p>
-              <h2 className="font-serif text-4xl md:text-5xl">
-                Not another tracker.{' '}
-                <span className="italic text-white/80">A companion.</span>
-              </h2>
-            </div>
-          </FadeUp>
-
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {FEATURES.map((f, i) => (
-              <FadeUp key={f.title} delay={i * 0.1}>
-                <div className="group rounded-3xl border border-white/5 bg-white/[0.03] p-8 backdrop-blur-sm transition-all duration-500 hover:border-white/10 hover:bg-white/[0.05]">
-                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5">
-                    <f.icon className="h-5 w-5 text-white/80" />
-                  </div>
-                  <h3 className="mb-3 font-serif text-xl">{f.title}</h3>
-                  <p className="text-[0.9375rem] leading-relaxed text-white/75">{f.desc}</p>
-                </div>
-              </FadeUp>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── HOW IT WORKS ── */}
       <section id="how" className="relative px-6 py-32">
         <div className="mx-auto max-w-4xl">
@@ -436,6 +368,37 @@ export default function LandingPage() {
                   </p>
                   <h3 className="mb-3 font-serif text-2xl">{s.title}</h3>
                   <p className="text-[0.9375rem] leading-relaxed text-white/75">{s.desc}</p>
+                </div>
+              </FadeUp>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── WHY IT'S DIFFERENT ── */}
+      <section id="story" className="relative px-6 py-32">
+        <div className="mx-auto max-w-6xl">
+          <FadeUp>
+            <div className="mb-16 text-center">
+              <p className="mb-4 text-sm tracking-[0.25em] uppercase text-white/60">
+                Why Luna
+              </p>
+              <h2 className="font-serif text-4xl md:text-5xl">
+                Not another tracker.{' '}
+                <span className="italic text-white/80">A companion.</span>
+              </h2>
+            </div>
+          </FadeUp>
+
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {FEATURES.map((f, i) => (
+              <FadeUp key={f.title} delay={i * 0.1}>
+                <div className="group rounded-3xl border border-white/5 bg-white/[0.03] p-8 backdrop-blur-sm transition-all duration-500 hover:border-white/10 hover:bg-white/[0.05]">
+                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5">
+                    <f.icon className="h-5 w-5 text-white/80" />
+                  </div>
+                  <h3 className="mb-3 font-serif text-xl">{f.title}</h3>
+                  <p className="text-[0.9375rem] leading-relaxed text-white/75">{f.desc}</p>
                 </div>
               </FadeUp>
             ))}
@@ -515,42 +478,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── WHISPER WALL ── */}
-      <section id="whispers" className="relative px-6 py-32">
-        <div className="mx-auto max-w-6xl">
-          <FadeUp>
-            <div className="mb-16 text-center">
-              <p className="mb-4 text-sm tracking-[0.25em] uppercase text-white/60">
-                Whispers
-              </p>
-              <h2 className="font-serif text-4xl md:text-5xl">
-                From women who&rsquo;ve{' '}
-                <span className="italic text-white/80">been heard.</span>
-              </h2>
-            </div>
-          </FadeUp>
-
-          <div className="flex flex-col items-center gap-6 md:flex-row md:items-start md:justify-center">
-            {WHISPERS.map((w, i) => (
-              <FadeUp key={w.name} delay={i * 0.15}>
-                <div
-                  className="max-w-xs rounded-2xl border border-luna-sunset/20 bg-luna-cream p-8 text-luna-ink"
-                  style={{
-                    transform: `rotate(${w.rotate}deg)`,
-                    boxShadow:
-                      '0 4px 24px rgba(0,0,0,0.2), 0 20px 60px rgba(0,0,0,0.3)',
-                  }}
-                >
-                  <p className="mb-4 font-serif text-lg italic leading-relaxed text-luna-ink">
-                    &ldquo;{w.text}&rdquo;
-                  </p>
-                  <p className="text-sm tracking-[0.15em] text-luna-ink/70">— {w.name}</p>
-                </div>
-              </FadeUp>
-            ))}
-          </div>
-        </div>
-      </section>
+      <MedicalAdvisors />
+      <Testimonials />
+      <PrivacyPromise />
+      <PressStrip />
 
       {/* ── PRICING ── */}
       <section id="pricing" className="relative px-6 py-32">

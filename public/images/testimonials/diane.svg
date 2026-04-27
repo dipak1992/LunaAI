@@ -1,0 +1,7 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diane placeholder avatar">
+  <rect width="200" height="200" rx="100" fill="#0B0B14"/>
+  <circle cx="100" cy="100" r="94" fill="#A8D8C9" fill-opacity="0.14"/>
+  <circle cx="100" cy="82" r="34" fill="#FAF7F2" fill-opacity="0.86"/>
+  <path d="M45 165C56 126 75 108 100 108C125 108 144 126 155 165" fill="#FAF7F2" fill-opacity="0.86"/>
+  <text x="100" y="176" text-anchor="middle" fill="#C8A8E9" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="700">DR</text>
+</svg>

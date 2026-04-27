@@ -1,13 +1,14 @@
 'use client';
 
+import { Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
 
 /**
- * Shows a warm welcome banner on the dashboard when user arrives
- * from the trial flow (?welcome=true query param).
+ * Inner component that reads search params.
+ * Must be wrapped in <Suspense> at the call site.
  */
-export function WelcomeBanner({ name }: { name?: string }) {
+function WelcomeBannerInner({ name }: { name?: string }) {
   const searchParams = useSearchParams();
   const isWelcome = searchParams.get('welcome') === 'true';
 
@@ -34,9 +35,22 @@ export function WelcomeBanner({ name }: { name?: string }) {
         transition={{ delay: 0.9 }}
         className="text-white/60 text-sm sm:text-base"
       >
-        Luna remembers your first whisper. She&apos;s here whenever you need her — 
+        Luna remembers your first whisper. She&apos;s here whenever you need her —
         morning, midnight, or anywhere in between.
       </motion.p>
     </motion.div>
+  );
+}
+
+/**
+ * Shows a warm welcome banner on the dashboard when user arrives
+ * from the trial flow (?welcome=true query param).
+ * Wraps inner component in Suspense to satisfy Next.js static prerender.
+ */
+export function WelcomeBanner({ name }: { name?: string }) {
+  return (
+    <Suspense fallback={null}>
+      <WelcomeBannerInner name={name} />
+    </Suspense>
   );
 }

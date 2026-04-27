@@ -769,3 +769,38 @@
     -webkit-backdrop-filter: blur(10px);
   }
 }
+
+/* ========================================
+   CHAT UTILITIES
+   ======================================== */
+
+.input-luna {
+  width: 100%;
+  border-radius: 9999px;
+  border: 1px solid rgba(232, 228, 220, 0.15);
+  background-color: rgba(232, 228, 220, 0.04);
+  padding: 1rem 1.5rem;
+  color: var(--color-luna-cream);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  outline: none;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.input-luna::placeholder {
+  color: rgba(232, 228, 220, 0.4);
+}
+
+.input-luna:focus {
+  border-color: rgba(200, 168, 233, 0.5);
+  background-color: rgba(232, 228, 220, 0.06);
+}
+
+@keyframes dot-bounce {
+  0%, 80%, 100% { transform: translateY(0);    opacity: 0.4; }
+  40%            { transform: translateY(-4px); opacity: 1;   }
+}
+
+.luna-dot {
+  animation: dot-bounce 1.2s infinite ease-in-out;
+}

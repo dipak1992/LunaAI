@@ -56,6 +56,12 @@ export default function Header() {
         {/* CTA buttons */}
         <div className="flex items-center gap-4">
           <Link
+            href="/dashboard"
+            className="hidden md:block text-sm text-white/50 hover:text-white/90 transition-colors duration-300"
+          >
+            Dashboard
+          </Link>
+          <Link
             href="/login"
             className="hidden md:block text-sm text-white/50 hover:text-white/90 transition-colors duration-300"
           >

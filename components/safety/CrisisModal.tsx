@@ -85,7 +85,7 @@ export default function CrisisModal({
               <p className="text-xs uppercase tracking-[0.25em] text-luna-aurora-pink/70">
                 {isEmergency ? 'You are not alone' : 'Gentle support'}
               </p>
-              <h2 className="mt-3 font-serif text-3xl font-light text-luna-cream">
+              <h2 className="mt-3 font-serif text-3xl text-luna-cream">
                 Please reach someone who can be with you.
               </h2>
 

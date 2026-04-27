@@ -59,7 +59,7 @@ export default function HaikuCollectionPage() {
           <p className="mb-3 text-xs uppercase tracking-[0.25em] text-white/30">
             Your collection
           </p>
-          <h1 className="font-serif text-4xl font-light text-luna-cream md:text-5xl">
+          <h1 className="font-serif text-4xl text-luna-cream md:text-5xl">
             Saved <span className="italic text-white/60">whispers.</span>
           </h1>
         </motion.div>

@@ -33,7 +33,7 @@ function StatCard({ icon, label, value, sub, color, delay = 0 }: StatCardProps) 
         <span style={{ color }}>{icon}</span>
       </div>
       <div>
-        <div className="text-2xl font-fraunces font-light" style={{ color }}>
+        <div className="text-2xl font-fraunces" style={{ color }}>
           {value}
         </div>
         <div className="text-xs text-white/50 mt-0.5">{label}</div>

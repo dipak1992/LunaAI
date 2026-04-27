@@ -120,7 +120,7 @@ export default function UpgradeModal({
                 <Logo size={36} animated={false} iconOnly />
               </div>
 
-              <h2 className="font-serif text-3xl font-light leading-tight text-luna-cream">
+              <h2 className="font-serif text-3xl leading-tight text-luna-cream">
                 {displayTitle}
               </h2>
               <p className="mt-4 text-sm leading-6 text-luna-whisper/65">{displayMessage}</p>

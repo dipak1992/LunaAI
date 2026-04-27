@@ -27,7 +27,7 @@ export default function LoginPage() {
       className="flex flex-col items-center"
     >
       {/* Headline */}
-      <h1 className="font-serif font-light text-3xl sm:text-4xl md:text-5xl text-center mb-3">
+      <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-center mb-3">
         Welcome back
       </h1>
       <p className="text-poetic text-center mb-8 sm:mb-12">

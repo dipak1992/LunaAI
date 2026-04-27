@@ -75,7 +75,7 @@ export default function Logo({
       {/* ── Wordmark ── */}
       {!iconOnly && (
         <motion.span
-          className="font-serif font-light tracking-wide text-aurora"
+          className="font-serif tracking-wide text-aurora"
           style={{ fontSize: size * 0.6 }}
           initial={animated ? { opacity: 0, x: -8 } : { opacity: 1, x: 0 }}
           animate={{ opacity: 1, x: 0 }}

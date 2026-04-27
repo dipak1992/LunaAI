@@ -142,7 +142,7 @@ export default function OnboardingPage() {
             className="flex flex-col items-center"
           >
             {/* Title + subtitle */}
-            <h1 className="font-serif text-4xl md:text-5xl font-light text-center mb-3 text-balance">
+            <h1 className="font-serif text-4xl md:text-5xl text-center mb-3 text-balance">
               {STEPS[step].title}
             </h1>
             <p className="text-poetic text-center mb-10">

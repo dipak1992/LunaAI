@@ -153,7 +153,7 @@ export default function LandingPage() {
         </FadeUp>
 
         <FadeUp delay={0.25}>
-          <h1 className="mb-6 max-w-3xl font-serif text-5xl font-light leading-tight md:text-7xl">
+          <h1 className="mb-6 max-w-3xl font-serif text-5xl leading-tight md:text-7xl">
             Your body&rsquo;s{' '}
             <span
               className="italic"
@@ -206,7 +206,7 @@ export default function LandingPage() {
               <p className="mb-4 text-sm tracking-[0.25em] uppercase text-white/60">
                 Why Luna
               </p>
-              <h2 className="font-serif text-4xl font-light md:text-5xl">
+              <h2 className="font-serif text-4xl md:text-5xl">
                 Not another tracker.{' '}
                 <span className="italic text-white/80">A companion.</span>
               </h2>
@@ -220,7 +220,7 @@ export default function LandingPage() {
                   <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5">
                     <f.icon className="h-5 w-5 text-white/80" />
                   </div>
-                  <h3 className="mb-3 font-serif text-xl font-light">{f.title}</h3>
+                  <h3 className="mb-3 font-serif text-xl">{f.title}</h3>
                   <p className="text-[0.9375rem] leading-relaxed text-white/75">{f.desc}</p>
                 </div>
               </FadeUp>
@@ -237,7 +237,7 @@ export default function LandingPage() {
               <p className="mb-4 text-sm tracking-[0.25em] uppercase text-white/60">
                 How it works
               </p>
-              <h2 className="font-serif text-4xl font-light md:text-5xl">
+              <h2 className="font-serif text-4xl md:text-5xl">
                 Three gentle steps.
               </h2>
             </div>
@@ -265,7 +265,7 @@ export default function LandingPage() {
                   <p className="mb-1 text-sm tracking-[0.2em] uppercase text-white/60">
                     Step {i + 1}
                   </p>
-                  <h3 className="mb-3 font-serif text-2xl font-light">{s.title}</h3>
+                  <h3 className="mb-3 font-serif text-2xl">{s.title}</h3>
                   <p className="text-[0.9375rem] leading-relaxed text-white/75">{s.desc}</p>
                 </div>
               </FadeUp>
@@ -281,7 +281,7 @@ export default function LandingPage() {
             <p className="mb-4 text-sm tracking-[0.25em] uppercase text-white/60">
               Try the whisper
             </p>
-            <h2 className="mb-16 font-serif text-4xl font-light md:text-5xl">
+            <h2 className="mb-16 font-serif text-4xl md:text-5xl">
               Press &amp; hold to whisper to Luna.
             </h2>
           </FadeUp>
@@ -354,7 +354,7 @@ export default function LandingPage() {
               <p className="mb-4 text-sm tracking-[0.25em] uppercase text-white/60">
                 Whispers
               </p>
-              <h2 className="font-serif text-4xl font-light md:text-5xl">
+              <h2 className="font-serif text-4xl md:text-5xl">
                 From women who&rsquo;ve{' '}
                 <span className="italic text-white/80">been heard.</span>
               </h2>
@@ -372,7 +372,7 @@ export default function LandingPage() {
                       '0 4px 24px rgba(0,0,0,0.2), 0 20px 60px rgba(0,0,0,0.3)',
                   }}
                 >
-                  <p className="mb-4 font-serif text-lg font-light italic leading-relaxed text-luna-ink">
+                  <p className="mb-4 font-serif text-lg italic leading-relaxed text-luna-ink">
                     &ldquo;{w.text}&rdquo;
                   </p>
                   <p className="text-sm tracking-[0.15em] text-luna-ink/70">— {w.name}</p>
@@ -391,7 +391,7 @@ export default function LandingPage() {
               <p className="mb-4 text-sm tracking-[0.25em] uppercase text-white/60">
                 Pricing
               </p>
-              <h2 className="font-serif text-4xl font-light md:text-5xl">
+              <h2 className="font-serif text-4xl md:text-5xl">
                 Choose your moon.
               </h2>
             </div>
@@ -417,7 +417,7 @@ export default function LandingPage() {
                     {p.name}
                   </p>
                   <div className="mb-6 flex items-baseline gap-1">
-                    <span className="font-serif text-4xl font-light">{p.price}</span>
+                    <span className="font-serif text-4xl">{p.price}</span>
                     {p.period && (
                       <span className="text-sm text-white/65">{p.period}</span>
                     )}
@@ -458,7 +458,7 @@ export default function LandingPage() {
         />
 
         <FadeUp>
-          <h2 className="relative mb-8 font-serif text-5xl font-light leading-tight md:text-6xl lg:text-7xl">
+          <h2 className="relative mb-8 font-serif text-5xl leading-tight md:text-6xl lg:text-7xl">
             Your story is waiting{' '}
             <br className="hidden md:block" />
             to be{' '}

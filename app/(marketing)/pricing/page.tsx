@@ -137,7 +137,7 @@ export default function PricingPage() {
       <section className="relative px-6 pb-16 pt-36 text-center md:pb-20 md:pt-44">
         <FadeUp>
           <p className="mb-4 text-xs uppercase tracking-[0.25em] text-white/35">Pricing</p>
-          <h1 className="mx-auto max-w-3xl font-serif text-5xl font-light leading-tight md:text-7xl">
+          <h1 className="mx-auto max-w-3xl font-serif text-5xl leading-tight md:text-7xl">
             Choose your <span className="italic text-luna-aurora-pink">moon.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-base leading-7 text-white/50">
@@ -193,12 +193,12 @@ export default function PricingPage() {
                 )}
 
                 <div className="pr-24">
-                  <h2 className="font-serif text-3xl font-light">{plan.name}</h2>
+                  <h2 className="font-serif text-3xl">{plan.name}</h2>
                   <p className="mt-2 text-sm text-white/45">{plan.tagline}</p>
                 </div>
 
                 <div className="mt-8 flex items-end gap-2">
-                  <span className="font-serif text-5xl font-light">${plan.price[cycle]}</span>
+                  <span className="font-serif text-5xl">${plan.price[cycle]}</span>
                   {plan.price[cycle] > 0 && (
                     <span className="pb-2 text-sm text-white/45">
                       /{cycle === 'monthly' ? 'mo' : 'yr'}
@@ -238,7 +238,7 @@ export default function PricingPage() {
           <FadeUp>
             <div className="mb-8 text-center">
               <p className="mb-3 text-xs uppercase tracking-[0.25em] text-white/30">Questions</p>
-              <h2 className="font-serif text-4xl font-light">
+              <h2 className="font-serif text-4xl">
                 Gently <span className="italic text-white/60">answered.</span>
               </h2>
             </div>

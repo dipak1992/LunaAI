@@ -245,16 +245,21 @@
 
   body {
     background-color: #0A0E27;
-    color: white;
+    color: rgba(255 255 255 / 0.95);
     font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    font-weight: 400;
     font-feature-settings: 'rlig' 1, 'calt' 1, 'ss01' 1;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
   }
 
   h1, h2, h3, h4 {
     font-family: var(--font-serif);
-    font-weight: 300;
-    letter-spacing: -0.02em;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: white;
   }
 
   h1 { font-size: 3rem; }
@@ -276,12 +281,12 @@
   p {
     font-size: 1.0625rem;
     line-height: 1.8;
-    color: rgba(255 255 255 / 0.9);
+    color: rgba(255 255 255 / 0.92);
     font-weight: 400;
   }
 
   @media (min-width: 768px) {
-    p { font-size: 1.125rem; }
+    p { font-size: 1.125rem; line-height: 1.85; }
   }
 
   ::selection {
@@ -446,7 +451,8 @@
     font-family: var(--font-serif);
     font-weight: 400;
     font-style: italic;
-    color: rgba(255 255 255 / 0.85);
+    font-size: 1.0625rem;
+    color: rgba(255 255 255 / 0.9);
   }
 
   /* ── Inputs ── */
@@ -469,12 +475,12 @@
     width: 100%;
     background: transparent;
     border: none;
-    border-bottom: 1px solid rgba(255 255 255 / 0.2);
+    border-bottom: 1px solid rgba(255 255 255 / 0.25);
     padding: 0.75rem 0;
     color: white;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     font-family: var(--font-serif);
-    font-weight: 300;
+    font-weight: 400;
     transition: all 300ms;
   }
   .input-underline::placeholder { color: rgba(255 255 255 / 0.5); }

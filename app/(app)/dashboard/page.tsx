@@ -11,6 +11,7 @@ import TodayHaiku from '@/components/haiku/TodayHaiku';
 import SeasonReportButton from '@/components/reports/SeasonReportButton';
 import SoundToggle from '@/components/settings/SoundToggle';
 import { createClient } from '@/lib/supabase/client';
+import { WelcomeBanner } from '@/components/trial/WelcomeBanner';
 import type { VoiceCheckInResult } from '@/types/voice';
 
 export default function DashboardPage() {
@@ -144,6 +145,9 @@ export default function DashboardPage() {
 
       {/* Main */}
       <main className="flex-1 flex flex-col items-center px-5 py-10 sm:py-12 gap-8 sm:gap-10 max-w-2xl mx-auto w-full">
+        {/* Trial welcome banner (shows when ?welcome=true) */}
+        <WelcomeBanner name={userName} />
+
         {/* Welcome + Greeting */}
         <motion.div
           className="text-center w-full"

@@ -266,6 +266,41 @@ Luna's long-term memory uses a hybrid approach:
 
 ---
 
+## 🎯 One Free Whisper (Trial Flow)
+
+A no-signup conversion funnel that lets visitors experience Luna before creating an account.
+
+### How It Works
+
+1. **Landing CTA** → "Try Luna Free" links to `/trial`
+2. **Welcome state** → Intro copy explaining the free whisper
+3. **Record state** → Voice orb (Whisper API) or text input
+4. **Result state** → Luna's response + personalized haiku
+5. **Soft gate** → Emotional signup modal with inline form
+6. **Conversion** → Anonymous auth → permanent user via `updateUser()`
+7. **Dashboard** → `?welcome=true` shows warm welcome banner
+
+### Technical Details
+
+| Component | Path |
+|-----------|------|
+| Trial page | `app/(marketing)/trial/page.tsx` |
+| State machine | `components/trial/TrialExperience.tsx` |
+| Soft gate modal | `components/trial/SoftGateModal.tsx` |
+| Welcome banner | `components/trial/WelcomeBanner.tsx` |
+| API route | `app/api/trial/check-in/route.ts` |
+| DB migration | `supabase/migrations/20250603_anonymous_trial_support.sql` |
+
+### Safety & Limits
+
+- **Rate limit**: 3 requests/IP/hour (in-memory)
+- **Usage cap**: 1 check-in per anonymous user
+- **Crisis detection**: Full pipeline active during trial
+- **Anonymous cleanup**: Cron deletes anonymous users after 30 days
+- **Supabase requirement**: Enable "Allow anonymous sign-ins" in Auth settings
+
+---
+
 ## 🚢 Deployment
 
 Deploy to Vercel:

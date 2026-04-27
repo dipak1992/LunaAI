@@ -216,7 +216,7 @@ export default function LandingPage() {
               <div className="mt-10 flex flex-col gap-4 sm:flex-row md:justify-center lg:justify-start">
                 <div className="flex w-full flex-col items-stretch sm:w-auto sm:items-center">
                   <GlowButton
-                    href="/dashboard?trial=true"
+                    href="/trial"
                     variant="primary"
                     className="min-h-11 w-full px-8 sm:w-auto"
                   >

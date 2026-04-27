@@ -29,7 +29,7 @@ export async function GET(req: Request) {
   const { data: rawLogs, error: logsError } = await (supabase as any)
     .from('symptom_logs')
     .select(
-      'log_date, weather_score, severity, energy_level, sleep_quality, triggers, emotional_tone, logged_at'
+      'log_date, weather_score, severity, energy_level, sleep_quality, triggers, emotional_tone, created_at'
     )
     .eq('user_id', user.id)
     .gte('log_date', from)
@@ -48,7 +48,7 @@ export async function GET(req: Request) {
     sleep_quality: number | null;
     triggers: string[] | null;   // jsonb array — Supabase deserialises to JS array
     emotional_tone: string | null;
-    logged_at: string;
+    created_at: string;
   }> = rawLogs ?? [];
 
   // ── Aggregate into DaySummary[] ───────────────────────────────────────────
@@ -92,7 +92,7 @@ export async function GET(req: Request) {
       avg_sleep:         avg(entries.map(e => e.sleep_quality)),
       all_triggers:      allTriggers,
       dominant_tone:     dominantTone,
-      first_log_at:      entries[0].logged_at,
+      first_log_at:      entries[0].created_at,
     });
   }
 

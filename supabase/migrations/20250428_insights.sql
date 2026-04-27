@@ -15,7 +15,8 @@ ALTER TABLE public.symptom_logs
   ADD COLUMN IF NOT EXISTS sleep_quality  smallint,
   ADD COLUMN IF NOT EXISTS severity       smallint,
   ADD COLUMN IF NOT EXISTS mood           text,
-  ADD COLUMN IF NOT EXISTS notes          text;
+  ADD COLUMN IF NOT EXISTS notes          text,
+  ADD COLUMN IF NOT EXISTS logged_at      timestamptz DEFAULT now();
 
 -- ============================================================
 -- Step 2: daily_summaries view
@@ -52,7 +53,7 @@ SELECT
     ORDER BY COUNT(*) DESC
     LIMIT 1
   )                               AS dominant_tone,
-  MIN(logged_at)                  AS first_log_at
+  MIN(COALESCE(logged_at, created_at))  AS first_log_at
 FROM symptom_logs sl
 GROUP BY user_id, log_date;
 

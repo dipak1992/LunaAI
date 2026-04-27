@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Logo from '@/components/brand/Logo';
 
 const NAV_LINKS = [
@@ -14,6 +14,7 @@ const NAV_LINKS = [
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -21,61 +22,148 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Close menu on route change / resize
+  useEffect(() => {
+    const onResize = () => { if (window.innerWidth >= 768) setMenuOpen(false); };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
   return (
-    <motion.header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? 'bg-luna-ink/80 backdrop-blur-xl border-b border-white/5'
-          : 'bg-transparent'
-      }`}
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-        <Link
-          href="/"
-          className="transition-opacity hover:opacity-85"
-          aria-label="Luna home"
-        >
-          <Logo size={34} animated={false} />
-        </Link>
+    <>
+      <motion.header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          scrolled || menuOpen
+            ? 'bg-luna-ink/90 backdrop-blur-xl border-b border-white/5'
+            : 'bg-transparent'
+        }`}
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
+          {/* Logo */}
+          <Link
+            href="/"
+            className="transition-opacity hover:opacity-85 shrink-0"
+            aria-label="Luna home"
+          >
+            <Logo size={32} animated={false} />
+          </Link>
 
-        {/* Nav links */}
-        <nav className="hidden md:flex items-center gap-8">
-          {NAV_LINKS.map((link) => (
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-8">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm text-white/50 hover:text-white/90 transition-colors duration-300 tracking-wide"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Desktop CTA */}
+          <div className="hidden md:flex items-center gap-4">
             <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm text-white/50 hover:text-white/90 transition-colors duration-300 tracking-wide"
+              href="/login"
+              className="text-sm text-white/50 hover:text-white/90 transition-colors duration-300"
             >
-              {link.label}
+              Sign in
             </Link>
-          ))}
-        </nav>
+            <Link
+              href="/signup"
+              className="rounded-full bg-luna-cream px-5 py-2.5 text-sm font-medium text-luna-ink hover:bg-white transition-colors duration-300"
+            >
+              Begin free
+            </Link>
+          </div>
 
-        {/* CTA buttons */}
-        <div className="flex items-center gap-4">
-          <Link
-            href="/dashboard"
-            className="hidden md:block text-sm text-white/50 hover:text-white/90 transition-colors duration-300"
-          >
-            Dashboard
-          </Link>
-          <Link
-            href="/login"
-            className="hidden md:block text-sm text-white/50 hover:text-white/90 transition-colors duration-300"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/signup"
-            className="rounded-full bg-luna-cream px-5 py-2.5 text-sm font-medium text-luna-ink hover:bg-white transition-colors duration-300"
-          >
-            Begin free
-          </Link>
+          {/* Mobile right side */}
+          <div className="flex md:hidden items-center gap-3">
+            <Link
+              href="/login"
+              className="text-sm text-white/60 hover:text-white transition-colors duration-300"
+            >
+              Sign in
+            </Link>
+            {/* Hamburger */}
+            <button
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              className="flex flex-col justify-center items-center w-9 h-9 gap-1.5 rounded-lg hover:bg-white/5 transition-colors"
+            >
+              <motion.span
+                animate={menuOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
+                transition={{ duration: 0.25 }}
+                className="block w-5 h-px bg-white/70 origin-center"
+              />
+              <motion.span
+                animate={menuOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
+                transition={{ duration: 0.2 }}
+                className="block w-5 h-px bg-white/70"
+              />
+              <motion.span
+                animate={menuOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
+                transition={{ duration: 0.25 }}
+                className="block w-5 h-px bg-white/70 origin-center"
+              />
+            </button>
+          </div>
         </div>
-      </div>
-    </motion.header>
+      </motion.header>
+
+      {/* Mobile drawer */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed top-[60px] left-0 right-0 z-40 bg-luna-ink/95 backdrop-blur-xl border-b border-white/5 md:hidden"
+          >
+            <nav className="flex flex-col px-6 py-6 gap-1">
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="py-3 text-base text-white/60 hover:text-white transition-colors duration-200 border-b border-white/5 last:border-0"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <div className="pt-4">
+                <Link
+                  href="/signup"
+                  onClick={() => setMenuOpen(false)}
+                  className="block w-full text-center rounded-full bg-luna-cream px-5 py-3 text-sm font-medium text-luna-ink hover:bg-white transition-colors duration-300"
+                >
+                  Begin free
+                </Link>
+              </div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Backdrop */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            key="backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-30 md:hidden"
+            onClick={() => setMenuOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+    </>
   );
 }

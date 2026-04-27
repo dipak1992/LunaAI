@@ -27,10 +27,10 @@ export default function SignupPage() {
       className="flex flex-col items-center"
     >
       {/* Headline */}
-      <h1 className="font-serif font-light text-4xl md:text-5xl text-center mb-3 text-aurora">
+      <h1 className="font-serif font-light text-3xl sm:text-4xl md:text-5xl text-center mb-3 text-aurora">
         Begin your story
       </h1>
-      <p className="text-poetic text-center mb-12">
+      <p className="text-poetic text-center mb-8 sm:mb-12">
         Every journey through change deserves a companion who listens.
       </p>
 

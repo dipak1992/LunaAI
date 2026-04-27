@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import Logo from '@/components/brand/Logo';
 
 const NAV_LINKS = [
   { label: 'Story', href: '/about' },
@@ -32,12 +33,12 @@ export default function Header() {
       transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
-        {/* Logo wordmark */}
         <Link
           href="/"
-          className="font-serif text-xl font-light tracking-wide text-luna-cream hover:opacity-80 transition-opacity"
+          className="transition-opacity hover:opacity-85"
+          aria-label="Luna home"
         >
-          Luna
+          <Logo size={34} animated={false} />
         </Link>
 
         {/* Nav links */}

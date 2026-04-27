@@ -9,9 +9,9 @@ import AuroraBackground from '@/components/marketing/AuroraBackground';
 import Message from '@/components/chat/Message';
 import TypingIndicator from '@/components/chat/TypingIndicator';
 import ChatInput from '@/components/chat/ChatInput';
-import MoonGlyph from '@/components/chat/MoonGlyph';
 import UpgradeModal from '@/components/subscription/UpgradeModal';
 import CrisisModal from '@/components/safety/CrisisModal';
+import Logo from '@/components/brand/Logo';
 import { useCrisisDetection } from '@/lib/hooks/useCrisisDetection';
 import { useUpgradeModal } from '@/lib/hooks/useUpgradeModal';
 
@@ -90,10 +90,7 @@ export default function ChatClient({ initialMessages }: Props) {
 
       {/* Header */}
       <header className="relative z-10 flex items-center justify-center border-b border-luna-whisper/10 bg-luna-night/60 px-6 py-4 backdrop-blur-xl">
-        <div className="flex items-center gap-3">
-          <MoonGlyph size={20} />
-          <span className="font-serif text-lg italic text-luna-cream">Luna</span>
-        </div>
+        <Logo size={30} animated={false} />
       </header>
 
       {/* Messages */}
@@ -108,7 +105,7 @@ export default function ChatClient({ initialMessages }: Props) {
               className="mt-20 text-center"
             >
               <div className="mb-8 flex justify-center">
-                <MoonGlyph size={56} />
+                <Logo size={64} animated={false} iconOnly />
               </div>
               <h2 className="mb-4 font-serif text-3xl italic text-luna-cream md:text-4xl">
                 I&apos;m here.

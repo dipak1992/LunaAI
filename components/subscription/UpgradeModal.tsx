@@ -1,8 +1,9 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { Sparkles, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useState } from 'react';
+import Logo from '@/components/brand/Logo';
 import type { UpgradeFeature } from '@/lib/hooks/useUpgradeModal';
 
 interface UpgradeModalProps {
@@ -116,7 +117,7 @@ export default function UpgradeModal({
 
             <div className="relative">
               <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/5">
-                <Sparkles className="h-6 w-6 text-luna-aurora-pink" />
+                <Logo size={36} animated={false} iconOnly />
               </div>
 
               <h2 className="font-serif text-3xl font-light leading-tight text-luna-cream">

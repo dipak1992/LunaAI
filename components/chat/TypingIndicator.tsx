@@ -1,11 +1,11 @@
-import MoonGlyph from './MoonGlyph';
+import Logo from '@/components/brand/Logo';
 
 export default function TypingIndicator() {
   return (
     <div className="flex items-start gap-3">
       {/* Avatar */}
       <div className="mt-1 flex-shrink-0 w-7 h-7 rounded-full bg-gradient-to-br from-luna-aurora-lilac to-luna-aurora-pink flex items-center justify-center">
-        <MoonGlyph size={14} />
+        <Logo size={18} animated={false} iconOnly />
       </div>
 
       {/* Bubble */}

@@ -365,19 +365,17 @@ export default function LandingPage() {
             {WHISPERS.map((w, i) => (
               <FadeUp key={w.name} delay={i * 0.15}>
                 <div
-                  className="max-w-xs rounded-2xl p-8"
+                  className="max-w-xs rounded-2xl border border-luna-sunset/20 bg-luna-cream p-8 text-luna-ink"
                   style={{
-                    background: '#FAF7F2',
-                    color: '#0B0B14',
                     transform: `rotate(${w.rotate}deg)`,
                     boxShadow:
                       '0 4px 24px rgba(0,0,0,0.2), 0 20px 60px rgba(0,0,0,0.3)',
                   }}
                 >
-                  <p className="mb-4 font-serif text-lg font-light italic leading-relaxed">
+                  <p className="mb-4 font-serif text-lg font-light italic leading-relaxed text-luna-ink">
                     &ldquo;{w.text}&rdquo;
                   </p>
-                  <p className="text-xs tracking-[0.15em] text-black/40">— {w.name}</p>
+                  <p className="text-xs tracking-[0.15em] text-luna-ink/55">— {w.name}</p>
                 </div>
               </FadeUp>
             ))}

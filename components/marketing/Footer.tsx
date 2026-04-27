@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Logo from '@/components/brand/Logo';
 
 const COLUMNS = [
   {
@@ -41,7 +42,9 @@ export default function Footer() {
         <div className="mb-16 grid grid-cols-2 gap-12 md:grid-cols-5">
           {/* Brand column */}
           <div className="col-span-2 md:col-span-1">
-            <p className="mb-4 font-serif text-2xl font-light text-luna-cream">Luna</p>
+            <Link href="/" className="mb-4 inline-flex transition-opacity hover:opacity-85">
+              <Logo size={34} animated={false} />
+            </Link>
             <p className="text-sm italic text-white/40 leading-relaxed">
               &ldquo;She is not a season ending. She is a sky rearranging.&rdquo;
             </p>

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import MoonGlyph from './MoonGlyph';
+import Logo from '@/components/brand/Logo';
 
 interface MessageProps {
   role: 'user' | 'assistant';
@@ -24,7 +24,7 @@ export default function Message({ role, content, index = 0, animate = true }: Me
       >
         {/* Luna avatar */}
         <div className="mt-1 flex-shrink-0 w-7 h-7 rounded-full bg-gradient-to-br from-luna-aurora-lilac to-luna-aurora-pink flex items-center justify-center">
-          <MoonGlyph size={14} />
+          <Logo size={18} animated={false} iconOnly />
         </div>
 
         {/* Bubble */}

@@ -51,7 +51,15 @@ export interface Database {
         Row: {
           id: string;
           user_id: string;
+          log_date: string;           // YYYY-MM-DD
           logged_at: string;
+          transcript: string | null;
+          ai_summary: string | null;
+          luna_response: string | null;
+          weather_score: number | null;
+          emotional_tone: string | null;
+          triggers: string[];
+          remedies: string[];
           symptoms: Json;
           severity: number;
           mood: string | null;
@@ -63,9 +71,17 @@ export interface Database {
         Insert: {
           id?: string;
           user_id: string;
+          log_date?: string;
           logged_at?: string;
-          symptoms: Json;
-          severity: number;
+          transcript?: string | null;
+          ai_summary?: string | null;
+          luna_response?: string | null;
+          weather_score?: number | null;
+          emotional_tone?: string | null;
+          triggers?: string[];
+          remedies?: string[];
+          symptoms?: Json;
+          severity?: number;
           mood?: string | null;
           energy_level?: number | null;
           sleep_quality?: number | null;
@@ -75,7 +91,15 @@ export interface Database {
         Update: {
           id?: string;
           user_id?: string;
+          log_date?: string;
           logged_at?: string;
+          transcript?: string | null;
+          ai_summary?: string | null;
+          luna_response?: string | null;
+          weather_score?: number | null;
+          emotional_tone?: string | null;
+          triggers?: string[];
+          remedies?: string[];
           symptoms?: Json;
           severity?: number;
           mood?: string | null;

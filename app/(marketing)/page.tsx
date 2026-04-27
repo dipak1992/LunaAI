@@ -147,7 +147,7 @@ export default function LandingPage() {
         </motion.div>
 
         <FadeUp delay={0.1}>
-          <p className="mb-4 text-xs tracking-[0.25em] uppercase text-white/40">
+          <p className="mb-4 text-sm tracking-[0.25em] uppercase text-white/65">
             Introducing Luna
           </p>
         </FadeUp>
@@ -172,7 +172,7 @@ export default function LandingPage() {
         </FadeUp>
 
         <FadeUp delay={0.4}>
-          <p className="mb-10 max-w-xl text-lg text-white/50 font-light leading-relaxed">
+          <p className="mb-10 max-w-xl text-lg text-white/80 font-normal leading-relaxed">
             Menopause isn&rsquo;t a problem to solve. It&rsquo;s a season to understand.
           </p>
         </FadeUp>
@@ -190,8 +190,8 @@ export default function LandingPage() {
 
         {/* Scroll hint */}
         <motion.p
-          className="absolute bottom-8 text-xs tracking-[0.2em] text-white/20"
-          animate={{ opacity: [0.3, 0.7, 0.3] }}
+          className="absolute bottom-8 text-sm tracking-[0.2em] text-white/40"
+          animate={{ opacity: [0.4, 0.8, 0.4] }}
           transition={{ duration: 3, repeat: Infinity }}
         >
           scroll gently ↓
@@ -203,12 +203,12 @@ export default function LandingPage() {
         <div className="mx-auto max-w-6xl">
           <FadeUp>
             <div className="mb-16 text-center">
-              <p className="mb-4 text-xs tracking-[0.25em] uppercase text-white/30">
+              <p className="mb-4 text-sm tracking-[0.25em] uppercase text-white/60">
                 Why Luna
               </p>
               <h2 className="font-serif text-4xl font-light md:text-5xl">
                 Not another tracker.{' '}
-                <span className="italic text-white/60">A companion.</span>
+                <span className="italic text-white/80">A companion.</span>
               </h2>
             </div>
           </FadeUp>
@@ -218,10 +218,10 @@ export default function LandingPage() {
               <FadeUp key={f.title} delay={i * 0.1}>
                 <div className="group rounded-3xl border border-white/5 bg-white/[0.03] p-8 backdrop-blur-sm transition-all duration-500 hover:border-white/10 hover:bg-white/[0.05]">
                   <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5">
-                    <f.icon className="h-5 w-5 text-white/60" />
+                    <f.icon className="h-5 w-5 text-white/80" />
                   </div>
                   <h3 className="mb-3 font-serif text-xl font-light">{f.title}</h3>
-                  <p className="text-sm leading-relaxed text-white/40">{f.desc}</p>
+                  <p className="text-[0.9375rem] leading-relaxed text-white/75">{f.desc}</p>
                 </div>
               </FadeUp>
             ))}
@@ -234,7 +234,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-4xl">
           <FadeUp>
             <div className="mb-20 text-center">
-              <p className="mb-4 text-xs tracking-[0.25em] uppercase text-white/30">
+              <p className="mb-4 text-sm tracking-[0.25em] uppercase text-white/60">
                 How it works
               </p>
               <h2 className="font-serif text-4xl font-light md:text-5xl">
@@ -256,17 +256,17 @@ export default function LandingPage() {
                         border: '1px solid rgba(255,255,255,0.1)',
                       }}
                     >
-                      <s.icon className="h-7 w-7 text-white/70" />
+                      <s.icon className="h-7 w-7 text-white/85" />
                     </div>
-                    <span className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-xs text-white/50">
+                    <span className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-sm text-white/70">
                       {i + 1}
                     </span>
                   </div>
-                  <p className="mb-1 text-xs tracking-[0.2em] uppercase text-white/30">
+                  <p className="mb-1 text-sm tracking-[0.2em] uppercase text-white/60">
                     Step {i + 1}
                   </p>
                   <h3 className="mb-3 font-serif text-2xl font-light">{s.title}</h3>
-                  <p className="text-sm leading-relaxed text-white/40">{s.desc}</p>
+                  <p className="text-[0.9375rem] leading-relaxed text-white/75">{s.desc}</p>
                 </div>
               </FadeUp>
             ))}
@@ -278,7 +278,7 @@ export default function LandingPage() {
       <section className="relative px-6 py-32">
         <div className="mx-auto max-w-2xl text-center">
           <FadeUp>
-            <p className="mb-4 text-xs tracking-[0.25em] uppercase text-white/30">
+            <p className="mb-4 text-sm tracking-[0.25em] uppercase text-white/60">
               Try the whisper
             </p>
             <h2 className="mb-16 font-serif text-4xl font-light md:text-5xl">
@@ -339,7 +339,7 @@ export default function LandingPage() {
           </FadeUp>
 
           <FadeUp delay={0.3}>
-            <p className="mt-8 text-xs text-white/25 italic">
+            <p className="mt-8 text-sm text-white/55 italic">
               (real listening begins when you sign in)
             </p>
           </FadeUp>
@@ -351,12 +351,12 @@ export default function LandingPage() {
         <div className="mx-auto max-w-6xl">
           <FadeUp>
             <div className="mb-16 text-center">
-              <p className="mb-4 text-xs tracking-[0.25em] uppercase text-white/30">
+              <p className="mb-4 text-sm tracking-[0.25em] uppercase text-white/60">
                 Whispers
               </p>
               <h2 className="font-serif text-4xl font-light md:text-5xl">
                 From women who&rsquo;ve{' '}
-                <span className="italic text-white/60">been heard.</span>
+                <span className="italic text-white/80">been heard.</span>
               </h2>
             </div>
           </FadeUp>
@@ -375,7 +375,7 @@ export default function LandingPage() {
                   <p className="mb-4 font-serif text-lg font-light italic leading-relaxed text-luna-ink">
                     &ldquo;{w.text}&rdquo;
                   </p>
-                  <p className="text-xs tracking-[0.15em] text-luna-ink/55">— {w.name}</p>
+                  <p className="text-sm tracking-[0.15em] text-luna-ink/70">— {w.name}</p>
                 </div>
               </FadeUp>
             ))}
@@ -388,7 +388,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-5xl">
           <FadeUp>
             <div className="mb-16 text-center">
-              <p className="mb-4 text-xs tracking-[0.25em] uppercase text-white/30">
+              <p className="mb-4 text-sm tracking-[0.25em] uppercase text-white/60">
                 Pricing
               </p>
               <h2 className="font-serif text-4xl font-light md:text-5xl">
@@ -413,20 +413,20 @@ export default function LandingPage() {
                     </span>
                   )}
 
-                  <p className="mb-2 text-xs tracking-[0.2em] uppercase text-white/40">
+                  <p className="mb-2 text-sm tracking-[0.2em] uppercase text-white/65">
                     {p.name}
                   </p>
                   <div className="mb-6 flex items-baseline gap-1">
                     <span className="font-serif text-4xl font-light">{p.price}</span>
                     {p.period && (
-                      <span className="text-sm text-white/40">{p.period}</span>
+                      <span className="text-sm text-white/65">{p.period}</span>
                     )}
                   </div>
 
                   <ul className="mb-8 flex-1 space-y-3">
                     {p.features.map((f) => (
-                      <li key={f} className="flex items-center gap-3 text-sm text-white/60">
-                        <Check className="h-4 w-4 shrink-0 text-white/30" />
+                      <li key={f} className="flex items-center gap-3 text-[0.9375rem] text-white/80">
+                        <Check className="h-4 w-4 shrink-0 text-white/60" />
                         {f}
                       </li>
                     ))}
@@ -484,7 +484,7 @@ export default function LandingPage() {
         </FadeUp>
 
         <FadeUp delay={0.35}>
-          <p className="mt-6 text-xs text-white/25">
+          <p className="mt-6 text-sm text-white/55">
             No credit card. No noise. Just you, heard.
           </p>
         </FadeUp>

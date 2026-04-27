@@ -30,23 +30,23 @@ export default function DashboardPage() {
         <nav className="flex items-center gap-3">
           <Link
             href="/chat"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-white/50 hover:text-white/90 transition-all duration-200 text-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-white/75 hover:text-white transition-all duration-200 text-[0.9375rem]"
           >
-            <MessageCircle size={14} />
+            <MessageCircle size={15} />
             <span>Chat</span>
           </Link>
           <Link
             href="/insights"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-white/50 hover:text-white/90 transition-all duration-200 text-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-white/75 hover:text-white transition-all duration-200 text-[0.9375rem]"
           >
-            <BarChart2 size={14} />
+            <BarChart2 size={15} />
             <span>Insights</span>
           </Link>
           <Link
             href="/haikus"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-white/50 hover:text-white/90 transition-all duration-200 text-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-white/75 hover:text-white transition-all duration-200 text-[0.9375rem]"
           >
-            <BookMarked size={14} />
+            <BookMarked size={15} />
             <span className="hidden sm:inline">Haikus</span>
           </Link>
           <SoundToggle />
@@ -66,7 +66,7 @@ export default function DashboardPage() {
           <h1 className="font-fraunces text-3xl md:text-4xl text-aurora mb-2">
             How are you today?
           </h1>
-          <p className="text-luna-mist/50 text-sm">
+          <p className="text-luna-mist/75 text-[0.9375rem]">
             Tap the orb to begin your daily check-in with Luna
           </p>
         </motion.div>
@@ -107,7 +107,7 @@ export default function DashboardPage() {
             transition={{ duration: 0.5 }}
           >
             <div className="flex items-center justify-between mb-3">
-              <p className="text-xs text-luna-mist/40 uppercase tracking-widest">
+              <p className="text-sm text-luna-mist/65 uppercase tracking-widest">
                 Latest check-in
               </p>
               <span className="text-lg">
@@ -118,7 +118,7 @@ export default function DashboardPage() {
                   : '🌧️'}
               </span>
             </div>
-            <p className="text-luna-mist/80 text-sm leading-relaxed italic font-fraunces">
+            <p className="text-luna-mist/90 text-[0.9375rem] leading-relaxed italic font-fraunces">
               &ldquo;{lastResult.lunaResponse}&rdquo;
             </p>
             {lastResult.triggers.length > 0 && (

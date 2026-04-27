@@ -46,7 +46,7 @@ export default function Footer() {
             <Link href="/" className="mb-4 inline-flex transition-opacity hover:opacity-85">
               <Logo size={34} animated={false} />
             </Link>
-            <p className="text-sm italic text-white/40 leading-relaxed">
+            <p className="text-[0.9375rem] italic text-white/65 leading-relaxed">
               &ldquo;She is not a season ending. She is a sky rearranging.&rdquo;
             </p>
           </div>
@@ -54,7 +54,7 @@ export default function Footer() {
           {/* Link columns */}
           {COLUMNS.map((col) => (
             <div key={col.title}>
-              <p className="mb-4 text-xs tracking-[0.25em] uppercase text-white/30">
+              <p className="mb-4 text-[0.8125rem] tracking-[0.25em] uppercase text-white/55">
                 {col.title}
               </p>
               <ul className="space-y-3">
@@ -62,7 +62,7 @@ export default function Footer() {
                   <li key={l.label}>
                     <Link
                       href={l.href}
-                      className="text-sm text-white/50 hover:text-white/90 transition-colors duration-300"
+                      className="text-[0.9375rem] text-white/75 hover:text-white transition-colors duration-300"
                     >
                       {l.label}
                     </Link>
@@ -75,10 +75,10 @@ export default function Footer() {
 
         {/* Bottom row */}
         <div className="flex flex-col gap-2 border-t border-white/5 pt-8 md:flex-row md:justify-between">
-          <p className="text-xs text-white/30">
+          <p className="text-sm text-white/55">
             &copy; {new Date().getFullYear()} Luna. Made with care.
           </p>
-          <p className="text-xs text-white/20">
+          <p className="text-sm text-white/45">
             Not a medical device. Always consult your clinician.
           </p>
         </div>

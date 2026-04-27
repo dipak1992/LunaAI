@@ -12,7 +12,7 @@ export default function AuthLayout({
       <div className="w-full max-w-md mb-8 sm:mb-10">
         <Link
           href="/"
-          className="inline-flex items-center gap-2 text-sm text-white/40 hover:text-white/70 transition-colors duration-300"
+          className="inline-flex items-center gap-2 text-[0.9375rem] text-white/60 hover:text-white/90 transition-colors duration-300"
           aria-label="Back to home"
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">

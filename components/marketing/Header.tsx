@@ -54,21 +54,21 @@ export default function Header() {
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm text-white/50 hover:text-white/90 transition-colors duration-300 tracking-wide"
-              >
-                {link.label}
-              </Link>
-            ))}
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-[0.9375rem] text-white/75 hover:text-white transition-colors duration-300 tracking-wide"
+                >
+                  {link.label}
+                </Link>
+              ))}
           </nav>
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center gap-4">
             <Link
               href="/login"
-              className="text-sm text-white/50 hover:text-white/90 transition-colors duration-300"
+              className="text-[0.9375rem] text-white/75 hover:text-white transition-colors duration-300"
             >
               Sign in
             </Link>
@@ -84,7 +84,7 @@ export default function Header() {
           <div className="flex md:hidden items-center gap-3">
             <Link
               href="/login"
-              className="text-sm text-white/60 hover:text-white transition-colors duration-300"
+              className="text-[0.9375rem] text-white/80 hover:text-white transition-colors duration-300"
             >
               Sign in
             </Link>
@@ -131,7 +131,7 @@ export default function Header() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className="py-3 text-base text-white/60 hover:text-white transition-colors duration-200 border-b border-white/5 last:border-0"
+                  className="py-3 text-[1.0625rem] text-white/85 hover:text-white transition-colors duration-200 border-b border-white/5 last:border-0"
                 >
                   {link.label}
                 </Link>

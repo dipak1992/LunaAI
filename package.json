@@ -16,6 +16,7 @@
     "@stripe/stripe-js": "^9.3.1",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.105.0",
+    "@vercel/og": "^0.11.1",
     "ai": "^6.0.168",
     "framer-motion": "^12.38.0",
     "howler": "^2.2.4",

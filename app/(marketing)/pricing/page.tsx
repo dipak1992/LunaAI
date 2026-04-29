@@ -182,9 +182,12 @@ export default function PricingPage() {
               <article
                 className={`relative flex h-full flex-col rounded-3xl border p-7 backdrop-blur-xl ${
                   plan.featured
-                    ? 'border-luna-aurora-pink/35 bg-white/[0.08] shadow-luna'
-                    : 'border-white/10 bg-white/[0.035]'
+                    ? 'border-luna-aurora-pink/40 bg-white/[0.08]'
+                    : 'border-white/10 bg-white/[0.04]'
                 }`}
+                style={plan.featured ? {
+                  boxShadow: '0 0 60px rgba(255,154,174,0.12), 0 4px 40px rgba(233,184,255,0.15)',
+                } : undefined}
               >
                 {plan.featured && (
                   <div className="absolute right-5 top-5 rounded-full bg-luna-cream px-3 py-1 text-xs font-medium text-luna-ink">

@@ -37,7 +37,7 @@ const COLUMNS = [
 
 export default function Footer() {
   return (
-    <footer className="relative border-t border-white/5 bg-luna-ink px-6 py-20">
+    <footer className="relative bg-luna-ink px-6 py-20" style={{ borderTop: '1px solid transparent', borderImage: 'linear-gradient(90deg, transparent, rgba(233,184,255,0.25), rgba(255,158,199,0.25), transparent) 1' }}>
       <div className="mx-auto max-w-7xl">
         {/* Top row */}
         <div className="mb-16 grid grid-cols-2 gap-12 md:grid-cols-5">

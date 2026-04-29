@@ -52,8 +52,8 @@
   --font-size-8xl:  6rem;
 
   /* ── Letter spacing ── */
-  --letter-spacing-whisper: 0.3em;
-  --letter-spacing-breath:  0.2em;
+  --letter-spacing-whisper: 0.2em;
+  --letter-spacing-breath:  0.15em;
 
   /* ── Background images / gradients ── */
   --background-image-aurora:         linear-gradient(135deg, #E9B8FF 0%, #FF9EC7 50%, #FFD4A3 100%);
@@ -328,32 +328,32 @@
 
   /* ── Glass Cards ── */
   .glass {
-    background: rgba(255 255 255 / 0.03);
+    background: rgba(255 255 255 / 0.04);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255 255 255 / 0.1);
+    border: 1px solid rgba(255 255 255 / 0.08);
     border-radius: 1.5rem;
   }
 
   .glass-hover {
-    background: rgba(255 255 255 / 0.03);
+    background: rgba(255 255 255 / 0.04);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255 255 255 / 0.1);
+    border: 1px solid rgba(255 255 255 / 0.08);
     border-radius: 1.5rem;
     transition: all 500ms var(--ease-luna);
   }
   .glass-hover:hover {
-    background: rgba(255 255 255 / 0.05);
-    border-color: rgba(255 255 255 / 0.2);
+    background: rgba(255 255 255 / 0.06);
+    border-color: rgba(255 255 255 / 0.18);
     box-shadow: var(--shadow-luna);
   }
 
   .glass-card {
-    background: rgba(255 255 255 / 0.03);
+    background: rgba(255 255 255 / 0.04);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255 255 255 / 0.1);
+    border: 1px solid rgba(255 255 255 / 0.08);
     border-radius: 1.5rem;
     padding: 2rem;
   }
@@ -386,7 +386,7 @@
   }
   .btn-primary:hover {
     transform: scale(1.02);
-    box-shadow: var(--shadow-luna-lg);
+    box-shadow: var(--shadow-luna-lg), 0 0 30px rgba(250,247,242,0.2);
   }
   .btn-primary:active { transform: scale(0.98); }
   .btn-primary::before {
@@ -767,7 +767,7 @@
   h1 { font-size: 3rem; }
   h2 { font-size: 2.25rem; }
 
-  .section { padding: 4rem 1rem; }
+  .section { padding: 5rem 1.25rem; }
 
   .frosted,
   .glass {

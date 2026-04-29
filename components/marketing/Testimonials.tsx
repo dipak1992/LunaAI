@@ -46,7 +46,16 @@ const TESTIMONIALS = [
 export default function Testimonials() {
   return (
     <section className="relative px-6 py-24 md:py-32">
-      <div className="mx-auto max-w-6xl">
+      {/* Warm organic background for human feel */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0"
+        aria-hidden="true"
+        style={{
+          background:
+            'radial-gradient(ellipse at 30% 50%, rgba(255,212,163,0.06) 0%, transparent 55%), radial-gradient(ellipse at 70% 60%, rgba(255,154,174,0.05) 0%, transparent 50%)',
+        }}
+      />
+      <div className="relative z-10 mx-auto max-w-6xl">
         <FadeUp>
           <div className="mx-auto mb-14 max-w-3xl text-center">
             <p className="mb-4 text-sm tracking-[0.25em] text-luna-aurora-lilac uppercase">

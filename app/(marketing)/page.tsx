@@ -175,6 +175,15 @@ export default function LandingPage() {
 
       {/* ── HERO ── */}
       <section className="relative flex min-h-screen items-center overflow-hidden px-6 py-20 pt-28">
+        {/* Warm hero background glow — simulates lifestyle warmth without requiring a photo */}
+        <div
+          className="pointer-events-none absolute inset-0 z-0"
+          aria-hidden="true"
+          style={{
+            background:
+              'radial-gradient(ellipse at 60% 40%, rgba(255,212,163,0.07) 0%, transparent 55%), radial-gradient(ellipse at 20% 70%, rgba(233,184,255,0.08) 0%, transparent 50%)',
+          }}
+        />
         <div className="mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-2">
           <div className="text-left md:text-center lg:text-left">
             <FadeUp delay={0}>
@@ -332,6 +341,15 @@ export default function LandingPage() {
 
       {/* ── HOW IT WORKS ── */}
       <section id="how" className="relative px-6 py-32">
+        {/* Subtle cool-toned background for contrast with hero */}
+        <div
+          className="pointer-events-none absolute inset-0 z-0"
+          aria-hidden="true"
+          style={{
+            background:
+              'radial-gradient(ellipse at 50% 50%, rgba(143,184,232,0.05) 0%, transparent 60%)',
+          }}
+        />
         <div className="mx-auto max-w-4xl">
           <FadeUp>
             <div className="mb-20 text-center">
@@ -377,6 +395,15 @@ export default function LandingPage() {
 
       {/* ── WHY IT'S DIFFERENT ── */}
       <section id="story" className="relative px-6 py-32">
+        {/* Warm rose glow for emotional resonance */}
+        <div
+          className="pointer-events-none absolute inset-0 z-0"
+          aria-hidden="true"
+          style={{
+            background:
+              'radial-gradient(ellipse at 80% 30%, rgba(255,154,174,0.06) 0%, transparent 55%), radial-gradient(ellipse at 20% 80%, rgba(200,168,233,0.06) 0%, transparent 50%)',
+          }}
+        />
         <div className="mx-auto max-w-6xl">
           <FadeUp>
             <div className="mb-16 text-center">
@@ -486,6 +513,15 @@ export default function LandingPage() {
 
       {/* ── PRICING ── */}
       <section id="pricing" className="relative px-6 py-32">
+        {/* Neutral clean background — let cards breathe */}
+        <div
+          className="pointer-events-none absolute inset-0 z-0"
+          aria-hidden="true"
+          style={{
+            background:
+              'radial-gradient(ellipse at 50% 0%, rgba(233,184,255,0.04) 0%, transparent 50%)',
+          }}
+        />
         <div className="mx-auto max-w-5xl">
           <FadeUp>
             <div className="mb-16 text-center">

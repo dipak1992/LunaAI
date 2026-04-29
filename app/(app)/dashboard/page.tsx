@@ -304,7 +304,7 @@ export default function DashboardPage() {
           <WelcomeBanner name={userName} />
         </div>
 
-        <section className="app-card-light overflow-hidden p-5 shadow-2xl shadow-black/16 sm:p-6 md:p-7">
+        <section className="app-card overflow-hidden p-5 sm:p-6 md:p-7">
           <motion.div
             className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr] lg:items-start"
             initial={{ opacity: 0, y: 20 }}
@@ -313,11 +313,11 @@ export default function DashboardPage() {
           >
             <div>
               {userName && (
-                <p className="mb-1 text-base text-luna-ink/68 sm:text-lg">
-                  {greeting()}, <span className="font-semibold text-luna-ink">{userName}</span>
+                <p className="mb-1 text-base text-white/68 sm:text-lg">
+                  {greeting()}, <span className="font-semibold text-white">{userName}</span>
                 </p>
               )}
-              <p className="mb-2 text-xs font-medium uppercase tracking-[0.14em] text-luna-ink/48">
+              <p className="mb-2 text-xs font-medium uppercase tracking-[0.14em] text-white/48">
                 Today&apos;s body weather
               </p>
               <div className="flex items-center gap-4">
@@ -330,10 +330,10 @@ export default function DashboardPage() {
                   <Mic className="h-8 w-8 text-white" aria-hidden="true" />
                 </button>
                 <div>
-                  <h1 className="font-serif text-3xl text-luna-ink sm:text-4xl">
+                  <h1 className="font-serif text-3xl text-white sm:text-4xl">
                     {weatherScore ? `${weatherScore}/10` : 'New day'}
                   </h1>
-                  <p className="mt-1 max-w-md text-sm leading-6 text-luna-ink/72">
+                  <p className="mt-1 max-w-md text-sm leading-6 text-white/72">
                     {weatherScore
                       ? mood
                         ? `${capitalize(mood)} weather, with Luna watching your patterns.`
@@ -397,7 +397,6 @@ export default function DashboardPage() {
 	              className="mt-5 w-full sm:mt-8"
 	            >
               <EmptyState
-                tone="light"
                 icon={<Mic className="h-5 w-5" aria-hidden="true" />}
                 title="Luna is ready to listen."
                 description="Your first check-in starts your private pattern history, whether you speak, type, or keep it short."
@@ -409,8 +408,8 @@ export default function DashboardPage() {
             </motion.div>
           )}
 
-          <div className="mx-auto mt-4 flex max-w-md items-start justify-center gap-2 rounded-lg border border-luna-ink/10 bg-white/60 px-3 py-2 text-xs leading-5 text-luna-ink/66">
-            <LockKeyhole className="mt-0.5 h-3.5 w-3.5 shrink-0 text-luna-storm" aria-hidden="true" />
+          <div className="mx-auto mt-4 flex max-w-md items-start justify-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-xs leading-5 text-white/60">
+            <LockKeyhole className="mt-0.5 h-3.5 w-3.5 shrink-0 text-luna-aurora-mint" aria-hidden="true" />
             <span>
               Transcript saved privately. You control your data.
               {checkInsUntilForecast > 0 && ` ${checkInsUntilForecast} more check-${checkInsUntilForecast === 1 ? 'in' : 'ins'} until forecast patterns get useful.`}
@@ -528,14 +527,14 @@ function MajorSectionLinks() {
 
 function SmartSuggestionCard({ suggestion }: { suggestion: { title: string; body: string; href: string; action: string } }) {
   return (
-    <div className="rounded-lg border border-luna-ink/10 bg-white/70 p-4 text-left">
-      <div className="mb-2 flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.12em] text-luna-ink/54">
-        <Sparkles className="h-4 w-4" aria-hidden="true" />
+    <div className="rounded-lg border border-white/10 bg-white/[0.04] p-4 text-left">
+      <div className="mb-2 flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.12em] text-white/50">
+        <Sparkles className="h-4 w-4 text-luna-aurora-mint" aria-hidden="true" />
         Smart suggestion
       </div>
-      <p className="text-sm font-semibold leading-5 text-luna-ink">{suggestion.title}</p>
-      <p className="mt-1 text-sm leading-6 text-luna-ink/70">{suggestion.body}</p>
-      <Link href={suggestion.href} className="mt-3 inline-flex text-sm font-semibold text-luna-storm hover:text-luna-ink">
+      <p className="text-sm font-semibold leading-5 text-white/92">{suggestion.title}</p>
+      <p className="mt-1 text-sm leading-6 text-white/68">{suggestion.body}</p>
+      <Link href={suggestion.href} className="mt-3 inline-flex text-sm font-semibold text-luna-aurora-mint hover:text-white">
         {suggestion.action}
       </Link>
     </div>
@@ -689,21 +688,21 @@ function ReportReadinessMeter({
   count: number;
 }) {
   return (
-    <div className="rounded-lg border border-luna-ink/10 bg-white/70 p-4 text-left">
+    <div className="app-card p-5 text-left">
       <div className="mb-3 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2 text-sm font-semibold text-luna-ink">
-          <FileText className="h-4 w-4 text-luna-storm" aria-hidden="true" />
+        <div className="flex items-center gap-2 text-sm font-semibold text-white/92">
+          <FileText className="h-4 w-4 text-luna-aurora-mint" aria-hidden="true" />
           Report readiness
         </div>
-        <span className="text-sm font-semibold text-luna-ink">{percentage}%</span>
+        <span className="text-sm font-semibold text-white">{percentage}%</span>
       </div>
-      <div className="h-2 rounded-full bg-luna-ink/10">
+      <div className="h-2 rounded-full bg-white/10">
         <div
-          className="h-full rounded-full bg-luna-storm"
+          className="h-full rounded-full bg-luna-aurora-mint"
           style={{ width: `${percentage}%` }}
         />
       </div>
-      <p className="mt-3 text-xs leading-5 text-luna-ink/66">
+      <p className="mt-3 text-xs leading-5 text-white/60">
         {count >= 14
           ? 'Ready for a useful clinician summary.'
           : `${Math.max(0, 14 - count)} more check-${14 - count === 1 ? 'in' : 'ins'} for a stronger clinician summary.`}
@@ -714,13 +713,13 @@ function ReportReadinessMeter({
 
 function WeeklyRecapCard({ recap }: { recap: string | null }) {
   return (
-    <div className="mt-5 rounded-lg border border-luna-ink/10 bg-white/70 p-4 text-left">
-      <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-luna-ink">
-        <Sparkles className="h-4 w-4 text-luna-storm" aria-hidden="true" />
+    <div className="app-card p-5 text-left">
+      <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-white/92">
+        <Sparkles className="h-4 w-4 text-luna-aurora-lilac" aria-hidden="true" />
         Weekly recap
       </div>
-      <p className="whitespace-pre-line text-sm leading-6 text-luna-ink/70">
-        {recap ?? 'Luna is preparing a grounded recap from this week’s logs.'}
+      <p className="whitespace-pre-line text-sm leading-6 text-white/72">
+        {recap ?? 'Luna is preparing a grounded recap from this week\u2019s logs.'}
       </p>
     </div>
   );
@@ -885,13 +884,13 @@ function TodayMetric({
 }) {
   return (
     <div
-      className="min-h-[76px] rounded-lg border border-luna-ink/10 bg-white/74 px-3 py-3 text-left"
+      className="min-h-[76px] rounded-lg border border-white/10 bg-white/[0.04] px-3 py-3 text-left"
     >
-      <span className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.12em] text-luna-ink/54">
+      <span className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.12em] text-white/50">
         {icon}
         {label}
       </span>
-      <span className="mt-2 block text-sm font-semibold leading-5 text-luna-ink">
+      <span className="mt-2 block text-sm font-semibold leading-5 text-white/92">
         {value}
       </span>
     </div>
@@ -917,18 +916,18 @@ function ActionButton({
       onClick={onClick}
       className={`flex min-h-16 items-center gap-3 rounded-lg border px-4 py-3 text-left transition-colors ${
         primary
-          ? 'border-luna-ink bg-luna-ink text-white hover:bg-luna-ink/88'
-          : 'border-luna-ink/10 bg-white/74 text-luna-ink hover:bg-white'
+          ? 'border-luna-aurora-mint/30 bg-luna-aurora-mint/10 text-white hover:bg-luna-aurora-mint/15'
+          : 'border-white/10 bg-white/[0.04] text-white hover:bg-white/[0.07]'
       }`}
     >
       <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
-        primary ? 'bg-white/12 text-white' : 'bg-luna-aurora-mint/18 text-luna-storm'
+        primary ? 'bg-luna-aurora-mint/20 text-luna-aurora-mint' : 'bg-white/8 text-white/70'
       }`}>
         <Icon className="h-4 w-4" aria-hidden="true" />
       </span>
       <span>
-        <span className="block text-sm font-semibold leading-5">{label}</span>
-        <span className={`block text-xs leading-5 ${primary ? 'text-white/70' : 'text-luna-ink/60'}`}>
+        <span className="block text-sm font-semibold leading-5 text-white/92">{label}</span>
+        <span className="block text-xs leading-5 text-white/58">
           {description}
         </span>
       </span>

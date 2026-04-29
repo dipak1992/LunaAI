@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, Sparkles } from 'lucide-react';
+import { Activity, Edit3, Mic, Sparkles } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import { VoiceOrb } from '@/components/dashboard/VoiceOrb';
 import { WeatherScore } from '@/components/dashboard/WeatherScore';
@@ -26,6 +26,14 @@ interface VoiceCheckInModalProps {
 }
 
 type ModalView = 'record' | 'result' | 'error';
+type InputMode = 'voice' | 'text';
+
+const QUICK_CHECK_INS = [
+  'hot flashes',
+  'poor sleep',
+  'anxious',
+  'low energy',
+];
 
 export function VoiceCheckInModal({
   open,
@@ -41,6 +49,10 @@ export function VoiceCheckInModal({
   const [crisisOpen, setCrisisOpen] = useState(false);
   const [crisisMessage, setCrisisMessage] = useState('');
   const [crisisLevel, setCrisisLevel] = useState<'yellow' | 'amber' | 'red'>('red');
+  const [inputMode, setInputMode] = useState<InputMode>('voice');
+  const [textInput, setTextInput] = useState('');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [submittingText, setSubmittingText] = useState(false);
   const {
     open: upgradeOpen,
     feature: upgradeFeature,
@@ -52,25 +64,39 @@ export function VoiceCheckInModal({
   const haptics = useHaptics();
   const whisper = useWhisper();
 
-  // Reset when modal opens
-  useEffect(() => {
-    if (open) {
-      setView('record');
-      setResult(null);
-      setSubmitError(null);
-      setShowSparkles(false);
-      recorder.reset();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  const handleCheckInResponse = useCallback(async (res: Response) => {
+    const data = await res.json();
 
-  // When audioBlob is ready (state = 'processing'), submit to API
-  useEffect(() => {
-    if (recorder.state === 'processing' && recorder.audioBlob) {
-      submitAudio(recorder.audioBlob);
+    if (res.status === 402 || data?.error === 'limit_reached') {
+      recorder.reset();
+      onClose();
+      promptUpgrade('checkin');
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recorder.state, recorder.audioBlob]);
+
+    if (data?.crisis) {
+      recorder.reset();
+      setCrisisLevel(data.crisis.level ?? 'red');
+      setCrisisMessage(data.crisis.message ?? '');
+      setCrisisOpen(true);
+      onClose();
+      return;
+    }
+
+    if (!res.ok) {
+      throw new Error(data.error ?? `Server error ${res.status}`);
+    }
+
+    setResult(data as VoiceCheckInResult);
+    setView('result');
+    setShowSparkles(true);
+    setSparkleKey(Date.now());
+    haptics('success');
+    playSound('chime', 0.25);
+    whisper('Your check-in is saved.', 'warm');
+    setTimeout(() => setShowSparkles(false), 2000);
+    onComplete?.(data as VoiceCheckInResult);
+  }, [haptics, onClose, onComplete, promptUpgrade, recorder, whisper]);
 
   const submitAudio = useCallback(async (blob: Blob) => {
     setSubmitError(null);
@@ -85,44 +111,65 @@ export function VoiceCheckInModal({
         body: formData,
       });
 
-      const data = await res.json();
-
-      if (res.status === 402 || data?.error === 'limit_reached') {
-        recorder.reset();
-        onClose();
-        promptUpgrade('checkin');
-        return;
-      }
-
-      if (data?.crisis) {
-        recorder.reset();
-        setCrisisLevel(data.crisis.level ?? 'red');
-        setCrisisMessage(data.crisis.message ?? '');
-        setCrisisOpen(true);
-        onClose();
-        return;
-      }
-
-      if (!res.ok) {
-        throw new Error(data.error ?? `Server error ${res.status}`);
-      }
-
-      setResult(data as VoiceCheckInResult);
-      setView('result');
-      setShowSparkles(true);
-      setSparkleKey(Date.now());
-      haptics('success');
-      playSound('chime', 0.25);
-      whisper('Your whisper is kept.', 'warm');
-      setTimeout(() => setShowSparkles(false), 2000);
-      onComplete?.(data as VoiceCheckInResult);
+      await handleCheckInResponse(res);
     } catch (err) {
       haptics('error');
       const message = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
       setSubmitError(message);
       setView('error');
     }
-  }, [haptics, onClose, onComplete, promptUpgrade, recorder, whisper]);
+  }, [handleCheckInResponse, haptics]);
+
+  // Reset when modal opens
+  useEffect(() => {
+    if (!open) return;
+    const id = window.setTimeout(() => {
+      setView('record');
+      setResult(null);
+      setSubmitError(null);
+      setShowSparkles(false);
+      setTextInput('');
+      setSelectedTags([]);
+      setSubmittingText(false);
+      recorder.reset();
+    }, 0);
+    return () => window.clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  // When audioBlob is ready (state = 'processing'), submit to API
+  useEffect(() => {
+    if (recorder.state !== 'processing' || !recorder.audioBlob) return;
+    const blob = recorder.audioBlob;
+    const id = window.setTimeout(() => submitAudio(blob), 0);
+    return () => window.clearTimeout(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recorder.state, recorder.audioBlob]);
+
+  const submitText = useCallback(async () => {
+    const text = textInput.trim();
+    if ((!text && selectedTags.length === 0) || submittingText) return;
+
+    setSubmitError(null);
+    setSubmittingText(true);
+
+    try {
+      const res = await fetch('/api/voice-checkin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, quickTags: selectedTags }),
+      });
+
+      await handleCheckInResponse(res);
+    } catch (err) {
+      haptics('error');
+      const message = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
+      setSubmitError(message);
+      setView('error');
+    } finally {
+      setSubmittingText(false);
+    }
+  }, [handleCheckInResponse, haptics, selectedTags, submittingText, textInput]);
 
   const handleOrbClick = useCallback(() => {
     if (recorder.state === 'idle' || recorder.state === 'error') {
@@ -140,8 +187,17 @@ export function VoiceCheckInModal({
   const handleRetry = useCallback(() => {
     recorder.reset();
     setSubmitError(null);
+    setTextInput('');
+    setSelectedTags([]);
+    setSubmittingText(false);
     setView('record');
   }, [recorder]);
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags((current) =>
+      current.includes(tag) ? current.filter((item) => item !== tag) : [...current, tag],
+    );
+  };
 
   return (
     <>
@@ -150,7 +206,9 @@ export function VoiceCheckInModal({
         onClose={handleClose}
         maxWidth="max-w-md"
         ariaLabel="Voice check-in"
-        closeOnBackdrop={recorder.state === 'idle' || view === 'result' || view === 'error'}
+        closeOnBackdrop={
+          (recorder.state === 'idle' && !submittingText) || view === 'result' || view === 'error'
+        }
       >
         <div className="relative overflow-hidden rounded-2xl">
         <SparkleBurst trigger={sparkleKey} />
@@ -161,7 +219,7 @@ export function VoiceCheckInModal({
         <SparkleParticles active={showSparkles} originX={50} originY={40} count={20} />
 
         {/* Header */}
-        <div className="flex items-center justify-between px-6 pt-6 pb-4">
+	        <div className="flex items-center justify-between px-5 pt-5 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
           <div>
             <h2 className="font-fraunces text-xl text-luna-mist">
               {view === 'result' ? 'Your check-in' : 'How are you feeling?'}
@@ -184,68 +242,135 @@ export function VoiceCheckInModal({
         </div>
 
         {/* Body */}
-        <div className="px-6 pb-6">
+	        <div className="px-5 pb-5 sm:px-6 sm:pb-6">
           <AnimatePresence mode="wait">
             {/* ── Record view ── */}
             {view === 'record' && (
               <motion.div
                 key="record"
-                className="flex flex-col items-center gap-6 py-4"
+	                className="flex flex-col items-center gap-4 py-2 sm:gap-6 sm:py-4"
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -16 }}
                 transition={{ duration: 0.3 }}
               >
-                {/* Prompt text */}
-                <p className="text-center text-luna-mist/70 text-sm leading-relaxed max-w-xs">
-                  {recorder.state === 'idle' &&
-                    'Speak freely — share how your body feels, your mood, your sleep, anything on your mind.'}
-                  {recorder.state === 'requesting' && 'Requesting microphone access…'}
-                  {recorder.state === 'recording' && (
-                    <span className="text-luna-aurora-pink">
-                      Recording… {formatDuration(recorder.duration)}
-                    </span>
-                  )}
-                  {recorder.state === 'processing' && 'Luna is transcribing your words…'}
-                  {recorder.state === 'error' && (
-                    <span className="text-luna-rose">{recorder.error}</span>
-                  )}
-                </p>
+	                <div className="grid w-full grid-cols-2 gap-2 rounded-2xl bg-white/5 p-1">
+	                  {[
+	                    { value: 'voice' as const, label: 'Voice', icon: Mic },
+	                    { value: 'text' as const, label: 'Type', icon: Edit3 },
+	                  ].map(({ value, label, icon: Icon }) => (
+	                    <button
+	                      key={value}
+	                      type="button"
+	                      onClick={() => {
+	                        recorder.reset();
+	                        setInputMode(value);
+	                      }}
+	                      className={`flex min-h-11 items-center justify-center gap-2 rounded-xl text-sm transition-all ${
+	                        inputMode === value
+	                          ? 'bg-luna-cream text-luna-ink'
+	                          : 'text-luna-mist/60 hover:bg-white/5 hover:text-luna-mist'
+	                      }`}
+	                    >
+	                      <Icon className="h-4 w-4" aria-hidden="true" />
+	                      {label}
+	                    </button>
+	                  ))}
+	                </div>
 
-                {/* Orb */}
-                <VoiceOrb
-                  state={recorder.state}
-                  audioLevel={recorder.audioLevel}
-                  onClick={handleOrbClick}
-                  size={120}
-                />
+	                {/* Prompt text */}
+	                <p className="text-center text-luna-mist/70 text-sm leading-relaxed max-w-xs">
+	                  {inputMode === 'voice' && recorder.state === 'idle' &&
+	                    'Speak freely — share how your body feels, your mood, your sleep, anything on your mind.'}
+	                  {inputMode === 'voice' && recorder.state === 'requesting' && 'Requesting microphone access…'}
+	                  {inputMode === 'voice' && recorder.state === 'recording' && (
+	                    <span className="text-luna-aurora-pink">
+	                      Recording… {formatDuration(recorder.duration)}
+	                    </span>
+	                  )}
+	                  {inputMode === 'voice' && recorder.state === 'processing' && 'Luna is transcribing your words…'}
+	                  {inputMode === 'voice' && recorder.state === 'error' && (
+	                    <span className="text-luna-rose">{recorder.error}</span>
+	                  )}
+	                  {inputMode === 'text' &&
+	                    'Use the chips, add a few words, or both. Keep it quick.'}
+	                </p>
 
-                {/* Audio level bars when recording */}
-                {recorder.state === 'recording' && (
-                  <AudioLevelBars level={recorder.audioLevel} />
-                )}
+	                {inputMode === 'voice' ? (
+	                  <>
+	                    <VoiceOrb
+	                      state={recorder.state}
+	                      audioLevel={recorder.audioLevel}
+	                      onClick={handleOrbClick}
+	                      size={112}
+	                    />
 
-                {/* Tips */}
-                {recorder.state === 'idle' && (
-                  <p className="text-xs text-luna-mist/30 text-center">
-                    Tap the orb to begin · Tap again to stop
-                  </p>
-                )}
-              </motion.div>
-            )}
+	                    {recorder.state === 'recording' && (
+	                      <AudioLevelBars level={recorder.audioLevel} />
+	                    )}
+
+	                    {recorder.state === 'idle' && (
+	                      <p className="text-xs text-luna-mist/35 text-center">
+	                        Tap once to start. Tap again to stop.
+	                      </p>
+	                    )}
+	                  </>
+	                ) : (
+	                  <div className="w-full space-y-4">
+	                    <div className="grid grid-cols-2 gap-2">
+	                      {QUICK_CHECK_INS.map((tag) => {
+	                        const selected = selectedTags.includes(tag);
+	                        return (
+	                          <button
+	                            key={tag}
+	                            type="button"
+	                            onClick={() => toggleTag(tag)}
+	                            className={`min-h-11 rounded-xl border px-3 text-sm capitalize transition-all ${
+	                              selected
+	                                ? 'border-luna-aurora-pink/50 bg-luna-aurora-pink/15 text-luna-cream'
+	                                : 'border-white/10 bg-white/[0.03] text-luna-mist/65 hover:border-white/20 hover:text-luna-mist'
+	                            }`}
+	                          >
+	                            {tag}
+	                          </button>
+	                        );
+	                      })}
+	                    </div>
+
+	                    <textarea
+	                      value={textInput}
+	                      onChange={(event) => setTextInput(event.target.value)}
+	                      placeholder="Anything else Luna should know?"
+	                      rows={3}
+	                      disabled={submittingText}
+	                      className="min-h-24 w-full resize-none rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm leading-6 text-luna-mist placeholder:text-luna-mist/35 transition-colors focus:border-luna-aurora-pink/40 disabled:opacity-60"
+	                    />
+
+	                    <button
+	                      type="button"
+	                      onClick={submitText}
+	                      disabled={submittingText || (!textInput.trim() && selectedTags.length === 0)}
+	                      className="flex min-h-12 w-full items-center justify-center rounded-full bg-luna-cream px-5 text-sm font-semibold text-luna-ink transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-45"
+	                    >
+	                      {submittingText ? 'Saving check-in...' : 'Save check-in'}
+	                    </button>
+	                  </div>
+	                )}
+	              </motion.div>
+	            )}
 
             {/* ── Result view ── */}
             {view === 'result' && result && (
               <motion.div
                 key="result"
-                className="flex flex-col gap-5"
+	                className="flex flex-col gap-4 sm:gap-5"
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -16 }}
                 transition={{ duration: 0.4 }}
               >
                 {/* Weather score */}
-                <div className="flex justify-center py-2">
+	                <div className="flex justify-center py-1 sm:py-2">
                   <WeatherScore
                     score={result.weatherScore}
                     emotionalTone={result.emotionalTone}
@@ -263,7 +388,7 @@ export function VoiceCheckInModal({
                 </div>
 
                 {/* Transcript */}
-                <details className="group">
+	                <details className="group hidden sm:block">
                   <summary className="text-xs text-luna-mist/40 cursor-pointer hover:text-luna-mist/60 transition-colors list-none flex items-center gap-1">
                     <svg
                       width={12}

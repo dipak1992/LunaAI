@@ -91,7 +91,8 @@ export default function ForecastStrip() {
   );
 
   useEffect(() => {
-    loadLatest();
+    const id = window.setTimeout(() => loadLatest(), 0);
+    return () => window.clearTimeout(id);
   }, [loadLatest]);
 
   // Auto-generate if user has enough logs but no forecast yet
@@ -102,7 +103,8 @@ export default function ForecastStrip() {
       !data.forecast &&
       data.log_count >= data.min_required
     ) {
-      triggerGeneration(false);
+      const id = window.setTimeout(() => triggerGeneration(false), 0);
+      return () => window.clearTimeout(id);
     }
   }, [loading, data, triggerGeneration]);
 
@@ -280,6 +282,15 @@ function DayTile({
     >
       <motion.div
         tabIndex={0}
+        role="button"
+        aria-expanded={isHovered}
+        onClick={() => onHover(isHovered ? null : day.date)}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            onHover(isHovered ? null : day.date);
+          }
+        }}
         className={`flex cursor-pointer flex-col items-center gap-1.5 rounded-xl border p-2 transition-all outline-none md:p-3 ${
           isToday
             ? 'border-luna-aurora-lilac/40 bg-luna-aurora-lilac/5'

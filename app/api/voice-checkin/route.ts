@@ -44,21 +44,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // ── Parse multipart form data ─────────────────────────────────────────
-    const formData = await req.formData();
-    const audioFile = formData.get('audio') as File | null;
-
-    if (!audioFile || audioFile.size === 0) {
-      return NextResponse.json({ error: 'No audio file provided' }, { status: 400 });
-    }
-
-    // Max 25 MB (Whisper limit)
-    if (audioFile.size > 25 * 1024 * 1024) {
-      return NextResponse.json({ error: 'Audio file too large (max 25 MB)' }, { status: 400 });
-    }
-
     // ── Fetch user profile ────────────────────────────────────────────────
-    const { data: profile } = await (supabase as any)
+    const { data: profile } = await supabase
       .from('profiles')
       .select('name, menopause_stage')
       .eq('id', user.id)
@@ -67,21 +54,46 @@ export async function POST(req: NextRequest) {
     const userName: string = profile?.name ?? 'friend';
     const menopauseStage: string | null = profile?.menopause_stage ?? null;
 
-    // ── Whisper transcription ─────────────────────────────────────────────
     const openai = getOpenAIClient();
+    const contentType = req.headers.get('content-type') ?? '';
+    let transcript = '';
 
-    const transcription = await openai.audio.transcriptions.create({
-      file: audioFile,
-      model: WHISPER_CONFIG.model,
-      language: WHISPER_CONFIG.language,
-      temperature: WHISPER_CONFIG.temperature,
-    });
+    if (contentType.includes('application/json')) {
+      const body = (await req.json()) as { text?: string; quickTags?: string[] };
+      const text = body.text?.trim();
+      const tags = Array.isArray(body.quickTags) ? body.quickTags.filter(Boolean) : [];
+      transcript = [text, tags.length ? `Quick check-in tags: ${tags.join(', ')}` : '']
+        .filter(Boolean)
+        .join('\n\n')
+        .trim();
+    } else {
+      // ── Parse multipart form data ───────────────────────────────────────
+      const formData = await req.formData();
+      const audioFile = formData.get('audio') as File | null;
 
-    const transcript = transcription.text.trim();
+      if (!audioFile || audioFile.size === 0) {
+        return NextResponse.json({ error: 'No audio file provided' }, { status: 400 });
+      }
+
+      // Max 25 MB (Whisper limit)
+      if (audioFile.size > 25 * 1024 * 1024) {
+        return NextResponse.json({ error: 'Audio file too large (max 25 MB)' }, { status: 400 });
+      }
+
+      // ── Whisper transcription ───────────────────────────────────────────
+      const transcription = await openai.audio.transcriptions.create({
+        file: audioFile,
+        model: WHISPER_CONFIG.model,
+        language: WHISPER_CONFIG.language,
+        temperature: WHISPER_CONFIG.temperature,
+      });
+
+      transcript = transcription.text.trim();
+    }
 
     if (!transcript) {
       return NextResponse.json(
-        { error: 'Could not transcribe audio. Please speak clearly and try again.' },
+        { error: 'Please share a few words or choose a quick check-in tag.' },
         { status: 422 },
       );
     }
@@ -134,7 +146,7 @@ export async function POST(req: NextRequest) {
     // ── Persist to Supabase ───────────────────────────────────────────────
     const today = new Date().toISOString().split('T')[0];
 
-    const { data: logRow, error: insertError } = await (supabase as any)
+    const { data: logRow, error: insertError } = await supabase
       .from('symptom_logs')
       .insert({
         user_id: user.id,

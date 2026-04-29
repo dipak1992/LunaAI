@@ -21,7 +21,7 @@ interface Props {
 
 export default function ChatClient({ initialMessages }: Props) {
   const [input, setInput] = useState('');
-  const initialCount = useRef(initialMessages.length);
+  const initialMessageCount = initialMessages.length;
   const {
     open: upgradeOpen,
     feature: upgradeFeature,
@@ -152,8 +152,8 @@ export default function ChatClient({ initialMessages }: Props) {
                     key={m.id}
                     role={role}
                     content={content}
-                    index={Math.max(0, i - initialCount.current)}
-                    animate={i >= initialCount.current}
+                    index={Math.max(0, i - initialMessageCount)}
+                    animate={i >= initialMessageCount}
                   />
                 );
               })}
@@ -176,7 +176,7 @@ export default function ChatClient({ initialMessages }: Props) {
       </div>
 
       {/* Input dock */}
-      <div className="relative z-10 border-t border-luna-whisper/10 bg-luna-night/80 px-4 py-4 backdrop-blur-xl md:px-6 md:py-5">
+      <div className="relative z-10 border-t border-luna-whisper/10 bg-luna-night/80 px-4 pb-24 pt-4 backdrop-blur-xl md:px-6 md:py-5">
         <div className="mx-auto max-w-3xl">
           <ChatInput
             input={input}

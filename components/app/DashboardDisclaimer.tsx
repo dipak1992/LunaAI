@@ -12,7 +12,7 @@ export default function DashboardDisclaimer() {
   return (
     <>
       <motion.footer
-        className="relative z-10 border-t border-white/5 bg-luna-ink/80 px-6 py-6 text-center text-xs text-luna-whisper/45 backdrop-blur-xl"
+        className="relative z-10 border-t border-white/5 bg-luna-ink/80 px-6 pb-28 pt-6 text-center text-xs text-luna-whisper/45 backdrop-blur-xl sm:py-6"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}

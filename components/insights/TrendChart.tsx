@@ -90,12 +90,12 @@ export default function TrendChart({ days }: TrendChartProps) {
   return (
     <div className="w-full">
       {/* Metric tabs */}
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
         {METRICS.map(m => (
           <button
             key={m}
             onClick={() => setActiveMetric(m)}
-            className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
+            className={`min-h-11 rounded-full px-3 py-2 text-xs font-medium transition-all duration-200 sm:min-h-0 sm:py-1 ${
               activeMetric === m
                 ? 'text-luna-night'
                 : 'bg-white/5 text-white/50 hover:bg-white/10 hover:text-white/80'

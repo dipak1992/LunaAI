@@ -7,9 +7,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   BarChart2,
+  BatteryMedium,
   BookMarked,
   Cloud,
   CloudSun,
+  HeartPulse,
   LockKeyhole,
   Menu,
   MessageCircle,
@@ -33,9 +35,19 @@ import type { VoiceCheckInResult } from '@/types/voice';
 const NAV_ITEMS = [
   { href: '/chat', icon: MessageCircle, label: 'Chat' },
   { href: '/insights', icon: BarChart2, label: 'Insights' },
-  { href: '/haikus', icon: BookMarked, label: 'Haikus' },
+  { href: '/haikus', icon: BookMarked, label: 'Saved' },
   { href: '/settings', icon: Settings, label: 'Settings' },
 ];
+
+interface LatestLog {
+  weather_score: number | null;
+  mood: string | null;
+  sleep_quality: number | null;
+  energy_level: number | null;
+  triggers: string[] | null;
+  luna_response: string | null;
+  created_at: string;
+}
 
 export default function DashboardPage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -43,6 +55,7 @@ export default function DashboardPage() {
   const [userName, setUserName] = useState<string>('');
   const [menuOpen, setMenuOpen] = useState(false);
   const [checkInCount, setCheckInCount] = useState<number | null>(null);
+  const [latestLog, setLatestLog] = useState<LatestLog | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -65,13 +78,40 @@ export default function DashboardPage() {
           .select('*', { count: 'exact', head: true })
           .eq('user_id', user.id);
         setCheckInCount(count ?? 0);
+
+        const { data: latest } = await supabase
+          .from('symptom_logs')
+          .select('weather_score, mood, sleep_quality, energy_level, triggers, luna_response, created_at')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        setLatestLog((latest as LatestLog | null) ?? null);
       }
     }
     fetchUser();
   }, []);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('checkin') === 'true') {
+      window.setTimeout(() => setModalOpen(true), 0);
+      window.history.replaceState(null, '', '/dashboard');
+    }
+  }, []);
+
   const handleComplete = (result: VoiceCheckInResult) => {
     setLastResult(result);
+    setLatestLog({
+      weather_score: result.weatherScore,
+      mood: result.emotionalTone,
+      sleep_quality: null,
+      energy_level: null,
+      triggers: result.triggers,
+      luna_response: result.lunaResponse,
+      created_at: new Date().toISOString(),
+    });
     setModalOpen(false);
     // Increment count after a check-in
     setCheckInCount((prev) => (prev ?? 0) + 1);
@@ -85,6 +125,15 @@ export default function DashboardPage() {
   };
 
   const isFirstTime = checkInCount === 0;
+  const weatherScore = lastResult?.weatherScore ?? latestLog?.weather_score ?? null;
+  const mood = lastResult?.emotionalTone ?? latestLog?.mood ?? null;
+  const sleep = latestLog?.sleep_quality ?? null;
+  const topTrigger = lastResult?.triggers[0] ?? latestLog?.triggers?.[0] ?? null;
+  const nextAction = isFirstTime
+    ? 'Start with 30 seconds'
+    : topTrigger
+      ? `Soothe ${topTrigger}`
+      : 'Check in when ready';
 
   return (
     <div className="min-h-screen aurora-bg-subtle flex flex-col">
@@ -155,13 +204,13 @@ export default function DashboardPage() {
       )}
 
       {/* Main */}
-      <main className="mx-auto grid w-full max-w-6xl flex-1 gap-6 px-5 py-8 sm:py-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
+      <main className="mx-auto grid w-full max-w-6xl flex-1 gap-5 px-4 pb-24 pt-5 sm:gap-6 sm:px-5 sm:py-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
         {/* Trial welcome banner (shows when ?welcome=true) */}
         <div className="lg:col-span-2">
           <WelcomeBanner name={userName} />
         </div>
 
-        <section className="rounded-2xl border border-white/10 bg-luna-cream p-6 text-luna-ink shadow-2xl shadow-black/20 md:p-8">
+        <section className="rounded-2xl border border-white/10 bg-luna-cream p-5 text-luna-ink shadow-2xl shadow-black/20 sm:p-6 md:p-8">
           {/* Welcome + Greeting */}
           <motion.div
             className="text-center w-full"
@@ -174,14 +223,42 @@ export default function DashboardPage() {
                 {greeting()}, <span className="text-luna-ink font-semibold">{userName}</span>
               </p>
             )}
-            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-luna-ink mb-3">
-              {isFirstTime ? 'Your journey begins here.' : 'How are you today?'}
-            </h1>
-            <p className="mx-auto max-w-md text-luna-ink/68 text-base sm:text-[1.0625rem]">
-              {isFirstTime
-                ? 'Tap the orb and speak freely — Luna is listening'
-                : 'Tap the orb to begin your daily check-in with Luna'}
-            </p>
+	            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-luna-ink mb-2 sm:mb-3">
+	              {isFirstTime ? 'Your journey begins here.' : 'How are you today?'}
+	            </h1>
+	            <p className="mx-auto max-w-md text-sm leading-6 text-luna-ink/68 sm:text-[1.0625rem]">
+	              {isFirstTime
+	                ? 'Speak, type, or tap what feels true right now.'
+	                : 'A quick read on today, then Luna can listen.'}
+	            </p>
+	          </motion.div>
+
+          <motion.div
+            className="mt-5 grid grid-cols-2 gap-2 sm:hidden"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.15 }}
+          >
+            <TodayMetric
+              icon={<CloudSun className="h-4 w-4" aria-hidden="true" />}
+              label="Weather"
+              value={weatherScore ? `${weatherScore}/10` : 'New'}
+            />
+            <TodayMetric
+              icon={<Moon className="h-4 w-4" aria-hidden="true" />}
+              label="Sleep"
+              value={sleep ? `${sleep}/10` : 'Tap to log'}
+            />
+            <TodayMetric
+              icon={<HeartPulse className="h-4 w-4" aria-hidden="true" />}
+              label="Mood"
+              value={mood ? capitalize(mood) : 'Open'}
+            />
+            <TodayMetric
+              icon={<BatteryMedium className="h-4 w-4" aria-hidden="true" />}
+              label="Next"
+              value={nextAction}
+            />
           </motion.div>
 
           {/* Streak indicator — only show after first check-in */}
@@ -190,7 +267,7 @@ export default function DashboardPage() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="mx-auto mt-6 flex w-fit items-center gap-2 rounded-full bg-luna-aurora-mint/20 px-4 py-2 text-sm text-luna-ink/70"
+	              className="mx-auto mt-4 flex w-fit items-center gap-2 rounded-full bg-luna-aurora-mint/20 px-4 py-2 text-sm text-luna-ink/70 sm:mt-6"
             >
               <Moon className="h-4 w-4 text-luna-storm" aria-hidden="true" />
               <span>
@@ -207,10 +284,10 @@ export default function DashboardPage() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="mt-8 w-full overflow-hidden rounded-2xl border border-luna-ink/10 bg-white text-center"
-            >
-            {/* Illustration banner */}
-            <div className="relative w-full" style={{ aspectRatio: '2 / 1' }}>
+	              className="mt-5 w-full overflow-hidden rounded-2xl border border-luna-ink/10 bg-white text-center sm:mt-8"
+	            >
+	            {/* Illustration banner */}
+	            <div className="relative hidden w-full sm:block" style={{ aspectRatio: '2 / 1' }}>
               <Image
                 src="/images/dashboard-empty.png"
                 alt="Luna is ready to listen"
@@ -229,7 +306,7 @@ export default function DashboardPage() {
               />
             </div>
             {/* Card body */}
-            <div className="px-6 pb-6 sm:px-8 sm:pb-8 -mt-8 relative z-10">
+	            <div className="relative z-10 px-5 py-5 sm:-mt-8 sm:px-8 sm:pb-8 sm:pt-0">
               <h2 className="font-serif text-xl sm:text-2xl text-luna-ink mb-3">
                 Luna is ready to listen.
               </h2>
@@ -260,13 +337,13 @@ export default function DashboardPage() {
           {/* Central orb trigger */}
           <motion.button
             onClick={() => setModalOpen(true)}
-            className="voice-orb mx-auto mt-8 w-32 h-32 sm:w-36 sm:h-36 rounded-full flex items-center justify-center cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-luna-aurora-pink focus-visible:ring-offset-2 focus-visible:ring-offset-luna-deep"
+            className="voice-orb mx-auto mt-5 flex h-24 w-24 cursor-pointer items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-luna-aurora-pink focus-visible:ring-offset-2 focus-visible:ring-offset-luna-deep sm:mt-8 sm:h-36 sm:w-36"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2, type: 'spring', stiffness: 200 }}
             whileHover={{ scale: 1.06 }}
             whileTap={{ scale: 0.96 }}
-            aria-label="Open voice check-in"
+            aria-label="Open check-in"
           >
           <svg
             width={36}
@@ -285,7 +362,7 @@ export default function DashboardPage() {
           </motion.button>
         </section>
 
-        <aside className="space-y-6">
+        <aside className="space-y-5 sm:space-y-6">
           {/* Last check-in result card */}
           {lastResult && (
             <motion.div
@@ -347,7 +424,36 @@ export default function DashboardPage() {
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         onComplete={handleComplete}
+        userName={userName || undefined}
       />
     </div>
   );
+}
+
+function TodayMetric({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div
+      className="min-h-[76px] rounded-2xl border border-luna-ink/10 bg-white/70 px-3 py-3 text-left"
+    >
+      <span className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.12em] text-luna-ink/45">
+        {icon}
+        {label}
+      </span>
+      <span className="mt-2 block text-sm font-semibold leading-5 text-luna-ink">
+        {value}
+      </span>
+    </div>
+  );
+}
+
+function capitalize(value: string): string {
+  return value.charAt(0).toUpperCase() + value.slice(1);
 }

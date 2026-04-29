@@ -7,11 +7,11 @@ import { usePathname } from 'next/navigation';
 import {
   BarChart2,
   BatteryMedium,
-  BookMarked,
   CalendarDays,
   ClipboardList,
   Cloud,
   CloudSun,
+  CookingPot,
   FileText,
   Keyboard,
   LockKeyhole,
@@ -21,6 +21,7 @@ import {
   Mic,
   Moon,
   Settings,
+  Sparkles,
   Sun,
   TrendingUp,
   X,
@@ -39,9 +40,11 @@ import type { VoiceCheckInResult } from '@/types/voice';
 import type { InsightsPayload } from '@/types/insights';
 
 const NAV_ITEMS = [
+  { href: '/track', icon: ClipboardList, label: 'Track' },
+  { href: '/plans', icon: Sparkles, label: 'Plans' },
   { href: '/chat', icon: MessageCircle, label: 'Chat' },
   { href: '/insights', icon: BarChart2, label: 'Insights' },
-  { href: '/haikus', icon: BookMarked, label: 'Saved' },
+  { href: '/clinician', icon: FileText, label: 'Clinician' },
   { href: '/settings', icon: Settings, label: 'Settings' },
 ];
 
@@ -85,6 +88,7 @@ export default function DashboardPage() {
   const [latestLog, setLatestLog] = useState<LatestLog | null>(null);
   const [recentLogs, setRecentLogs] = useState<TimelineLog[]>([]);
   const [insights, setInsights] = useState<InsightsPayload | null>(null);
+  const [weeklyRecap, setWeeklyRecap] = useState<string | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -128,6 +132,12 @@ export default function DashboardPage() {
         const insightsRes = await fetch('/api/insights?days=30', { cache: 'no-store' });
         if (insightsRes.ok) {
           setInsights((await insightsRes.json()) as InsightsPayload);
+        }
+
+        const recapRes = await fetch('/api/weekly-recap', { cache: 'no-store' });
+        if (recapRes.ok) {
+          const recap = (await recapRes.json()) as { recap?: string };
+          setWeeklyRecap(recap.recap ?? null);
         }
       }
     }
@@ -461,6 +471,8 @@ export default function DashboardPage() {
             </div>
           </div>
 
+          <WeeklyRecapCard recap={weeklyRecap} />
+
           {/* Central orb trigger */}
           <motion.button
             onClick={() => openCheckIn('voice')}
@@ -546,6 +558,10 @@ export default function DashboardPage() {
         </aside>
 
         <section className="lg:col-span-2">
+          <MajorSectionLinks />
+        </section>
+
+        <section className="lg:col-span-2">
           <CheckInTimeline logs={recentLogs} />
         </section>
       </main>
@@ -558,6 +574,53 @@ export default function DashboardPage() {
         userName={userName || undefined}
         initialMode={checkInMode}
       />
+    </div>
+  );
+}
+
+function MajorSectionLinks() {
+  const sections = [
+    {
+      href: '/track',
+      icon: ClipboardList,
+      title: 'Track',
+      description: 'Symptoms, sleep, mood, energy, and triggers.',
+    },
+    {
+      href: '/plans',
+      icon: Sparkles,
+      title: 'Plans',
+      description: 'Sleep, hot flash, anxiety, and brain fog support.',
+    },
+    {
+      href: '/clinician',
+      icon: FileText,
+      title: 'Clinician prep',
+      description: 'Talking points, timeline, and report readiness.',
+    },
+    {
+      href: '/meals',
+      icon: CookingPot,
+      title: 'Meals',
+      description: 'Steady energy, cooling meals, and sleep support.',
+    },
+  ];
+
+  return (
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {sections.map(({ href, icon: Icon, title, description }) => (
+        <Link
+          key={href}
+          href={href}
+          className="app-card group p-4 transition-colors hover:bg-white/[0.075]"
+        >
+          <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/[0.06] text-luna-aurora-mint">
+            <Icon className="h-5 w-5" aria-hidden="true" />
+          </div>
+          <p className="text-sm font-semibold text-white/92">{title}</p>
+          <p className="mt-1 text-xs leading-5 text-white/64">{description}</p>
+        </Link>
+      ))}
     </div>
   );
 }
@@ -608,6 +671,20 @@ function ReportReadinessMeter({
         {count >= 14
           ? 'Ready for a useful clinician summary.'
           : `${Math.max(0, 14 - count)} more check-${14 - count === 1 ? 'in' : 'ins'} for a stronger clinician summary.`}
+      </p>
+    </div>
+  );
+}
+
+function WeeklyRecapCard({ recap }: { recap: string | null }) {
+  return (
+    <div className="mt-5 rounded-lg border border-luna-ink/10 bg-white/70 p-4 text-left">
+      <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-luna-ink">
+        <Sparkles className="h-4 w-4 text-luna-storm" aria-hidden="true" />
+        Weekly recap
+      </div>
+      <p className="whitespace-pre-line text-sm leading-6 text-luna-ink/70">
+        {recap ?? 'Luna is preparing a grounded recap from this week’s logs.'}
       </p>
     </div>
   );

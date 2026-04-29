@@ -25,6 +25,8 @@ export default function SettingsPage() {
   const [saved, setSaved] = useState(false);
   const [saveTranscripts, setSaveTranscripts] = useState(true);
   const [aiMemory, setAiMemory] = useState(true);
+  const [morningReminder, setMorningReminder] = useState(false);
+  const [eveningReminder, setEveningReminder] = useState(false);
   const [weeklyInsight, setWeeklyInsight] = useState(false);
 
   useEffect(() => {
@@ -233,17 +235,19 @@ export default function SettingsPage() {
             </div>
 
             <div className="app-card divide-y divide-white/10 overflow-hidden">
-              <PlaceholderRow
+              <ToggleRow
                 icon={<Bell className="h-4 w-4" aria-hidden="true" />}
                 title="Morning check-in"
                 description="A gentle nudge to log how your day is starting."
-                status="Off"
+                checked={morningReminder}
+                onChange={setMorningReminder}
               />
-              <PlaceholderRow
+              <ToggleRow
                 icon={<Bell className="h-4 w-4" aria-hidden="true" />}
                 title="Evening sleep reflection"
                 description="Track sleep signals before patterns fade."
-                status="Off"
+                checked={eveningReminder}
+                onChange={setEveningReminder}
               />
               <ToggleRow
                 icon={<Bell className="h-4 w-4" aria-hidden="true" />}
@@ -252,6 +256,12 @@ export default function SettingsPage() {
                 checked={weeklyInsight}
                 onChange={setWeeklyInsight}
               />
+              <div className="px-5 py-4 sm:px-6">
+                <p className="text-sm font-medium text-white/92">Notification lifecycle</p>
+                <p className="mt-1 text-xs leading-5 text-white/66">
+                  Reminders will start as in-app preferences, then can connect to push/email delivery when notification permissions are enabled.
+                </p>
+              </div>
             </div>
           </section>
 

@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChart2, Home, MessageCircle, MoreHorizontal, Plus } from 'lucide-react';
+import { ClipboardList, Home, MessageCircle, MoreHorizontal, Plus, Sparkles } from 'lucide-react';
 
 const NAV_ITEMS = [
   { href: '/dashboard', label: 'Today', icon: Home },
+  { href: '/track', label: 'Track', icon: ClipboardList },
   { href: '/chat', label: 'Chat', icon: MessageCircle },
-  { href: '/insights', label: 'Trends', icon: BarChart2 },
+  { href: '/plans', label: 'Plans', icon: Sparkles },
   { href: '/settings', label: 'More', icon: MoreHorizontal },
 ];
 

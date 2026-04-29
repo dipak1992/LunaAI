@@ -40,9 +40,8 @@ import PressStrip from '@/components/marketing/PressStrip';
 import GlowButton from '@/components/ui/GlowButton';
 import FadeUp from '@/components/ui/FadeUp';
 
-const HERO_VIDEO_SRC = '/videos/luna-hero-demo.mp4';
+const HERO_VIDEO_SRC = '/videos/hero.MOV';
 const HERO_VIDEO_POSTER = '/images/luna-hero-poster.png';
-const HERO_VIDEO_CAPTIONS = '/videos/luna-hero-demo.vtt';
 
 const FEATURES = [
   {
@@ -166,32 +165,9 @@ const HERO_PROOF = [
 
 export default function LandingPage() {
   const [orbPressed, setOrbPressed] = useState(false);
-  const [demoVideoReady, setDemoVideoReady] = useState(false);
   const [demoModalOpen, setDemoModalOpen] = useState(false);
   const demoCardRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
-
-  useEffect(() => {
-    const demoCard = demoCardRef.current;
-
-    if (!demoCard) {
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) {
-          setDemoVideoReady(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: '200px' }
-    );
-
-    observer.observe(demoCard);
-
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     if (!demoModalOpen) {
@@ -367,28 +343,19 @@ export default function LandingPage() {
                 preload
               />
 
-              {demoVideoReady && (
-                <video
-                  className="absolute inset-0 h-full w-full object-cover"
-                  aria-label="Demo of Luna voice check-in"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="none"
-                  poster={HERO_VIDEO_POSTER}
-                >
-                  {/* TODO(video team): replace placeholder with the final Luna hero demo cut. */}
-                  <source src={HERO_VIDEO_SRC} type="video/mp4" />
-                  <track
-                    kind="captions"
-                    src={HERO_VIDEO_CAPTIONS}
-                    srcLang="en"
-                    label="English captions"
-                    default
-                  />
-                </video>
-              )}
+              <video
+                className="absolute inset-0 h-full w-full object-cover"
+                aria-label="Luna AI companion demo"
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                poster={HERO_VIDEO_POSTER}
+              >
+                <source src={HERO_VIDEO_SRC} type="video/quicktime" />
+                <source src={HERO_VIDEO_SRC} type="video/mp4" />
+              </video>
 
               <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[30%] bg-gradient-to-t from-luna-ink to-transparent" />
 
@@ -436,7 +403,7 @@ export default function LandingPage() {
 
             <video
               className="h-full w-full object-cover"
-              aria-label="Demo of Luna voice check-in"
+              aria-label="Luna AI companion demo"
               autoPlay
               loop
               muted
@@ -444,15 +411,8 @@ export default function LandingPage() {
               controls
               poster={HERO_VIDEO_POSTER}
             >
-              {/* TODO(video team): replace placeholder with the final Luna hero demo cut. */}
+              <source src={HERO_VIDEO_SRC} type="video/quicktime" />
               <source src={HERO_VIDEO_SRC} type="video/mp4" />
-              <track
-                kind="captions"
-                src={HERO_VIDEO_CAPTIONS}
-                srcLang="en"
-                label="English captions"
-                default
-              />
             </video>
           </div>
         </div>

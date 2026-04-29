@@ -896,3 +896,32 @@
   font-style: italic;
   color: rgba(250, 247, 242, 0.85);
 }
+
+.prose-luna-light h2,
+.prose-luna-light h3 {
+  color: #211a24;
+}
+
+.prose-luna-light p,
+.prose-luna-light ul li {
+  color: rgba(33, 26, 36, 0.74);
+}
+
+.prose-luna-light a {
+  color: #6b5b95;
+}
+
+.prose-luna-light a:hover,
+.prose-luna-light strong {
+  color: #211a24;
+}
+
+.prose-luna-light ul li::before {
+  color: #7fa99b;
+}
+
+.prose-luna-light .callout {
+  border-left-color: #7fa99b;
+  background: rgba(168, 216, 201, 0.16);
+  color: rgba(33, 26, 36, 0.86);
+}

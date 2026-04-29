@@ -45,7 +45,9 @@ export default function MarketingPage({
 
       <section className="relative px-6 pb-28">
         <FadeUp>
-          <article className="prose-luna mx-auto max-w-3xl">{children}</article>
+          <article className="prose-luna prose-luna-light mx-auto max-w-3xl rounded-2xl border border-[#eadfd5] bg-luna-cream px-6 py-8 text-luna-ink shadow-2xl shadow-black/20 md:px-10 md:py-12">
+            {children}
+          </article>
         </FadeUp>
       </section>
 

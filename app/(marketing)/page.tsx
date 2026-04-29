@@ -4,7 +4,7 @@
  * Hero assets needed:
  * - /public/videos/luna-hero-demo.mp4
  * - /public/videos/luna-hero-demo.vtt
- * - /public/images/luna-hero-poster.jpg
+ * - /public/images/luna-hero-poster.png
  *
  * TODO(video team): create the hero demo sequence:
  * 0:00–0:03 → Woman's hand taps a glowing voice orb
@@ -14,6 +14,7 @@
  */
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
   Mic,
@@ -37,7 +38,7 @@ import GlowButton from '@/components/ui/GlowButton';
 import FadeUp from '@/components/ui/FadeUp';
 
 const HERO_VIDEO_SRC = '/videos/luna-hero-demo.mp4';
-const HERO_VIDEO_POSTER = '/images/luna-hero-poster.jpg';
+const HERO_VIDEO_POSTER = '/images/luna-hero-poster.png';
 const HERO_VIDEO_CAPTIONS = '/videos/luna-hero-demo.vtt';
 
 const FEATURES = [
@@ -121,6 +122,27 @@ const PLANS = [
   },
 ];
 
+const BLOG_TEASERS = [
+  {
+    title: 'Why Menopause Steals Your Sleep',
+    tag: 'Sleep',
+    href: '/whispers/sleep-and-menopause',
+    desc: 'A clearer read on the 3am wake-up, night sweats, and the patterns Luna helps you notice.',
+  },
+  {
+    title: 'The Anxiety No One Warned You About',
+    tag: 'Mood',
+    href: '/whispers/mood-changes-anxiety',
+    desc: 'A calm explanation of hormonal mood shifts and how pattern awareness can reduce fear.',
+  },
+  {
+    title: 'Brain Fog: You Are Not Losing Your Mind',
+    tag: 'Clarity',
+    href: '/whispers/brain-fog-menopause',
+    desc: 'Reassurance and science for the moments when words, focus, and confidence feel harder to hold.',
+  },
+];
+
 export default function LandingPage() {
   const [orbPressed, setOrbPressed] = useState(false);
   const [demoVideoReady, setDemoVideoReady] = useState(false);
@@ -177,7 +199,7 @@ export default function LandingPage() {
         {/* Hero lifestyle photo — full bleed with dark overlay */}
         <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
           <Image
-            src="/images/hero-lifestyle.jpg"
+            src="/images/hero-lifestyle.png"
             alt=""
             fill
             priority
@@ -527,26 +549,25 @@ export default function LandingPage() {
       {/* <MedicalAdvisors /> */}
       <Testimonials />
       <PrivacyPromise />
-      <PressStrip />
 
       {/* ── PRICING ── */}
-      <section id="pricing" className="relative px-6 py-32">
+      <section id="pricing" className="relative bg-luna-cream px-6 py-32 text-luna-ink">
         {/* Neutral clean background — let cards breathe */}
         <div
           className="pointer-events-none absolute inset-0 z-0"
           aria-hidden="true"
           style={{
             background:
-              'radial-gradient(ellipse at 50% 0%, rgba(233,184,255,0.04) 0%, transparent 50%)',
+              'radial-gradient(ellipse at 50% 0%, rgba(168,216,201,0.24) 0%, transparent 48%)',
           }}
         />
         <div className="mx-auto max-w-5xl">
           <FadeUp>
             <div className="mb-16 text-center">
-              <p className="mb-4 text-sm tracking-[0.14em] uppercase text-white/70">
+              <p className="mb-4 text-sm tracking-[0.14em] uppercase text-luna-ink/55">
                 Pricing
               </p>
-              <h2 className="font-serif text-4xl md:text-5xl">
+              <h2 className="font-serif text-4xl text-luna-ink md:text-5xl">
                 Choose your moon.
               </h2>
             </div>
@@ -558,30 +579,30 @@ export default function LandingPage() {
                 <div
                   className={`relative flex flex-col rounded-2xl p-8 transition-all duration-500 ${
                     p.featured
-                      ? 'border border-white/20 bg-white/[0.07]'
-                      : 'border border-white/5 bg-white/[0.03]'
+                      ? 'border border-luna-storm/20 bg-white shadow-2xl shadow-luna-storm/10'
+                      : 'border border-luna-ink/10 bg-white/55'
                   }`}
                 >
                   {p.featured && (
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-white/10 px-4 py-1 text-xs tracking-wide text-white/70">
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-luna-storm px-4 py-1 text-xs tracking-wide text-luna-cream">
                       Most chosen
                     </span>
                   )}
 
-                  <p className="mb-2 text-sm tracking-[0.14em] uppercase text-white/70">
+                  <p className="mb-2 text-sm tracking-[0.14em] uppercase text-luna-ink/55">
                     {p.name}
                   </p>
                   <div className="mb-6 flex items-baseline gap-1">
-                    <span className="font-serif text-4xl">{p.price}</span>
+                    <span className="font-serif text-4xl text-luna-ink">{p.price}</span>
                     {p.period && (
-                      <span className="text-sm text-white/65">{p.period}</span>
+                      <span className="text-sm text-luna-ink/55">{p.period}</span>
                     )}
                   </div>
 
                   <ul className="mb-8 flex-1 space-y-3">
                     {p.features.map((f) => (
-                      <li key={f} className="flex items-center gap-3 text-[0.9375rem] text-white/80">
-                        <Check className="h-4 w-4 shrink-0 text-white/60" />
+                      <li key={f} className="flex items-center gap-3 text-[0.9375rem] text-luna-ink/72">
+                        <Check className="h-4 w-4 shrink-0 text-luna-storm" />
                         {f}
                       </li>
                     ))}
@@ -590,7 +611,9 @@ export default function LandingPage() {
                   <GlowButton
                     href={p.href}
                     variant={p.featured ? 'primary' : 'ghost'}
-                    className="w-full justify-center"
+                    className={`w-full justify-center ${
+                      p.featured ? '' : 'border-luna-ink/15 text-luna-ink hover:border-luna-ink/30'
+                    }`}
                   >
                     {p.cta}
                   </GlowButton>
@@ -601,12 +624,57 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── BLOG PREVIEW ── */}
+      <section className="relative px-6 py-28">
+        <div className="mx-auto max-w-6xl">
+          <FadeUp>
+            <div className="mb-12 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className="mb-4 text-sm tracking-[0.14em] uppercase text-white/70">
+                  Whispers
+                </p>
+                <h2 className="max-w-2xl font-serif text-4xl text-luna-cream md:text-5xl">
+                  Education that feels calm enough to keep reading.
+                </h2>
+              </div>
+              <Link
+                href="/whispers"
+                className="inline-flex rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-luna-cream transition-colors hover:border-white/30 hover:bg-white/[0.04]"
+              >
+                Read the journal
+              </Link>
+            </div>
+          </FadeUp>
+
+          <div className="grid gap-5 md:grid-cols-3">
+            {BLOG_TEASERS.map((post, index) => (
+              <FadeUp key={post.href} delay={index * 0.1}>
+                <Link
+                  href={post.href}
+                  className="block h-full rounded-2xl border border-luna-cream/10 bg-luna-cream p-6 text-luna-ink shadow-2xl shadow-black/15 transition-transform hover:-translate-y-1"
+                >
+                  <span className="mb-6 inline-flex rounded-full bg-luna-aurora-mint/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-luna-ink/65">
+                    {post.tag}
+                  </span>
+                  <h3 className="font-serif text-2xl leading-tight text-luna-ink">
+                    {post.title}
+                  </h3>
+                  <p className="mt-4 text-sm leading-6 text-luna-ink/68">{post.desc}</p>
+                </Link>
+              </FadeUp>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <PressStrip />
+
       {/* ── FINAL CTA ── */}
       <section className="relative overflow-hidden px-6 py-40 text-center">
         {/* CTA scene photo — silhouette at dusk with heavy dark overlay */}
         <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
           <Image
-            src="/images/cta-scene.jpg"
+            src="/images/cta-scene.png"
             alt=""
             fill
             sizes="100vw"

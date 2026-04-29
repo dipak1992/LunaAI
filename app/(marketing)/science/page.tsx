@@ -52,7 +52,7 @@ export default function SciencePage() {
       <div className="not-prose my-10 overflow-hidden rounded-2xl border border-white/8">
         <div className="relative w-full" style={{ aspectRatio: '3 / 1' }}>
           <Image
-            src="/images/science-flow.jpg"
+            src="/images/science-flow.png"
             alt="Luna AI pipeline: Voice → Transcription → Pattern Detection → Forecast → Insights"
             fill
             sizes="(min-width: 768px) 768px, 100vw"

@@ -155,69 +155,69 @@ export default function DashboardPage() {
       )}
 
       {/* Main */}
-      <main className="flex-1 flex flex-col items-center px-5 py-10 sm:py-12 gap-8 sm:gap-10 max-w-2xl mx-auto w-full">
+      <main className="mx-auto grid w-full max-w-6xl flex-1 gap-6 px-5 py-8 sm:py-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
         {/* Trial welcome banner (shows when ?welcome=true) */}
-        <WelcomeBanner name={userName} />
+        <div className="lg:col-span-2">
+          <WelcomeBanner name={userName} />
+        </div>
 
-        {/* Welcome + Greeting */}
-        <motion.div
-          className="text-center w-full"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          {userName && (
-            <p className="text-white/70 text-base sm:text-lg mb-1">
-              {greeting()}, <span className="text-white/90 font-medium">{userName}</span>
-            </p>
-          )}
-          <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl text-aurora mb-2">
-            {isFirstTime ? 'Your journey begins here.' : 'How are you today?'}
-          </h1>
-          <p className="text-white/75 text-base sm:text-[1.0625rem]">
-            {isFirstTime
-              ? 'Tap the orb and speak freely — Luna is listening'
-              : 'Tap the orb to begin your daily check-in with Luna'}
-          </p>
-        </motion.div>
-
-        {/* Streak indicator — only show after first check-in */}
-        {checkInCount !== null && checkInCount > 0 && (
+        <section className="rounded-2xl border border-white/10 bg-luna-cream p-6 text-luna-ink shadow-2xl shadow-black/20 md:p-8">
+          {/* Welcome + Greeting */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/8 text-sm text-white/70"
-          >
-            <Moon className="h-4 w-4 text-luna-aurora-mint" aria-hidden="true" />
-            <span>
-              {checkInCount === 1
-                ? 'Day 1 of your journey with Luna'
-                : `${checkInCount} whispers shared with Luna`}
-            </span>
-          </motion.div>
-        )}
-
-        {/* First-time empty state */}
-        {isFirstTime && checkInCount !== null && (
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            className="text-center w-full"
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="w-full glass rounded-2xl overflow-hidden text-center"
-            style={{
-              background: 'linear-gradient(135deg, rgba(233,184,255,0.06) 0%, rgba(255,158,199,0.04) 100%)',
-            }}
+            transition={{ duration: 0.6 }}
           >
+            {userName && (
+              <p className="text-luna-ink/62 text-base sm:text-lg mb-1">
+                {greeting()}, <span className="text-luna-ink font-semibold">{userName}</span>
+              </p>
+            )}
+            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-luna-ink mb-3">
+              {isFirstTime ? 'Your journey begins here.' : 'How are you today?'}
+            </h1>
+            <p className="mx-auto max-w-md text-luna-ink/68 text-base sm:text-[1.0625rem]">
+              {isFirstTime
+                ? 'Tap the orb and speak freely — Luna is listening'
+                : 'Tap the orb to begin your daily check-in with Luna'}
+            </p>
+          </motion.div>
+
+          {/* Streak indicator — only show after first check-in */}
+          {checkInCount !== null && checkInCount > 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="mx-auto mt-6 flex w-fit items-center gap-2 rounded-full bg-luna-aurora-mint/20 px-4 py-2 text-sm text-luna-ink/70"
+            >
+              <Moon className="h-4 w-4 text-luna-storm" aria-hidden="true" />
+              <span>
+                {checkInCount === 1
+                  ? 'Day 1 of your journey with Luna'
+                  : `${checkInCount} whispers shared with Luna`}
+              </span>
+            </motion.div>
+          )}
+
+          {/* First-time empty state */}
+          {isFirstTime && checkInCount !== null && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="mt-8 w-full overflow-hidden rounded-2xl border border-luna-ink/10 bg-white text-center"
+            >
             {/* Illustration banner */}
             <div className="relative w-full" style={{ aspectRatio: '2 / 1' }}>
               <Image
-                src="/images/dashboard-empty.jpg"
+                src="/images/dashboard-empty.png"
                 alt="Luna is ready to listen"
                 fill
                 sizes="(min-width: 640px) 672px, 100vw"
                 className="object-cover object-center"
-                style={{ opacity: 0.75 }}
+                style={{ opacity: 0.82 }}
               />
               {/* Bottom fade into card body */}
               <div
@@ -230,14 +230,14 @@ export default function DashboardPage() {
             </div>
             {/* Card body */}
             <div className="px-6 pb-6 sm:px-8 sm:pb-8 -mt-8 relative z-10">
-              <h2 className="font-serif text-xl sm:text-2xl text-white mb-3">
+              <h2 className="font-serif text-xl sm:text-2xl text-luna-ink mb-3">
                 Luna is ready to listen.
               </h2>
-              <p className="text-white/70 text-sm sm:text-base leading-relaxed max-w-sm mx-auto">
+              <p className="text-luna-ink/68 text-sm sm:text-base leading-relaxed max-w-sm mx-auto">
                 Your first whisper starts your story. She&apos;ll remember how you feel today,
                 and help you understand your patterns over time.
               </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6 text-xs text-white/55">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6 text-xs text-luna-ink/55">
                 <span className="inline-flex items-center gap-1.5">
                   <Mic className="h-3.5 w-3.5" aria-hidden="true" />
                   Voice or text
@@ -254,20 +254,20 @@ export default function DashboardPage() {
                 </span>
               </div>
             </div>
-          </motion.div>
-        )}
+            </motion.div>
+          )}
 
-        {/* Central orb trigger */}
-        <motion.button
-          onClick={() => setModalOpen(true)}
-          className="voice-orb w-32 h-32 sm:w-36 sm:h-36 rounded-full flex items-center justify-center cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-luna-aurora-pink focus-visible:ring-offset-2 focus-visible:ring-offset-luna-deep"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.2, type: 'spring', stiffness: 200 }}
-          whileHover={{ scale: 1.06 }}
-          whileTap={{ scale: 0.96 }}
-          aria-label="Open voice check-in"
-        >
+          {/* Central orb trigger */}
+          <motion.button
+            onClick={() => setModalOpen(true)}
+            className="voice-orb mx-auto mt-8 w-32 h-32 sm:w-36 sm:h-36 rounded-full flex items-center justify-center cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-luna-aurora-pink focus-visible:ring-offset-2 focus-visible:ring-offset-luna-deep"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2, type: 'spring', stiffness: 200 }}
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.96 }}
+            aria-label="Open voice check-in"
+          >
           <svg
             width={36}
             height={36}
@@ -282,16 +282,18 @@ export default function DashboardPage() {
               d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"
             />
           </svg>
-        </motion.button>
+          </motion.button>
+        </section>
 
-        {/* Last check-in result card */}
-        {lastResult && (
-          <motion.div
-            className="glass rounded-2xl p-5 sm:p-6 w-full"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+        <aside className="space-y-6">
+          {/* Last check-in result card */}
+          {lastResult && (
+            <motion.div
+              className="rounded-2xl border border-white/10 bg-white/[0.05] p-5 shadow-2xl shadow-black/10 backdrop-blur-xl sm:p-6 w-full"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
             <div className="flex items-center justify-between mb-3">
               <p className="text-[0.875rem] text-white/70 uppercase tracking-[0.14em]">
                 Latest check-in
@@ -319,24 +321,25 @@ export default function DashboardPage() {
                 ))}
               </div>
             )}
-          </motion.div>
-        )}
+            </motion.div>
+          )}
 
-        {/* 7-day forecast — only show after first check-in */}
-        {!isFirstTime && (
-          <motion.div
-            className="w-full"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            <ForecastStrip />
-          </motion.div>
-        )}
+          {/* 7-day forecast — only show after first check-in */}
+          {!isFirstTime && (
+            <motion.div
+              className="w-full"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <ForecastStrip />
+            </motion.div>
+          )}
 
-        <TodayHaiku />
+          <TodayHaiku />
 
-        {!isFirstTime && <SeasonReportButton />}
+          {!isFirstTime && <SeasonReportButton />}
+        </aside>
       </main>
 
       {/* Voice Check-In Modal */}

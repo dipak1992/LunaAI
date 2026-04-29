@@ -230,15 +230,34 @@ export default function LandingPage() {
             fill
             priority
             sizes="100vw"
-            className="object-cover object-center"
+            className="hidden object-cover object-center md:block"
             style={{ opacity: 0.22 }}
+          />
+          <Image
+            src="/images/hero-lifestyle.png"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover md:hidden"
+            style={{
+              objectPosition: '58% center',
+              opacity: 0.34,
+            }}
           />
           {/* Dark gradient overlay — heavier at top/bottom, lighter in center */}
           <div
-            className="absolute inset-0"
+            className="absolute inset-0 hidden md:block"
             style={{
               background:
                 'linear-gradient(180deg, rgba(10,14,39,0.75) 0%, rgba(10,14,39,0.45) 40%, rgba(10,14,39,0.55) 70%, rgba(10,14,39,0.85) 100%)',
+            }}
+          />
+          <div
+            className="absolute inset-0 md:hidden"
+            style={{
+              background:
+                'linear-gradient(180deg, rgba(10,14,39,0.82) 0%, rgba(10,14,39,0.58) 34%, rgba(10,14,39,0.72) 68%, rgba(10,14,39,0.94) 100%), linear-gradient(90deg, rgba(10,14,39,0.88) 0%, rgba(10,14,39,0.48) 58%, rgba(10,14,39,0.7) 100%)',
             }}
           />
           {/* Warm colour tint to blend with aurora palette */}

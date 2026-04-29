@@ -334,17 +334,19 @@ export default function LandingPage() {
               ref={demoCardRef}
               className="glass-card relative mx-auto aspect-[9/16] w-full max-w-sm overflow-hidden rounded-3xl p-0 shadow-2xl shadow-luna-aurora-lilac/20 md:aspect-video md:max-w-3xl lg:max-w-xl"
             >
+              {/* Poster image — always visible as base layer */}
               <Image
                 src={HERO_VIDEO_POSTER}
                 alt="Luna voice check-in demo preview"
                 fill
                 sizes="(min-width: 1024px) 46vw, 100vw"
                 className="object-cover"
-                preload
+                priority
               />
 
+              {/* Desktop only: autoplay silent video over the poster */}
               <video
-                className="absolute inset-0 h-full w-full object-cover"
+                className="absolute inset-0 hidden h-full w-full object-cover md:block"
                 aria-label="Luna AI companion demo"
                 autoPlay
                 loop
@@ -356,6 +358,18 @@ export default function LandingPage() {
                 <source src={HERO_VIDEO_SRC} type="video/quicktime" />
                 <source src={HERO_VIDEO_SRC} type="video/mp4" />
               </video>
+
+              {/* Mobile only: tap-to-play button opens the demo modal */}
+              <button
+                type="button"
+                onClick={() => setDemoModalOpen(true)}
+                className="absolute inset-0 flex items-center justify-center md:hidden"
+                aria-label="Watch Luna demo video"
+              >
+                <span className="flex h-16 w-16 items-center justify-center rounded-full border border-white/30 bg-luna-ink/60 backdrop-blur-md transition-transform active:scale-95">
+                  <Play className="h-6 w-6 translate-x-0.5 text-white" aria-hidden />
+                </span>
+              </button>
 
               <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[30%] bg-gradient-to-t from-luna-ink to-transparent" />
 
@@ -373,7 +387,9 @@ export default function LandingPage() {
                       : { duration: 2.4, ease: 'easeInOut', repeat: Infinity }
                   }
                 />
-                Live demo
+                {/* Label: "Tap to watch" on mobile, "Live demo" on desktop */}
+                <span className="md:hidden">Tap to watch</span>
+                <span className="hidden md:inline">Live demo</span>
               </div>
             </div>
           </FadeUp>

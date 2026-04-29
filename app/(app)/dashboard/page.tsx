@@ -9,10 +9,10 @@ import {
   BatteryMedium,
   CalendarDays,
   ClipboardList,
-  Cloud,
   CloudSun,
   CookingPot,
   FileText,
+  Flame,
   Keyboard,
   LockKeyhole,
   HeartPulse,
@@ -20,10 +20,11 @@ import {
   MessageCircle,
   Mic,
   Moon,
+  PenLine,
   Settings,
   Sparkles,
-  Sun,
   TrendingUp,
+  Wind,
   X,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -205,16 +206,23 @@ export default function DashboardPage() {
   const severity = latestLog?.severity ?? null;
   const topTrigger = lastResult?.triggers[0] ?? latestLog?.triggers?.[0] ?? null;
   const topInsightTrigger = insights?.triggers[0]?.trigger_name ?? topTrigger;
-  const nextAction = isFirstTime
-    ? 'Start with 30 seconds'
-    : topInsightTrigger
-      ? `Soothe ${topInsightTrigger}`
-      : severity && severity >= 7
-        ? 'Try a relief reset'
-        : 'Check in when ready';
   const checkInsUntilForecast = Math.max(0, 7 - (checkInCount ?? 0));
   const reportReadyCount = Math.min(checkInCount ?? 0, 14);
   const reportReadiness = Math.round((reportReadyCount / 14) * 100);
+  const smartSuggestion = buildSmartSuggestion({
+    isFirstTime,
+    topTrigger: topInsightTrigger,
+    sleep,
+    energy,
+    severity,
+  });
+  const weeklyProgress = {
+    checkIns: insights?.total_check_ins ?? checkInCount ?? 0,
+    streak: insights?.streak ?? 0,
+    bestSignal: insights?.days.length
+      ? bestDayLabel(insights.days)
+      : 'Patterns will appear after a few check-ins.',
+  };
 
   const openCheckIn = (mode: 'voice' | 'text') => {
     setCheckInMode(mode);
@@ -290,106 +298,95 @@ export default function DashboardPage() {
       )}
 
       {/* Main */}
-      <main className="mx-auto grid w-full max-w-6xl flex-1 gap-5 px-4 pb-24 pt-5 sm:gap-6 sm:px-5 sm:py-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
+      <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-5 px-4 pb-24 pt-5 sm:gap-6 sm:px-5 sm:py-8">
         {/* Trial welcome banner (shows when ?welcome=true) */}
-        <div className="lg:col-span-2">
+        <div>
           <WelcomeBanner name={userName} />
         </div>
 
-        <section className="app-card-light p-5 shadow-2xl shadow-black/16 sm:p-6 md:p-8">
-          {/* Welcome + Greeting */}
+        <section className="app-card-light overflow-hidden p-5 shadow-2xl shadow-black/16 sm:p-6 md:p-7">
           <motion.div
-            className="text-center w-full"
+            className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr] lg:items-start"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            {userName && (
-              <p className="text-luna-ink/68 text-base sm:text-lg mb-1">
-                {greeting()}, <span className="text-luna-ink font-semibold">{userName}</span>
+            <div>
+              {userName && (
+                <p className="mb-1 text-base text-luna-ink/68 sm:text-lg">
+                  {greeting()}, <span className="font-semibold text-luna-ink">{userName}</span>
+                </p>
+              )}
+              <p className="mb-2 text-xs font-medium uppercase tracking-[0.14em] text-luna-ink/48">
+                Today&apos;s body weather
               </p>
-            )}
-	            <h1 className="font-serif text-3xl sm:text-4xl text-luna-ink mb-2 sm:mb-3">
-	              {isFirstTime ? 'Your journey begins here.' : 'How are you today?'}
-	            </h1>
-	            <p className="mx-auto max-w-md text-sm leading-6 text-luna-ink/72 sm:text-[1rem]">
-	              {isFirstTime
-	                ? 'Speak, type, or tap what feels true right now.'
-	                : 'A quick read on today, then Luna can listen.'}
-	            </p>
-	          </motion.div>
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => openCheckIn('voice')}
+                  className="voice-orb flex h-20 w-20 shrink-0 items-center justify-center rounded-full sm:h-24 sm:w-24"
+                  aria-label="Start voice check-in"
+                >
+                  <Mic className="h-8 w-8 text-white" aria-hidden="true" />
+                </button>
+                <div>
+                  <h1 className="font-serif text-3xl text-luna-ink sm:text-4xl">
+                    {weatherScore ? `${weatherScore}/10` : 'New day'}
+                  </h1>
+                  <p className="mt-1 max-w-md text-sm leading-6 text-luna-ink/72">
+                    {weatherScore
+                      ? mood
+                        ? `${capitalize(mood)} weather, with Luna watching your patterns.`
+                        : 'Luna has a read on today. Add anything new when you are ready.'
+                      : 'A quick check-in gives Luna today’s first signal.'}
+                  </p>
+                </div>
+              </div>
 
-          <motion.div
-            className="mt-5 grid grid-cols-2 gap-2 sm:mt-6 sm:grid-cols-4"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, delay: 0.18 }}
-          >
-            <TodayMetric
-              icon={<CloudSun className="h-4 w-4" aria-hidden="true" />}
-              label="Weather"
-              value={weatherScore ? `${weatherScore}/10` : 'Start today'}
-            />
-            <TodayMetric
-              icon={<Moon className="h-4 w-4" aria-hidden="true" />}
-              label="Sleep"
-              value={sleep ? `${sleep}/10` : 'Not logged'}
-            />
-            <TodayMetric
-              icon={<HeartPulse className="h-4 w-4" aria-hidden="true" />}
-              label="Mood"
-              value={mood ? capitalize(mood) : 'Not logged'}
-            />
-            <TodayMetric
-              icon={<BatteryMedium className="h-4 w-4" aria-hidden="true" />}
-              label="Energy"
-              value={energy ? `${energy}/10` : 'Not logged'}
-            />
+              <div className="mt-5 grid gap-2 sm:grid-cols-2">
+                <ActionButton
+                  icon={Mic}
+                  label="Check in"
+                  description="Voice"
+                  onClick={() => openCheckIn('voice')}
+                  primary
+                />
+                <ActionButton
+                  icon={Keyboard}
+                  label="Type instead"
+                  description="Text"
+                  onClick={() => openCheckIn('text')}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-2">
+                <TodayMetric
+                  icon={<CloudSun className="h-4 w-4" aria-hidden="true" />}
+                  label="Weather"
+                  value={weatherScore ? `${weatherScore}/10` : 'Start today'}
+                />
+                <TodayMetric
+                  icon={<Moon className="h-4 w-4" aria-hidden="true" />}
+                  label="Sleep"
+                  value={sleep ? `${sleep}/10` : 'Not logged'}
+                />
+                <TodayMetric
+                  icon={<HeartPulse className="h-4 w-4" aria-hidden="true" />}
+                  label="Mood"
+                  value={mood ? capitalize(mood) : 'Not logged'}
+                />
+                <TodayMetric
+                  icon={<BatteryMedium className="h-4 w-4" aria-hidden="true" />}
+                  label="Energy"
+                  value={energy ? `${energy}/10` : 'Not logged'}
+                />
+              </div>
+
+              <SmartSuggestionCard suggestion={smartSuggestion} />
+            </div>
           </motion.div>
-
-          <motion.div
-            className="mt-3 grid gap-2 sm:grid-cols-3"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, delay: 0.22 }}
-          >
-            <TodayStatusCard
-              icon={TrendingUp}
-              label="What Luna noticed"
-              value={
-                topInsightTrigger
-                  ? `${capitalize(topInsightTrigger)} is your clearest recent pattern.`
-                  : latestLog?.ai_summary ?? 'A check-in will give Luna something to compare.'
-              }
-            />
-            <TodayStatusCard
-              icon={HeartPulse}
-              label="Symptom load"
-              value={severity ? `${severity}/10 severity logged today.` : 'No severity logged yet today.'}
-            />
-            <TodayStatusCard
-              icon={ClipboardList}
-              label="Next action"
-              value={nextAction}
-            />
-          </motion.div>
-
-          {/* Streak indicator — only show after first check-in */}
-          {checkInCount !== null && checkInCount > 0 && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-	              className="mx-auto mt-4 flex w-fit items-center gap-2 rounded-full bg-luna-aurora-mint/20 px-4 py-2 text-sm text-luna-ink/74 sm:mt-6"
-            >
-              <Moon className="h-4 w-4 text-luna-storm" aria-hidden="true" />
-              <span>
-                {checkInCount === 1
-                  ? 'Day 1 of your journey with Luna'
-                  : `${checkInCount} whispers shared with Luna`}
-              </span>
-            </motion.div>
-          )}
 
           {/* First-time empty state */}
           {isFirstTime && checkInCount !== null && (
@@ -412,39 +409,6 @@ export default function DashboardPage() {
             </motion.div>
           )}
 
-          <motion.div
-            className="mt-5 grid gap-2 sm:mt-7 sm:grid-cols-3"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, delay: 0.25 }}
-          >
-            <ActionButton
-              icon={Mic}
-              label="Speak check-in"
-              description="Voice"
-              onClick={() => openCheckIn('voice')}
-              primary
-            />
-            <ActionButton
-              icon={Keyboard}
-              label="Type instead"
-              description="Text"
-              onClick={() => openCheckIn('text')}
-            />
-            <Link
-              href="/chat"
-              className="flex min-h-16 items-center gap-3 rounded-lg border border-luna-ink/10 bg-white/74 px-4 py-3 text-left transition-colors hover:bg-white"
-            >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-luna-storm/12 text-luna-storm">
-                <MessageCircle className="h-4 w-4" aria-hidden="true" />
-              </span>
-              <span>
-                <span className="block text-sm font-semibold leading-5 text-luna-ink">Ask Luna</span>
-                <span className="block text-xs leading-5 text-luna-ink/60">Open chat</span>
-              </span>
-            </Link>
-          </motion.div>
-
           <div className="mx-auto mt-4 flex max-w-md items-start justify-center gap-2 rounded-lg border border-luna-ink/10 bg-white/60 px-3 py-2 text-xs leading-5 text-luna-ink/66">
             <LockKeyhole className="mt-0.5 h-3.5 w-3.5 shrink-0 text-luna-storm" aria-hidden="true" />
             <span>
@@ -452,116 +416,53 @@ export default function DashboardPage() {
               {checkInsUntilForecast > 0 && ` ${checkInsUntilForecast} more check-${checkInsUntilForecast === 1 ? 'in' : 'ins'} until forecast patterns get useful.`}
             </span>
           </div>
-
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <ReportReadinessMeter
-              percentage={reportReadiness}
-              count={checkInCount ?? 0}
-            />
-            <div className="rounded-lg border border-luna-ink/10 bg-white/70 p-4 text-left">
-              <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-luna-ink">
-                <CalendarDays className="h-4 w-4 text-luna-storm" aria-hidden="true" />
-                30-day momentum
-              </div>
-              <p className="text-sm leading-6 text-luna-ink/68">
-                {insights
-                  ? `${insights.total_check_ins} check-ins, ${insights.streak} day streak, ${insights.triggers.length ? `${insights.triggers[0].trigger_name} showing most often` : 'patterns still forming'}.`
-                  : 'Luna is gathering your recent pattern summary.'}
-              </p>
-            </div>
-          </div>
-
-          <WeeklyRecapCard recap={weeklyRecap} />
-
-          {/* Central orb trigger */}
-          <motion.button
-            onClick={() => openCheckIn('voice')}
-            className="voice-orb mx-auto mt-5 flex h-24 w-24 cursor-pointer items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-luna-aurora-pink focus-visible:ring-offset-2 focus-visible:ring-offset-luna-deep sm:mt-8 sm:h-36 sm:w-36"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.2, type: 'spring', stiffness: 200 }}
-            whileHover={{ scale: 1.06 }}
-            whileTap={{ scale: 0.96 }}
-            aria-label="Open check-in"
-          >
-          <svg
-            width={36}
-            height={36}
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="white"
-            strokeWidth={1.5}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"
-            />
-          </svg>
-          </motion.button>
         </section>
 
-        <aside className="space-y-5 sm:space-y-6">
-          {/* Last check-in result card */}
-          {lastResult && (
-            <motion.div
-              className="app-card p-5 shadow-2xl shadow-black/10 sm:p-6 w-full"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-[0.8125rem] text-white/76 uppercase tracking-[0.14em]">
-                Latest check-in
-              </p>
-              {lastResult.weatherScore >= 8 ? (
-                <Sun className="h-5 w-5 text-luna-sunset" aria-hidden="true" />
-              ) : lastResult.weatherScore >= 5 ? (
-                <CloudSun className="h-5 w-5 text-luna-aurora-blue" aria-hidden="true" />
-              ) : (
-                <Cloud className="h-5 w-5 text-luna-aurora-lilac" aria-hidden="true" />
-              )}
-            </div>
-            <p className="text-white/92 text-base leading-relaxed italic font-serif">
-              &ldquo;{lastResult.lunaResponse}&rdquo;
-            </p>
-            {lastResult.triggers.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-3">
-                {lastResult.triggers.slice(0, 3).map((t) => (
-                  <span
-                    key={t}
-                    className="px-2.5 py-1 rounded-full text-sm bg-luna-rose/20 text-luna-rose border border-luna-rose/30"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-            )}
-            </motion.div>
-          )}
+        <section className="grid gap-5 lg:grid-cols-[0.92fr_1.08fr]">
+          <div className="space-y-5">
+            <QuickReliefTools
+              topTrigger={topInsightTrigger}
+              severity={severity}
+            />
+            <AskLunaCard />
+          </div>
 
-          {/* 7-day forecast — only show after first check-in */}
-          {!isFirstTime && (
-            <motion.div
-              className="w-full"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
+          <div>
+            {!isFirstTime ? (
               <ForecastStrip />
-            </motion.div>
-          )}
+            ) : (
+              <EmptyState
+                icon={<CloudSun className="h-5 w-5" aria-hidden="true" />}
+                title="Forecast preview"
+                description="Your forecast opens once Luna has enough check-ins to compare patterns."
+                requirement="7 check-ins unlock a more useful forecast preview."
+                actionLabel="Check in now"
+                actionHref="/dashboard?checkin=true"
+              />
+            )}
+          </div>
+        </section>
 
+        <section className="grid gap-5 lg:grid-cols-4">
+          <WeeklyProgressCard progress={weeklyProgress} />
+          <TopPatternCard trigger={topInsightTrigger} severity={severity} />
+          <ReflectionCard lastResult={lastResult} />
+          <ReportReadinessMeter
+            percentage={reportReadiness}
+            count={checkInCount ?? 0}
+          />
+        </section>
+
+        <section className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
           <TodayHaiku />
+          {!isFirstTime ? <SeasonReportButton /> : <WeeklyRecapCard recap={weeklyRecap} />}
+        </section>
 
-          {!isFirstTime && <SeasonReportButton />}
-        </aside>
-
-        <section className="lg:col-span-2">
+        <section>
           <MajorSectionLinks />
         </section>
 
-        <section className="lg:col-span-2">
+        <section>
           <CheckInTimeline logs={recentLogs} />
         </section>
       </main>
@@ -625,22 +526,157 @@ function MajorSectionLinks() {
   );
 }
 
-function TodayStatusCard({
-  icon: Icon,
-  label,
-  value,
-}: {
-  icon: LucideIcon;
-  label: string;
-  value: string;
-}) {
+function SmartSuggestionCard({ suggestion }: { suggestion: { title: string; body: string; href: string; action: string } }) {
   return (
     <div className="rounded-lg border border-luna-ink/10 bg-white/70 p-4 text-left">
       <div className="mb-2 flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.12em] text-luna-ink/54">
-        <Icon className="h-4 w-4" aria-hidden="true" />
-        {label}
+        <Sparkles className="h-4 w-4" aria-hidden="true" />
+        Smart suggestion
       </div>
-      <p className="text-sm leading-6 text-luna-ink/74">{value}</p>
+      <p className="text-sm font-semibold leading-5 text-luna-ink">{suggestion.title}</p>
+      <p className="mt-1 text-sm leading-6 text-luna-ink/70">{suggestion.body}</p>
+      <Link href={suggestion.href} className="mt-3 inline-flex text-sm font-semibold text-luna-storm hover:text-luna-ink">
+        {suggestion.action}
+      </Link>
+    </div>
+  );
+}
+
+function QuickReliefTools({
+  topTrigger,
+  severity,
+}: {
+  topTrigger: string | null;
+  severity: number | null;
+}) {
+  const tools = [
+    {
+      icon: Wind,
+      label: 'Breathing',
+      detail: severity && severity >= 7 ? '2 minutes now' : 'Steady the nervous system',
+    },
+    {
+      icon: Flame,
+      label: 'Cooling',
+      detail: topTrigger?.toLowerCase().includes('flash') ? 'Prep for heat waves' : 'A quick body reset',
+    },
+    {
+      icon: Moon,
+      label: 'Sleep reset',
+      detail: 'Tonight’s downshift',
+    },
+    {
+      icon: PenLine,
+      label: 'Journal',
+      detail: 'Capture what helped',
+    },
+  ];
+
+  return (
+    <div className="app-card p-5 sm:p-6">
+      <div className="app-section-title">
+        <div>
+          <h2>Quick relief tools</h2>
+          <p>Small supports for the next ten minutes</p>
+        </div>
+      </div>
+      <div className="grid gap-2 sm:grid-cols-2">
+        {tools.map(({ icon: Icon, label, detail }) => (
+          <Link
+            key={label}
+            href="/plans"
+            className="rounded-lg border border-white/10 bg-white/[0.045] p-4 transition-colors hover:bg-white/[0.075]"
+          >
+            <Icon className="mb-3 h-5 w-5 text-luna-aurora-mint" aria-hidden="true" />
+            <p className="text-sm font-semibold text-white/90">{label}</p>
+            <p className="mt-1 text-xs leading-5 text-white/62">{detail}</p>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function AskLunaCard() {
+  return (
+    <Link
+      href="/chat"
+      className="app-card flex min-h-32 items-center gap-4 p-5 transition-colors hover:bg-white/[0.075] sm:p-6"
+    >
+      <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-luna-aurora-lilac/15 text-luna-aurora-lilac">
+        <MessageCircle className="h-6 w-6" aria-hidden="true" />
+      </span>
+      <span>
+        <span className="block text-base font-semibold text-white/92">Ask Luna anything</span>
+        <span className="mt-1 block text-sm leading-6 text-white/66">
+          Bring today’s weather into chat, or ask what your patterns may mean.
+        </span>
+      </span>
+    </Link>
+  );
+}
+
+function WeeklyProgressCard({
+  progress,
+}: {
+  progress: { checkIns: number; streak: number; bestSignal: string };
+}) {
+  return (
+    <div className="app-card p-5">
+      <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-white/92">
+        <CalendarDays className="h-4 w-4 text-luna-aurora-mint" aria-hidden="true" />
+        Weekly progress
+      </div>
+      <p className="text-2xl font-semibold text-white">{progress.checkIns}</p>
+      <p className="text-xs uppercase tracking-[0.14em] text-white/52">check-ins in range</p>
+      <p className="mt-3 text-sm leading-6 text-white/72">
+        {progress.streak > 0 ? `${progress.streak} day soft streak. ` : ''}
+        {progress.bestSignal}
+      </p>
+    </div>
+  );
+}
+
+function TopPatternCard({
+  trigger,
+  severity,
+}: {
+  trigger: string | null;
+  severity: number | null;
+}) {
+  return (
+    <div className="app-card p-5">
+      <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-white/92">
+        <TrendingUp className="h-4 w-4 text-luna-aurora-pink" aria-hidden="true" />
+        Top pattern
+      </div>
+      <p className="text-sm leading-6 text-white/76">
+        {trigger
+          ? `${capitalize(trigger)} is the clearest symptom or trigger pattern right now.`
+          : 'Luna needs a few more check-ins to name a top pattern.'}
+      </p>
+      <p className="mt-3 text-xs leading-5 text-white/58">
+        {severity ? `Latest severity: ${severity}/10.` : 'Add symptom severity during check-in to sharpen this.'}
+      </p>
+    </div>
+  );
+}
+
+function ReflectionCard({ lastResult }: { lastResult: VoiceCheckInResult | null }) {
+  return (
+    <div className="app-card p-5">
+      <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-white/92">
+        <PenLine className="h-4 w-4 text-luna-aurora-lilac" aria-hidden="true" />
+        Saved reflection
+      </div>
+      <p className="text-sm leading-6 text-white/76">
+        {lastResult?.lunaResponse
+          ? `“${lastResult.lunaResponse}”`
+          : 'After your next check-in, Luna’s reflection will be saved here.'}
+      </p>
+      <Link href="/haikus" className="mt-3 inline-flex text-sm font-semibold text-luna-aurora-mint hover:text-white">
+        View saved
+      </Link>
     </div>
   );
 }
@@ -754,6 +790,88 @@ function formatTimelineDate(value: string): string {
     month: 'short',
     day: 'numeric',
   });
+}
+
+function buildSmartSuggestion({
+  isFirstTime,
+  topTrigger,
+  sleep,
+  energy,
+  severity,
+}: {
+  isFirstTime: boolean;
+  topTrigger: string | null;
+  sleep: number | null;
+  energy: number | null;
+  severity: number | null;
+}) {
+  if (isFirstTime) {
+    return {
+      title: 'Start simple',
+      body: 'One short check-in is enough to begin your Today view and help Luna learn what support fits.',
+      href: '/dashboard?checkin=true',
+      action: 'Check in now',
+    };
+  }
+
+  if (sleep !== null && sleep <= 5) {
+    return {
+      title: 'Protect tonight’s recovery',
+      body: 'Your sleep signal is low. Keep the evening plan gentle and note any wake reasons tomorrow.',
+      href: '/plans',
+      action: 'Open sleep plan',
+    };
+  }
+
+  if (severity !== null && severity >= 7) {
+    return {
+      title: 'Use a relief reset',
+      body: 'Severity is running high. Pick one cooling, breathing, or quiet reset before adding more tasks.',
+      href: '/plans',
+      action: 'Open relief tools',
+    };
+  }
+
+  if (energy !== null && energy <= 5) {
+    return {
+      title: 'Keep the day low-friction',
+      body: 'Energy looks limited. Choose one priority and support it with steady food and a short pause.',
+      href: '/meals',
+      action: 'Open meal nudges',
+    };
+  }
+
+  if (topTrigger) {
+    return {
+      title: `Plan around ${topTrigger}`,
+      body: 'This pattern is showing up enough to deserve a little preparation instead of willpower.',
+      href: '/track',
+      action: 'Review pattern',
+    };
+  }
+
+  return {
+    title: 'Keep continuity',
+    body: 'Your next check-in will make the weekly picture clearer and keep Luna’s recommendations grounded.',
+    href: '/dashboard?checkin=true',
+    action: 'Add today’s signal',
+  };
+}
+
+function bestDayLabel(days: InsightsPayload['days']): string {
+  const best = [...days]
+    .filter((day) => day.avg_weather_score !== null)
+    .sort((a, b) => (b.avg_weather_score ?? 0) - (a.avg_weather_score ?? 0))[0];
+
+  if (!best) return 'Patterns will appear after a few check-ins.';
+
+  const date = new Date(`${best.log_date}T00:00:00`).toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+  });
+
+  return `Best weather: ${date} at ${best.avg_weather_score}/10.`;
 }
 
 function TodayMetric({

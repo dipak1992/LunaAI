@@ -384,7 +384,7 @@ export default function DashboardPage() {
                 />
               </div>
 
-              <SmartSuggestionCard suggestion={smartSuggestion} />
+              <SmartSuggestionCard suggestion={smartSuggestion} onCheckIn={() => openCheckIn('voice')} />
             </div>
           </motion.div>
 
@@ -445,7 +445,7 @@ export default function DashboardPage() {
         <section className="grid gap-5 lg:grid-cols-4">
           <WeeklyProgressCard progress={weeklyProgress} />
           <TopPatternCard trigger={topInsightTrigger} severity={severity} />
-          <ReflectionCard lastResult={lastResult} />
+          <ReflectionCard lastResult={lastResult} latestLunaResponse={latestLog?.luna_response ?? null} />
           <ReportReadinessMeter
             percentage={reportReadiness}
             count={checkInCount ?? 0}
@@ -454,7 +454,11 @@ export default function DashboardPage() {
 
         <section className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
           <TodayHaiku />
-          {!isFirstTime ? <SeasonReportButton /> : <WeeklyRecapCard recap={weeklyRecap} />}
+          {!isFirstTime && (checkInCount ?? 0) >= 14 ? (
+            <SeasonReportButton />
+          ) : (
+            <WeeklyRecapCard recap={weeklyRecap} />
+          )}
         </section>
 
         <section>
@@ -525,7 +529,16 @@ function MajorSectionLinks() {
   );
 }
 
-function SmartSuggestionCard({ suggestion }: { suggestion: { title: string; body: string; href: string; action: string } }) {
+function SmartSuggestionCard({
+  suggestion,
+  onCheckIn,
+}: {
+  suggestion: { title: string; body: string; href: string; action: string };
+  onCheckIn: () => void;
+}) {
+  // If the suggestion action is a check-in trigger, open modal directly
+  const isCheckInAction = suggestion.href.includes('checkin=true');
+
   return (
     <div className="rounded-lg border border-white/10 bg-white/[0.04] p-4 text-left">
       <div className="mb-2 flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.12em] text-white/50">
@@ -534,9 +547,19 @@ function SmartSuggestionCard({ suggestion }: { suggestion: { title: string; body
       </div>
       <p className="text-sm font-semibold leading-5 text-white/92">{suggestion.title}</p>
       <p className="mt-1 text-sm leading-6 text-white/68">{suggestion.body}</p>
-      <Link href={suggestion.href} className="mt-3 inline-flex text-sm font-semibold text-luna-aurora-mint hover:text-white">
-        {suggestion.action}
-      </Link>
+      {isCheckInAction ? (
+        <button
+          type="button"
+          onClick={onCheckIn}
+          className="mt-3 inline-flex text-sm font-semibold text-luna-aurora-mint hover:text-white"
+        >
+          {suggestion.action}
+        </button>
+      ) : (
+        <Link href={suggestion.href} className="mt-3 inline-flex text-sm font-semibold text-luna-aurora-mint hover:text-white">
+          {suggestion.action}
+        </Link>
+      )}
     </div>
   );
 }
@@ -661,7 +684,16 @@ function TopPatternCard({
   );
 }
 
-function ReflectionCard({ lastResult }: { lastResult: VoiceCheckInResult | null }) {
+function ReflectionCard({
+  lastResult,
+  latestLunaResponse,
+}: {
+  lastResult: VoiceCheckInResult | null;
+  latestLunaResponse: string | null;
+}) {
+  // Prefer the in-session result, fall back to the persisted log response
+  const reflection = lastResult?.lunaResponse ?? latestLunaResponse;
+
   return (
     <div className="app-card p-5">
       <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-white/92">
@@ -669,9 +701,9 @@ function ReflectionCard({ lastResult }: { lastResult: VoiceCheckInResult | null 
         Saved reflection
       </div>
       <p className="text-sm leading-6 text-white/76">
-        {lastResult?.lunaResponse
-          ? `“${lastResult.lunaResponse}”`
-          : 'After your next check-in, Luna’s reflection will be saved here.'}
+        {reflection
+          ? `"${reflection}"`
+          : 'After your next check-in, Luna\u2019s reflection will be saved here.'}
       </p>
       <Link href="/haikus" className="mt-3 inline-flex text-sm font-semibold text-luna-aurora-mint hover:text-white">
         View saved

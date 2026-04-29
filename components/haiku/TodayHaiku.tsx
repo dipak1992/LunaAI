@@ -44,7 +44,16 @@ export default function TodayHaiku() {
     );
   }
 
-  if (!haiku) return null;
+  if (!haiku) {
+    return (
+      <div className="w-full rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+        <p className="mb-4 text-xs uppercase tracking-[0.14em] text-white/40">Today&apos;s haiku</p>
+        <p className="font-serif text-sm italic leading-7 text-white/40">
+          Luna will write a haiku after your first check-in today.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <motion.section

@@ -251,14 +251,14 @@ export default function LandingPage() {
             className="absolute inset-0 hidden md:block"
             style={{
               background:
-                'linear-gradient(180deg, rgba(10,14,39,0.75) 0%, rgba(10,14,39,0.45) 40%, rgba(10,14,39,0.55) 70%, rgba(10,14,39,0.85) 100%)',
+                'linear-gradient(180deg, rgba(10,14,39,0.78) 0%, rgba(10,14,39,0.52) 40%, rgba(10,14,39,0.62) 70%, rgba(10,14,39,0.88) 100%), linear-gradient(90deg, rgba(10,14,39,0.62) 0%, rgba(10,14,39,0.35) 48%, rgba(10,14,39,0.2) 100%)',
             }}
           />
           <div
             className="absolute inset-0 md:hidden"
             style={{
               background:
-                'linear-gradient(180deg, rgba(10,14,39,0.82) 0%, rgba(10,14,39,0.58) 34%, rgba(10,14,39,0.72) 68%, rgba(10,14,39,0.94) 100%), linear-gradient(90deg, rgba(10,14,39,0.88) 0%, rgba(10,14,39,0.48) 58%, rgba(10,14,39,0.7) 100%)',
+                'linear-gradient(180deg, rgba(10,14,39,0.9) 0%, rgba(10,14,39,0.68) 34%, rgba(10,14,39,0.78) 68%, rgba(10,14,39,0.96) 100%), linear-gradient(90deg, rgba(10,14,39,0.94) 0%, rgba(10,14,39,0.62) 58%, rgba(10,14,39,0.78) 100%)',
             }}
           />
           {/* Warm colour tint to blend with aurora palette */}
@@ -271,21 +271,25 @@ export default function LandingPage() {
           />
         </div>
         <div className="mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-2">
-          <div className="text-left md:text-center lg:text-left">
+          <div className="relative text-left md:text-center lg:text-left">
+            <div
+              className="pointer-events-none absolute -inset-x-5 -inset-y-8 -z-10 rounded-3xl bg-luna-ink/42 blur-2xl md:-inset-x-10 md:bg-luna-ink/30 lg:-inset-x-8"
+              aria-hidden="true"
+            />
             <FadeUp delay={0}>
-              <p className="mb-5 text-sm tracking-[0.14em] text-luna-aurora-lilac uppercase opacity-90">
+              <p className="mb-5 text-sm font-semibold tracking-[0.14em] text-luna-cream uppercase opacity-95 [text-shadow:0_2px_18px_rgba(0,0,0,0.85)]">
                 She is not a season ending. She is a sky rearranging.
               </p>
             </FadeUp>
 
             <FadeUp delay={0.15} initialVisible>
-              <h1 className="max-w-4xl font-serif text-5xl leading-tight font-normal text-luna-cream md:text-6xl lg:text-7xl">
+              <h1 className="max-w-4xl font-serif text-5xl leading-tight font-normal text-white [text-shadow:0_4px_28px_rgba(0,0,0,0.9)] md:text-6xl lg:text-7xl">
                 Finally, a companion who understands your menopause.
               </h1>
             </FadeUp>
 
             <FadeUp delay={0.3}>
-              <p className="mt-7 max-w-2xl text-lg leading-relaxed font-normal text-white/85 md:mx-auto md:text-xl lg:mx-0">
+              <p className="mt-7 max-w-2xl text-lg leading-relaxed font-medium text-white/95 [text-shadow:0_3px_22px_rgba(0,0,0,0.9)] md:mx-auto md:text-xl lg:mx-0">
                 Speak to Luna. She listens, remembers, and forecasts your body&apos;s weather
                 — so you never feel alone in the change.
               </p>
@@ -297,11 +301,11 @@ export default function LandingPage() {
                   <GlowButton
                     href="/trial"
                     variant="primary"
-                    className="min-h-11 w-full px-8 sm:w-auto"
+                    className="min-h-11 w-full px-8 shadow-2xl shadow-black/25 sm:w-auto"
                   >
                     Try Luna Free
                   </GlowButton>
-                  <p className="mt-2 text-center text-xs text-white/60">
+                  <p className="mt-2 text-center text-xs font-medium text-white/82 [text-shadow:0_2px_14px_rgba(0,0,0,0.8)]">
                     No signup for your first check-in
                   </p>
                 </div>
@@ -309,7 +313,7 @@ export default function LandingPage() {
                 <button
                   type="button"
                   onClick={() => setDemoModalOpen(true)}
-                  className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-luna-aurora-lilac/40 px-8 py-4 font-sans text-base font-semibold text-luna-cream transition-all duration-500 hover:border-luna-aurora-mint/70 hover:bg-luna-cream/5 sm:w-auto"
+                  className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-luna-cream/45 bg-luna-ink/35 px-8 py-4 font-sans text-base font-semibold text-white shadow-xl shadow-black/15 backdrop-blur-md transition-all duration-500 hover:border-luna-aurora-mint/70 hover:bg-luna-cream/10 sm:w-auto"
                 >
                   <Play className="h-4 w-4" aria-hidden />
                   <span>Watch 30-sec demo</span>
@@ -322,13 +326,13 @@ export default function LandingPage() {
                 {HERO_PROOF.map((proof) => (
                   <div
                     key={proof.label}
-                    className="rounded-2xl border border-luna-cream/12 bg-luna-ink/45 p-4 text-left shadow-xl shadow-black/10 backdrop-blur-xl"
+                    className="rounded-2xl border border-luna-cream/22 bg-luna-ink/72 p-4 text-left shadow-xl shadow-black/20 backdrop-blur-xl"
                   >
                     <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-luna-aurora-mint">
                       <proof.icon className="h-4 w-4" aria-hidden="true" />
                       {proof.label}
                     </div>
-                    <p className="text-sm leading-5 text-luna-cream/82">{proof.value}</p>
+                    <p className="text-sm font-medium leading-5 text-luna-cream">{proof.value}</p>
                   </div>
                 ))}
               </div>
@@ -336,7 +340,7 @@ export default function LandingPage() {
 
             <TrustStrip className="mt-9 md:mx-auto lg:mx-0" delay={0.6} />
             <FadeUp delay={0.66}>
-              <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-white/62 md:justify-center lg:justify-start">
+              <div className="mt-4 flex flex-wrap items-center gap-3 text-xs font-medium text-white/82 [text-shadow:0_2px_14px_rgba(0,0,0,0.8)] md:justify-center lg:justify-start">
                 <span className="inline-flex items-center gap-1.5">
                   <LockKeyhole className="h-3.5 w-3.5 text-luna-aurora-mint" aria-hidden="true" />
                   Private by design

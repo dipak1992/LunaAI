@@ -27,7 +27,7 @@ export default function TrustStrip({ className = '', delay = 0.4 }: TrustStripPr
   return (
     <FadeUp delay={delay}>
       <div
-        className={`mx-auto flex max-w-3xl flex-col gap-4 text-sm text-white/70 md:flex-row md:items-center md:justify-center md:gap-6 ${className}`}
+        className={`mx-auto flex max-w-3xl flex-col gap-4 text-sm font-medium text-white/88 [text-shadow:0_2px_14px_rgba(0,0,0,0.82)] md:flex-row md:items-center md:justify-center md:gap-6 ${className}`}
       >
         {TRUST_ITEMS.map((item, index) => (
           <div key={item.text} className="contents">

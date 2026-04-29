@@ -19,7 +19,7 @@ export default function StormAlert({ days }: Props) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="rounded-2xl border border-luna-aurora-pink/30 bg-luna-aurora-pink/5 px-4 py-3"
+          className="rounded-lg border border-luna-aurora-pink/30 bg-luna-aurora-pink/5 px-4 py-3"
         >
           <div className="flex items-start gap-3">
             <div className="mt-0.5 flex-shrink-0 rounded-full bg-luna-aurora-pink/20 p-1.5">
@@ -29,7 +29,7 @@ export default function StormAlert({ days }: Props) {
               <p className="text-sm font-medium text-luna-aurora-pink">
                 A storm may be arriving. Let&apos;s prepare.
               </p>
-              <p className="mt-0.5 text-xs text-luna-whisper/60">
+              <p className="mt-0.5 text-xs text-luna-whisper/76">
                 {incoming.day_name} looks heavier —{' '}
                 {incoming.summary || 'give yourself extra softness.'}
               </p>

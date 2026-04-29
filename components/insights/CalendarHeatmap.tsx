@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import type { DaySummary, HeatmapCell } from '@/types/insights';
 
@@ -36,6 +36,7 @@ const DAY_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTH_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 export default function CalendarHeatmap({ days, weeks = 13 }: CalendarHeatmapProps) {
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
   // Build a lookup: date string → DaySummary
   const byDate = useMemo(() => {
     const m = new Map<string, DaySummary>();
@@ -95,7 +96,7 @@ export default function CalendarHeatmap({ days, weeks = 13 }: CalendarHeatmapPro
           return (
             <div key={wi} className="flex-shrink-0" style={{ width: '1.75rem' }}>
               {label && (
-                <span className="text-xs text-white/30 leading-none">{label.label}</span>
+                <span className="text-xs text-white/58 leading-none">{label.label}</span>
               )}
             </div>
           );
@@ -112,7 +113,7 @@ export default function CalendarHeatmap({ days, weeks = 13 }: CalendarHeatmapPro
               style={{ height: '1.5rem' }}
             >
               {i % 2 === 1 && (
-                <span className="text-xs text-white/25 pr-1 leading-none">{label}</span>
+                <span className="text-xs text-white/54 pr-1 leading-none">{label}</span>
               )}
             </div>
           ))}
@@ -129,14 +130,29 @@ export default function CalendarHeatmap({ days, weeks = 13 }: CalendarHeatmapPro
                 const tooltipText = cell.count > 0
                   ? `${cell.date}: ${cell.count} check-in${cell.count > 1 ? 's' : ''}, score ${cell.score ?? '–'}`
                   : cell.date;
+                const isSelected = selectedDate === cell.date;
 
                 return (
                   <motion.div
                     key={cell.date}
-                    className="relative group"
+                    className="relative group outline-none"
                     style={{ width: '1.5rem', height: '1.5rem' }}
                     whileHover={!isFuture ? { scale: 1.3, zIndex: 10 } : {}}
                     transition={{ duration: 0.15 }}
+                    tabIndex={isFuture ? -1 : 0}
+                    role={isFuture ? undefined : 'button'}
+                    aria-label={tooltipText}
+                    aria-expanded={isSelected}
+                    onClick={() => {
+                      if (!isFuture) setSelectedDate(isSelected ? null : cell.date);
+                    }}
+                    onKeyDown={(event) => {
+                      if (isFuture) return;
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        setSelectedDate(isSelected ? null : cell.date);
+                      }
+                    }}
                   >
                     <div
                       className="w-full h-full rounded-sm transition-all duration-200"
@@ -151,11 +167,11 @@ export default function CalendarHeatmap({ days, weeks = 13 }: CalendarHeatmapPro
                     />
                     {/* Tooltip */}
                     {!isFuture && (
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-                        <div className="glass rounded-lg px-2.5 py-1.5 text-xs text-white/90 whitespace-nowrap shadow-luna">
+                      <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-20 pointer-events-none transition-opacity duration-150 ${isSelected ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 group-focus:opacity-100'}`}>
+                        <div className="rounded-lg border border-white/10 bg-luna-night/95 px-2.5 py-1.5 text-xs text-white/92 whitespace-nowrap shadow-luna">
                           <div className="font-medium">{tooltipText}</div>
                           {summary?.dominant_tone && (
-                            <div className="text-white/50 mt-0.5 capitalize">{summary.dominant_tone}</div>
+                            <div className="text-white/68 mt-0.5 capitalize">{summary.dominant_tone}</div>
                           )}
                         </div>
                       </div>
@@ -170,7 +186,7 @@ export default function CalendarHeatmap({ days, weeks = 13 }: CalendarHeatmapPro
 
       {/* Legend */}
       <div className="flex items-center gap-2 mt-3 justify-end">
-        <span className="text-xs text-white/30">Stormy</span>
+        <span className="text-xs text-white/58">Stormy</span>
         {[1, 3, 5, 7, 9].map(s => (
           <div
             key={s}
@@ -181,7 +197,7 @@ export default function CalendarHeatmap({ days, weeks = 13 }: CalendarHeatmapPro
             }}
           />
         ))}
-        <span className="text-xs text-white/30">Clear</span>
+        <span className="text-xs text-white/58">Clear</span>
       </div>
     </div>
   );

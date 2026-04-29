@@ -71,12 +71,12 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="min-h-screen aurora-bg flex flex-col">
+    <div className="app-shell min-h-screen aurora-bg flex flex-col">
       {/* Header */}
       <header className="flex items-center gap-4 px-4 sm:px-6 py-3 sm:py-4 border-b border-white/5">
         <Link
           href="/dashboard"
-          className="flex items-center gap-2 text-white/70 hover:text-white transition-colors text-[0.9375rem]"
+          className="flex items-center gap-2 text-white/74 hover:text-white transition-colors text-[0.9375rem]"
         >
           <ArrowLeft size={18} />
           <span className="hidden sm:inline">Dashboard</span>
@@ -99,20 +99,20 @@ export default function SettingsPage() {
           {/* Profile section */}
           <section className="mb-8">
             <div className="flex items-center gap-2 mb-4">
-              <User size={18} className="text-white/60" />
+              <User size={18} className="text-white/74" />
               <h2 className="text-lg text-white/90 font-medium">Profile</h2>
             </div>
 
-            <div className="glass rounded-2xl p-5 sm:p-6 space-y-5">
+            <div className="app-card p-5 sm:p-6 space-y-5">
               {/* Email (read-only) */}
               <div>
-                <label className="block text-sm text-white/60 mb-1.5">Email</label>
+                <label className="block text-sm text-white/72 mb-1.5">Email</label>
                 <p className="text-base text-white/90">{email}</p>
               </div>
 
               {/* Name (editable) */}
               <div>
-                <label htmlFor="name" className="block text-sm text-white/60 mb-1.5">
+                <label htmlFor="name" className="block text-sm text-white/72 mb-1.5">
                   Display name
                 </label>
                 <div className="flex gap-3">
@@ -122,12 +122,12 @@ export default function SettingsPage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="What should Luna call you?"
-                    className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-base text-white placeholder:text-white/40 focus:border-luna-rose/50 focus:outline-none transition-colors"
+                    className="flex-1 bg-white/5 border border-white/12 rounded-lg px-4 py-2.5 text-base text-white placeholder:text-white/58 focus:border-luna-rose/50 focus:outline-none transition-colors"
                   />
                   <button
                     onClick={handleSaveName}
                     disabled={saving}
-                    className="px-4 py-2.5 rounded-xl bg-white/10 border border-white/10 text-white/90 hover:bg-white/15 transition-colors text-sm font-medium disabled:opacity-50"
+                    className="px-4 py-2.5 rounded-lg bg-white/10 border border-white/12 text-white/92 hover:bg-white/15 transition-colors text-sm font-medium disabled:opacity-50"
                   >
                     {saving ? 'Saving...' : saved ? '✓ Saved' : 'Save'}
                   </button>
@@ -139,22 +139,22 @@ export default function SettingsPage() {
           {/* Billing section */}
           <section className="mb-8">
             <div className="flex items-center gap-2 mb-4">
-              <CreditCard size={18} className="text-white/60" />
+              <CreditCard size={18} className="text-white/74" />
               <h2 className="text-lg text-white/90 font-medium">Billing</h2>
             </div>
 
-            <div className="glass rounded-2xl p-5 sm:p-6 space-y-4">
+            <div className="app-card p-5 sm:p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-white/60 mb-0.5">Current plan</p>
+                  <p className="text-sm text-white/72 mb-0.5">Current plan</p>
                   <p className="text-base text-white/90 font-medium">
                     {profile ? tierLabel(profile.subscription_tier) : '—'}
                   </p>
                 </div>
                 {profile?.subscription_tier !== 'free' && profile?.subscription_current_period_end && (
                   <div className="text-right">
-                    <p className="text-sm text-white/60 mb-0.5">Renews</p>
-                    <p className="text-sm text-white/80">
+                    <p className="text-sm text-white/72 mb-0.5">Renews</p>
+                    <p className="text-sm text-white/84">
                       {new Date(profile.subscription_current_period_end).toLocaleDateString()}
                     </p>
                   </div>
@@ -172,7 +172,7 @@ export default function SettingsPage() {
             <form action={logout}>
               <button
                 type="submit"
-                className="flex items-center gap-2 px-4 py-3 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-colors text-base w-full"
+                className="flex items-center gap-2 px-4 py-3 rounded-lg text-white/74 hover:text-white hover:bg-white/5 transition-colors text-base w-full"
               >
                 <LogOut size={18} />
                 Sign out

@@ -1,7 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { CircleDot } from 'lucide-react';
 import type { TriggerFrequency } from '@/types/insights';
+import EmptyState from '@/components/ui/EmptyState';
 
 interface SymptomFrequencyProps {
   triggers: TriggerFrequency[];
@@ -29,9 +31,14 @@ export default function SymptomFrequency({ triggers, limit = 10 }: SymptomFreque
 
   if (top.length === 0) {
     return (
-      <div className="flex items-center justify-center h-32 text-white/30 text-sm">
-        No triggers recorded yet
-      </div>
+      <EmptyState
+        icon={<CircleDot className="h-5 w-5" aria-hidden="true" />}
+        title="No triggers recorded yet"
+        description="Triggers appear here once Luna can spot what tends to show up around symptoms."
+        requirement="Add 3 check-ins with symptoms or triggers to make this section useful."
+        actionLabel="Check in now"
+        actionHref="/dashboard?checkin=true"
+      />
     );
   }
 
@@ -43,8 +50,8 @@ export default function SymptomFrequency({ triggers, limit = 10 }: SymptomFreque
         return (
           <div key={t.trigger_name} className="group">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-sm text-white/80 capitalize">{t.trigger_name}</span>
-              <span className="text-xs text-white/40">
+              <span className="text-sm text-white/86 capitalize">{t.trigger_name}</span>
+              <span className="text-xs text-white/66">
                 {t.occurrences}×
               </span>
             </div>

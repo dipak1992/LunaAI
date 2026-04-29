@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { ArrowLeft, Bookmark } from 'lucide-react';
 import HaikuCard from '@/components/haiku/HaikuCard';
 import Logo from '@/components/brand/Logo';
+import EmptyState from '@/components/ui/EmptyState';
 import type { HaikuRecord } from '@/lib/haiku/generate';
 
 export default function HaikuCollectionPage() {
@@ -34,12 +35,12 @@ export default function HaikuCollectionPage() {
   }, []);
 
   return (
-    <div className="min-h-screen aurora-bg">
+    <div className="app-shell min-h-screen aurora-bg">
       <header className="flex items-center justify-between border-b border-white/5 px-6 py-4">
         <div className="flex items-center gap-4">
           <Link
             href="/dashboard"
-            className="flex items-center gap-1.5 text-sm text-white/40 transition-colors hover:text-white/80"
+            className="flex items-center gap-1.5 text-sm text-white/66 transition-colors hover:text-white/88"
           >
             <ArrowLeft size={16} />
             <span>Dashboard</span>
@@ -59,8 +60,8 @@ export default function HaikuCollectionPage() {
           <p className="mb-3 text-xs uppercase tracking-[0.14em] text-white/55">
             Your collection
           </p>
-          <h1 className="font-serif text-4xl text-luna-cream md:text-5xl">
-            Saved <span className="italic text-white/60">whispers.</span>
+          <h1 className="font-serif text-3xl text-luna-cream md:text-4xl">
+            Saved <span className="italic text-white/72">whispers.</span>
           </h1>
         </motion.div>
 
@@ -69,22 +70,25 @@ export default function HaikuCollectionPage() {
             {Array.from({ length: 3 }).map((_, index) => (
               <div
                 key={index}
-                className="h-44 animate-pulse rounded-2xl border border-white/10 bg-white/[0.04]"
+                className="h-44 animate-pulse rounded-lg border border-white/10 bg-white/[0.04]"
               />
             ))}
           </div>
         ) : haikus.length === 0 ? (
           <motion.div
-            className="flex flex-col items-center rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-14 text-center"
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           >
-            <Bookmark className="mb-5 h-8 w-8 text-white/35" />
-            <p className="font-serif text-2xl italic text-luna-cream">No whispers kept yet.</p>
-            <p className="mt-3 max-w-sm text-sm leading-6 text-white/45">
-              Save today&apos;s haiku, and it will rest here whenever you need it.
-            </p>
+            <EmptyState
+              icon={<Bookmark className="h-5 w-5" aria-hidden="true" />}
+              title="No whispers kept yet."
+              description="Save today's haiku, and it will rest here whenever you need it."
+              requirement="Complete one check-in to receive a haiku you can save."
+              reassurance="Saved items are private to your account."
+              actionLabel="Check in now"
+              actionHref="/dashboard?checkin=true"
+            />
           </motion.div>
         ) : (
           <div className="grid gap-5">

@@ -21,7 +21,7 @@ interface StatCardProps {
 function StatCard({ icon, label, value, sub, color, delay = 0 }: StatCardProps) {
   return (
     <motion.div
-      className="glass rounded-2xl p-4 flex flex-col gap-2"
+      className="app-card flex flex-col gap-2 p-4"
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
@@ -36,8 +36,8 @@ function StatCard({ icon, label, value, sub, color, delay = 0 }: StatCardProps) 
         <div className="text-2xl font-fraunces" style={{ color }}>
           {value}
         </div>
-        <div className="text-xs text-white/50 mt-0.5">{label}</div>
-        {sub && <div className="text-xs text-white/30 mt-0.5">{sub}</div>}
+        <div className="text-xs text-white/68 mt-0.5">{label}</div>
+        {sub && <div className="text-xs text-white/58 mt-0.5">{sub}</div>}
       </div>
     </motion.div>
   );
@@ -111,18 +111,18 @@ export default function InsightsSummary({ data }: InsightsSummaryProps) {
       {/* Biggest trigger callout */}
       {biggestTrigger && (
         <motion.div
-          className="glass-aurora rounded-2xl px-5 py-4 flex items-center gap-3"
+          className="rounded-lg border border-luna-aurora-lilac/18 bg-luna-aurora-lilac/[0.06] px-5 py-4 flex items-center gap-3"
           initial={{ opacity: 0, x: -12 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5, delay: 0.32 }}
         >
           <span className="text-2xl">⚡</span>
           <div>
-            <p className="text-xs text-white/55 uppercase tracking-[0.14em] mb-0.5">
+            <p className="text-xs text-white/70 uppercase tracking-[0.14em] mb-0.5">
               Most frequent trigger
             </p>
             <p className="text-white/90 font-medium capitalize">{biggestTrigger}</p>
-            <p className="text-xs text-white/40 mt-0.5">
+            <p className="text-xs text-white/64 mt-0.5">
               Appeared {triggers[0].occurrences} time{triggers[0].occurrences !== 1 ? 's' : ''} in the selected period
             </p>
           </div>

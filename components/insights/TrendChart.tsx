@@ -29,6 +29,7 @@ function buildPath(points: { x: number; y: number }[]): string {
 export default function TrendChart({ days }: TrendChartProps) {
   const [activeMetric, setActiveMetric] = useState<TrendMetric>('avg_weather_score');
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
 
   const sorted = useMemo(
     () => [...days].sort((a, b) => a.log_date.localeCompare(b.log_date)),
@@ -66,6 +67,7 @@ export default function TrendChart({ days }: TrendChartProps) {
 
   const color = TREND_METRIC_COLORS[activeMetric];
   const gradId = `trend-grad-${activeMetric}`;
+  const activeIdx = selectedIdx ?? hoveredIdx;
 
   // X-axis date labels (show ~5 evenly spaced)
   const xLabels = useMemo(() => {
@@ -84,8 +86,15 @@ export default function TrendChart({ days }: TrendChartProps) {
       });
   }, [sorted]);
 
-  const hoveredDay = hoveredIdx !== null ? sorted[hoveredIdx] : null;
-  const hoveredVal = hoveredDay ? (hoveredDay[activeMetric] as number | null) : null;
+  const activeDay = activeIdx !== null ? sorted[activeIdx] : null;
+  const activeVal = activeDay ? (activeDay[activeMetric] as number | null) : null;
+  const metricValues = sorted
+    .map(d => d[activeMetric] as number | null)
+    .filter((v): v is number => v !== null);
+  const latestValue = metricValues.at(-1);
+  const avgValue = metricValues.length
+    ? Math.round((metricValues.reduce((sum, value) => sum + value, 0) / metricValues.length) * 10) / 10
+    : null;
 
   return (
     <div className="w-full">
@@ -94,11 +103,15 @@ export default function TrendChart({ days }: TrendChartProps) {
         {METRICS.map(m => (
           <button
             key={m}
-            onClick={() => setActiveMetric(m)}
+            onClick={() => {
+              setActiveMetric(m);
+              setHoveredIdx(null);
+              setSelectedIdx(null);
+            }}
             className={`min-h-11 rounded-full px-3 py-2 text-xs font-medium transition-all duration-200 sm:min-h-0 sm:py-1 ${
               activeMetric === m
                 ? 'text-luna-night'
-                : 'bg-white/5 text-white/50 hover:bg-white/10 hover:text-white/80'
+                : 'bg-white/5 text-white/68 hover:bg-white/10 hover:text-white/86'
             }`}
             style={
               activeMetric === m
@@ -111,19 +124,27 @@ export default function TrendChart({ days }: TrendChartProps) {
         ))}
       </div>
 
+      {avgValue !== null && (
+        <div className="mb-4 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-xs leading-5 text-white/72">
+          <span className="font-medium text-white/90">{TREND_METRIC_LABELS[activeMetric]}</span>
+          {' '}averaged {avgValue}/10 across {metricValues.length} logged day{metricValues.length === 1 ? '' : 's'}
+          {latestValue !== undefined ? `; latest logged value is ${latestValue}/10.` : '.'}
+        </div>
+      )}
+
       {/* Chart */}
       {sorted.length === 0 ? (
-        <div className="flex items-center justify-center h-32 text-white/30 text-sm">
+        <div className="flex items-center justify-center h-32 rounded-lg border border-white/10 bg-white/[0.035] text-white/68 text-sm">
           No data yet — complete your first check-in to see trends
         </div>
       ) : (
         <div className="relative w-full">
           {/* Hover tooltip */}
-          {hoveredDay && hoveredVal !== null && (
-            <div className="absolute top-0 right-0 glass rounded-xl px-3 py-2 text-xs pointer-events-none z-10">
-              <div className="text-white/50">{hoveredDay.log_date}</div>
+          {activeDay && activeVal !== null && (
+            <div className="absolute top-0 right-0 rounded-lg border border-white/10 bg-luna-night/95 px-3 py-2 text-xs shadow-xl pointer-events-none z-10">
+              <div className="text-white/70">{activeDay.log_date}</div>
               <div className="font-medium" style={{ color }}>
-                {TREND_METRIC_LABELS[activeMetric]}: {hoveredVal}
+                {TREND_METRIC_LABELS[activeMetric]}: {activeVal}
               </div>
             </div>
           )}
@@ -133,6 +154,7 @@ export default function TrendChart({ days }: TrendChartProps) {
             className="w-full"
             style={{ height: 160 }}
             onMouseLeave={() => setHoveredIdx(null)}
+            aria-label={`${TREND_METRIC_LABELS[activeMetric]} trend chart`}
           >
             <defs>
               <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
@@ -149,14 +171,14 @@ export default function TrendChart({ days }: TrendChartProps) {
                 <g key={t}>
                   <line
                     x1={0} y1={y} x2={CHART_W} y2={y}
-                    stroke="rgba(255,255,255,0.05)"
+                    stroke="rgba(255,255,255,0.1)"
                     strokeWidth={1}
                   />
                   <text
                     x={-4} y={y + 4}
                     textAnchor="end"
                     fontSize={10}
-                    fill="rgba(255,255,255,0.25)"
+                    fill="rgba(255,255,255,0.55)"
                   >
                     {val}
                   </text>
@@ -189,9 +211,9 @@ export default function TrendChart({ days }: TrendChartProps) {
                 <circle
                   cx={pt.x}
                   cy={pt.y}
-                  r={hoveredIdx === pt.idx ? 5 : 3}
+                  r={activeIdx === pt.idx ? 5 : 3}
                   fill={color}
-                  opacity={hoveredIdx === pt.idx ? 1 : 0.7}
+                  opacity={activeIdx === pt.idx ? 1 : 0.78}
                   style={{ transition: 'r 0.15s, opacity 0.15s' }}
                 />
                 {/* Invisible hit area */}
@@ -201,6 +223,7 @@ export default function TrendChart({ days }: TrendChartProps) {
                   r={12}
                   fill="transparent"
                   onMouseEnter={() => setHoveredIdx(pt.idx)}
+                  onClick={() => setSelectedIdx(selectedIdx === pt.idx ? null : pt.idx)}
                 />
               </g>
             ))}
@@ -213,7 +236,7 @@ export default function TrendChart({ days }: TrendChartProps) {
                 y={CHART_H + 16}
                 textAnchor="middle"
                 fontSize={10}
-                fill="rgba(255,255,255,0.25)"
+                fill="rgba(255,255,255,0.55)"
               >
                 {label}
               </text>

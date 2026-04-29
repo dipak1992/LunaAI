@@ -23,8 +23,8 @@ export default function MobileBottomNav() {
             <Link
               key={href}
               href={href}
-              className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-2xl text-[11px] font-medium transition-colors ${
-                active ? 'text-luna-cream' : 'text-luna-whisper/48'
+              className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-lg text-[11px] font-medium transition-colors ${
+                active ? 'text-luna-cream' : 'text-luna-whisper/64'
               }`}
               aria-current={active ? 'page' : undefined}
             >
@@ -49,8 +49,8 @@ export default function MobileBottomNav() {
             <Link
               key={href}
               href={href}
-              className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-2xl text-[11px] font-medium transition-colors ${
-                active ? 'text-luna-cream' : 'text-luna-whisper/48'
+              className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-lg text-[11px] font-medium transition-colors ${
+                active ? 'text-luna-cream' : 'text-luna-whisper/64'
               }`}
               aria-current={active ? 'page' : undefined}
             >

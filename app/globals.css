@@ -258,7 +258,7 @@
   h1, h2, h3, h4 {
     font-family: var(--font-serif);
     font-weight: 400;
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
     color: white;
   }
 
@@ -328,11 +328,11 @@
 
   /* ── Glass Cards ── */
   .glass {
-    background: rgba(255 255 255 / 0.04);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255 255 255 / 0.08);
-    border-radius: 1.5rem;
+    background: rgba(255 255 255 / 0.055);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255 255 255 / 0.1);
+    border-radius: 0.5rem;
   }
 
   .glass-hover {
@@ -340,7 +340,7 @@
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255 255 255 / 0.08);
-    border-radius: 1.5rem;
+    border-radius: 0.5rem;
     transition: all 500ms var(--ease-luna);
   }
   .glass-hover:hover {
@@ -354,7 +354,7 @@
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255 255 255 / 0.08);
-    border-radius: 1.5rem;
+    border-radius: 0.5rem;
     padding: 2rem;
   }
   @media (min-width: 768px) {
@@ -365,8 +365,67 @@
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255 255 255 / 0.1);
-    border-radius: 1.5rem;
+    border-radius: 0.5rem;
     background: linear-gradient(135deg, rgba(233,184,255,0.08), rgba(255,158,199,0.05));
+  }
+
+  .app-shell {
+    background-color: #0B0B14;
+  }
+
+  .app-shell h1 {
+    font-size: clamp(1.75rem, 2.4vw, 2.75rem);
+    line-height: 1.12;
+  }
+
+  .app-shell h2 {
+    font-size: clamp(1rem, 1.4vw, 1.25rem);
+    line-height: 1.35;
+  }
+
+  .app-shell h3 {
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  .app-shell p {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+  }
+
+  .app-card {
+    border: 1px solid rgba(232, 228, 220, 0.12);
+    border-radius: 0.5rem;
+    background: rgba(232, 228, 220, 0.055);
+  }
+
+  .app-card-light {
+    border: 1px solid rgba(11, 11, 20, 0.1);
+    border-radius: 0.5rem;
+    background: #FAF7F2;
+    color: #0B0B14;
+  }
+
+  .app-section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .app-section-title h2 {
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    font-weight: 650;
+    color: rgba(250, 247, 242, 0.92);
+  }
+
+  .app-section-title p {
+    margin-top: 0.125rem;
+    color: rgba(232, 228, 220, 0.68);
+    font-size: 0.8125rem;
+    line-height: 1.45;
   }
 
   /* ── Buttons ── */
@@ -649,10 +708,10 @@
   position: absolute;
   inset: -50%;
   background:
-    radial-gradient(ellipse at 20% 30%, rgba(233,184,255,0.11) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 70%, rgba(255,158,199,0.1) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(255,212,163,0.08) 0%, transparent 50%);
-  animation: auroraShift 20s ease infinite;
+    radial-gradient(ellipse at 20% 30%, rgba(233,184,255,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(255,158,199,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(255,212,163,0.04) 0%, transparent 50%);
+  animation: auroraShift 36s ease infinite;
   z-index: 0;
 }
 .aurora-bg > * { position: relative; z-index: 1; }
@@ -717,6 +776,14 @@
     0 0 80px rgba(255,158,199,0.3),
     inset 0 0 20px rgba(255,255,255,0.3);
   animation: pulseGlow 3s ease-in-out infinite;
+}
+
+.app-shell .voice-orb {
+  box-shadow:
+    0 0 28px rgba(233,184,255,0.34),
+    0 0 54px rgba(255,158,199,0.2),
+    inset 0 0 16px rgba(255,255,255,0.24);
+  animation-duration: 4.5s;
 }
 
 .moon-phase {

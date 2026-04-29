@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -12,13 +11,11 @@ import {
   Cloud,
   CloudSun,
   HeartPulse,
-  LockKeyhole,
   Menu,
   MessageCircle,
   Mic,
   Moon,
   Settings,
-  Sparkles,
   Sun,
   X,
 } from 'lucide-react';
@@ -28,6 +25,7 @@ import ForecastStrip from '@/components/forecast/ForecastStrip';
 import TodayHaiku from '@/components/haiku/TodayHaiku';
 import SeasonReportButton from '@/components/reports/SeasonReportButton';
 import SoundToggle from '@/components/settings/SoundToggle';
+import EmptyState from '@/components/ui/EmptyState';
 import { createClient } from '@/lib/supabase/client';
 import { WelcomeBanner } from '@/components/trial/WelcomeBanner';
 import type { VoiceCheckInResult } from '@/types/voice';
@@ -136,7 +134,7 @@ export default function DashboardPage() {
       : 'Check in when ready';
 
   return (
-    <div className="min-h-screen aurora-bg-subtle flex flex-col">
+    <div className="app-shell min-h-screen aurora-bg-subtle flex flex-col">
       {/* Header */}
       <header className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-white/5">
         <Logo size={28} />
@@ -152,7 +150,7 @@ export default function DashboardPage() {
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-full transition-all duration-200 text-[0.9375rem] ${
                   isActive
                     ? 'bg-white/10 text-white border border-white/15'
-                    : 'glass text-white/80 hover:text-white'
+                    : 'glass text-white/82 hover:text-white'
                 }`}
                 aria-current={isActive ? 'page' : undefined}
               >
@@ -191,7 +189,7 @@ export default function DashboardPage() {
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-[0.9375rem] transition-all ${
                   isActive
                     ? 'bg-white/10 text-white border border-white/15'
-                    : 'glass text-white/80 hover:text-white'
+                    : 'glass text-white/82 hover:text-white'
                 }`}
               >
                 <Icon size={16} />
@@ -210,7 +208,7 @@ export default function DashboardPage() {
           <WelcomeBanner name={userName} />
         </div>
 
-        <section className="rounded-2xl border border-white/10 bg-luna-cream p-5 text-luna-ink shadow-2xl shadow-black/20 sm:p-6 md:p-8">
+        <section className="app-card-light p-5 shadow-2xl shadow-black/16 sm:p-6 md:p-8">
           {/* Welcome + Greeting */}
           <motion.div
             className="text-center w-full"
@@ -219,14 +217,14 @@ export default function DashboardPage() {
             transition={{ duration: 0.6 }}
           >
             {userName && (
-              <p className="text-luna-ink/62 text-base sm:text-lg mb-1">
+              <p className="text-luna-ink/68 text-base sm:text-lg mb-1">
                 {greeting()}, <span className="text-luna-ink font-semibold">{userName}</span>
               </p>
             )}
-	            <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-luna-ink mb-2 sm:mb-3">
+	            <h1 className="font-serif text-3xl sm:text-4xl text-luna-ink mb-2 sm:mb-3">
 	              {isFirstTime ? 'Your journey begins here.' : 'How are you today?'}
 	            </h1>
-	            <p className="mx-auto max-w-md text-sm leading-6 text-luna-ink/68 sm:text-[1.0625rem]">
+	            <p className="mx-auto max-w-md text-sm leading-6 text-luna-ink/72 sm:text-[1rem]">
 	              {isFirstTime
 	                ? 'Speak, type, or tap what feels true right now.'
 	                : 'A quick read on today, then Luna can listen.'}
@@ -267,7 +265,7 @@ export default function DashboardPage() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-	              className="mx-auto mt-4 flex w-fit items-center gap-2 rounded-full bg-luna-aurora-mint/20 px-4 py-2 text-sm text-luna-ink/70 sm:mt-6"
+	              className="mx-auto mt-4 flex w-fit items-center gap-2 rounded-full bg-luna-aurora-mint/20 px-4 py-2 text-sm text-luna-ink/74 sm:mt-6"
             >
               <Moon className="h-4 w-4 text-luna-storm" aria-hidden="true" />
               <span>
@@ -284,53 +282,18 @@ export default function DashboardPage() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-	              className="mt-5 w-full overflow-hidden rounded-2xl border border-luna-ink/10 bg-white text-center sm:mt-8"
+	              className="mt-5 w-full sm:mt-8"
 	            >
-	            {/* Illustration banner */}
-	            <div className="relative hidden w-full sm:block" style={{ aspectRatio: '2 / 1' }}>
-              <Image
-                src="/images/dashboard-empty.png"
-                alt="Luna is ready to listen"
-                fill
-                sizes="(min-width: 640px) 672px, 100vw"
-                className="object-cover object-center"
-                style={{ opacity: 0.82 }}
+              <EmptyState
+                tone="light"
+                icon={<Mic className="h-5 w-5" aria-hidden="true" />}
+                title="Luna is ready to listen."
+                description="Your first check-in starts your private pattern history, whether you speak, type, or keep it short."
+                requirement="1 check-in unlocks your first Today snapshot. 7 check-ins start shaping a forecast."
+                reassurance="Transcript saved privately. You control your data."
+                actionLabel="Start check-in"
+                onAction={() => setModalOpen(true)}
               />
-              {/* Bottom fade into card body */}
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    'linear-gradient(180deg, transparent 40%, rgba(10,14,39,0.85) 100%)',
-                }}
-              />
-            </div>
-            {/* Card body */}
-	            <div className="relative z-10 px-5 py-5 sm:-mt-8 sm:px-8 sm:pb-8 sm:pt-0">
-              <h2 className="font-serif text-xl sm:text-2xl text-luna-ink mb-3">
-                Luna is ready to listen.
-              </h2>
-              <p className="text-luna-ink/68 text-sm sm:text-base leading-relaxed max-w-sm mx-auto">
-                Your first whisper starts your story. She&apos;ll remember how you feel today,
-                and help you understand your patterns over time.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6 text-xs text-luna-ink/55">
-                <span className="inline-flex items-center gap-1.5">
-                  <Mic className="h-3.5 w-3.5" aria-hidden="true" />
-                  Voice or text
-                </span>
-                <span className="hidden sm:inline">•</span>
-                <span className="inline-flex items-center gap-1.5">
-                  <LockKeyhole className="h-3.5 w-3.5" aria-hidden="true" />
-                  Private & secure
-                </span>
-                <span className="hidden sm:inline">•</span>
-                <span className="inline-flex items-center gap-1.5">
-                  <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-                  Haiku after each check-in
-                </span>
-              </div>
-            </div>
             </motion.div>
           )}
 
@@ -366,13 +329,13 @@ export default function DashboardPage() {
           {/* Last check-in result card */}
           {lastResult && (
             <motion.div
-              className="rounded-2xl border border-white/10 bg-white/[0.05] p-5 shadow-2xl shadow-black/10 backdrop-blur-xl sm:p-6 w-full"
+              className="app-card p-5 shadow-2xl shadow-black/10 sm:p-6 w-full"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
             <div className="flex items-center justify-between mb-3">
-              <p className="text-[0.875rem] text-white/70 uppercase tracking-[0.14em]">
+              <p className="text-[0.8125rem] text-white/76 uppercase tracking-[0.14em]">
                 Latest check-in
               </p>
               {lastResult.weatherScore >= 8 ? (
@@ -383,7 +346,7 @@ export default function DashboardPage() {
                 <Cloud className="h-5 w-5 text-luna-aurora-lilac" aria-hidden="true" />
               )}
             </div>
-            <p className="text-white/90 text-base leading-relaxed italic font-serif">
+            <p className="text-white/92 text-base leading-relaxed italic font-serif">
               &ldquo;{lastResult.lunaResponse}&rdquo;
             </p>
             {lastResult.triggers.length > 0 && (
@@ -441,9 +404,9 @@ function TodayMetric({
 }) {
   return (
     <div
-      className="min-h-[76px] rounded-2xl border border-luna-ink/10 bg-white/70 px-3 py-3 text-left"
+      className="min-h-[76px] rounded-lg border border-luna-ink/10 bg-white/74 px-3 py-3 text-left"
     >
-      <span className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.12em] text-luna-ink/45">
+      <span className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.12em] text-luna-ink/54">
         {icon}
         {label}
       </span>

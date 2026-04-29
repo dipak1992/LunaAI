@@ -9,6 +9,7 @@ import InsightsSummary from '@/components/insights/InsightsSummary';
 import CalendarHeatmap from '@/components/insights/CalendarHeatmap';
 import TrendChart from '@/components/insights/TrendChart';
 import SymptomFrequency from '@/components/insights/SymptomFrequency';
+import EmptyState from '@/components/ui/EmptyState';
 import type { InsightsPayload } from '@/types/insights';
 
 type Period = 30 | 60 | 90;
@@ -24,7 +25,7 @@ function Skeleton({ className = '' }: { className?: string }) {
 
 function SectionSkeleton() {
   return (
-    <div className="glass rounded-2xl p-6 space-y-3">
+    <div className="app-card p-6 space-y-3">
       <Skeleton className="h-4 w-32" />
       <Skeleton className="h-32 w-full" />
     </div>
@@ -45,14 +46,16 @@ function Section({
 }) {
   return (
     <motion.div
-      className="glass rounded-2xl p-5 sm:p-6"
+      className="app-card p-5 sm:p-6"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
     >
-      <div className="mb-4">
-        <h2 className="text-base font-medium text-white/90">{title}</h2>
-        {subtitle && <p className="text-xs text-white/40 mt-0.5">{subtitle}</p>}
+      <div className="app-section-title">
+        <div>
+          <h2>{title}</h2>
+          {subtitle && <p>{subtitle}</p>}
+        </div>
       </div>
       {children}
     </motion.div>
@@ -85,19 +88,20 @@ export default function InsightsPage() {
   }, []);
 
   useEffect(() => {
-    fetchInsights(period);
+    const id = window.setTimeout(() => fetchInsights(period), 0);
+    return () => window.clearTimeout(id);
   }, [period, fetchInsights]);
 
   const PERIODS: Period[] = [30, 60, 90];
 
   return (
-    <div className="min-h-screen aurora-bg flex flex-col">
+    <div className="app-shell min-h-screen aurora-bg flex flex-col">
       {/* Nav */}
       <header className="flex items-center justify-between px-6 py-4 border-b border-white/5">
         <div className="flex items-center gap-4">
           <Link
             href="/dashboard"
-            className="flex items-center gap-1.5 text-white/40 hover:text-white/80 transition-colors text-sm"
+            className="flex items-center gap-1.5 text-white/66 hover:text-white/88 transition-colors text-sm"
           >
             <ArrowLeft size={16} />
             <span>Dashboard</span>
@@ -108,7 +112,7 @@ export default function InsightsPage() {
 
         <div className="flex items-center gap-2">
           {/* Period selector */}
-          <div className="flex items-center gap-1 glass rounded-full px-1 py-1">
+          <div className="flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.055] px-1 py-1">
             {PERIODS.map(p => (
               <button
                 key={p}
@@ -116,7 +120,7 @@ export default function InsightsPage() {
                 className={`px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
                   period === p
                     ? 'bg-white/15 text-white'
-                    : 'text-white/40 hover:text-white/70'
+                    : 'text-white/64 hover:text-white/82'
                 }`}
               >
                 {p}d
@@ -128,7 +132,7 @@ export default function InsightsPage() {
           <button
             onClick={() => fetchInsights(period)}
             disabled={loading}
-            className="w-8 h-8 flex items-center justify-center rounded-full glass text-white/40 hover:text-white/80 transition-colors disabled:opacity-40"
+            className="w-8 h-8 flex items-center justify-center rounded-full border border-white/10 bg-white/[0.055] text-white/66 hover:text-white/88 transition-colors disabled:opacity-40"
             aria-label="Refresh insights"
           >
             <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
@@ -144,10 +148,10 @@ export default function InsightsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="font-fraunces text-2xl md:text-3xl text-aurora mb-1">
+          <h1 className="font-fraunces text-2xl md:text-3xl text-white mb-1">
             Your Insights
           </h1>
-          <p className="text-sm text-white/40">
+          <p className="text-sm text-white/68">
             Patterns and trends from your last {period} days
           </p>
         </motion.div>
@@ -155,7 +159,7 @@ export default function InsightsPage() {
         {/* Error state */}
         {error && (
           <motion.div
-            className="glass rounded-2xl p-5 border border-red-400/20 text-red-300/80 text-sm"
+            className="rounded-lg border border-red-400/25 bg-red-400/8 p-5 text-red-200 text-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
@@ -168,7 +172,7 @@ export default function InsightsPage() {
           <div className="space-y-5">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[0, 1, 2, 3].map(i => (
-                <Skeleton key={i} className="h-28 rounded-2xl" />
+                <Skeleton key={i} className="h-28 rounded-lg" />
               ))}
             </div>
             <SectionSkeleton />
@@ -196,9 +200,14 @@ export default function InsightsPage() {
               delay={0.1}
             >
               {data.days.length === 0 ? (
-                <div className="flex items-center justify-center h-24 text-white/30 text-sm">
-                  No check-ins in this period
-                </div>
+                <EmptyState
+                  icon={<Moon className="h-5 w-5" aria-hidden="true" />}
+                  title="No check-ins in this period"
+                  description="Choose a wider range or add one short check-in to light up the calendar."
+                  requirement="1 check-in adds a day marker. 3 check-ins make early patterns easier to read."
+                  actionLabel="Check in now"
+                  actionHref="/dashboard?checkin=true"
+                />
               ) : (
                 <CalendarHeatmap
                   days={data.days}
@@ -250,13 +259,13 @@ export default function InsightsPage() {
                         return (
                           <motion.div
                             key={tone}
-                            className="flex items-center gap-2 glass rounded-full px-3 py-1.5"
+                            className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.055] px-3 py-1.5"
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.3 }}
                           >
-                            <span className="text-sm capitalize text-white/80">{tone}</span>
-                            <span className="text-xs text-white/40">{pct}%</span>
+                            <span className="text-sm capitalize text-white/86">{tone}</span>
+                            <span className="text-xs text-white/66">{pct}%</span>
                           </motion.div>
                         );
                       });
@@ -268,21 +277,19 @@ export default function InsightsPage() {
             {/* Empty state */}
             {data.days.length === 0 && !loading && (
               <motion.div
-                className="glass rounded-2xl p-10 text-center"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
               >
-                <Moon className="mx-auto mb-3 h-9 w-9 text-luna-aurora-mint/80" aria-hidden="true" />
-                <h3 className="font-fraunces text-xl text-white/70 mb-2">
-                  No data yet
-                </h3>
-                <p className="text-sm text-white/40 mb-5">
-                  Complete your first voice check-in to start seeing insights
-                </p>
-                <Link href="/dashboard" className="btn-primary text-sm px-5 py-2.5">
-                  Go to Dashboard
-                </Link>
+                <EmptyState
+                  icon={<Moon className="h-5 w-5" aria-hidden="true" />}
+                  title="No insight history yet"
+                  description="Complete your first check-in and Luna will start turning daily notes into readable patterns."
+                  requirement="1 check-in unlocks the first summary. 7 check-ins start making trends more useful."
+                  reassurance="Your logs stay private and can be controlled from Settings."
+                  actionLabel="Start check-in"
+                  actionHref="/dashboard?checkin=true"
+                />
               </motion.div>
             )}
           </>

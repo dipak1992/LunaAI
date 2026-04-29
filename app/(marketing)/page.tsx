@@ -24,6 +24,9 @@ import {
   Check,
   Play,
   X,
+  LockKeyhole,
+  ShieldCheck,
+  TrendingUp,
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import Header from '@/components/marketing/Header';
@@ -143,6 +146,24 @@ const BLOG_TEASERS = [
   },
 ];
 
+const HERO_PROOF = [
+  {
+    icon: Mic,
+    label: 'Voice check-in',
+    value: 'I could not sleep again...',
+  },
+  {
+    icon: CloudSun,
+    label: 'Body forecast',
+    value: 'Cloudy stretch likely Wed',
+  },
+  {
+    icon: TrendingUp,
+    label: 'Pattern noticed',
+    value: 'Sleep and warmth linked',
+  },
+];
+
 export default function LandingPage() {
   const [orbPressed, setOrbPressed] = useState(false);
   const [demoVideoReady, setDemoVideoReady] = useState(false);
@@ -193,9 +214,14 @@ export default function LandingPage() {
       <AuroraBackground />
       <StarField />
       <Header />
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-luna-ink/88 px-4 py-3 backdrop-blur-xl md:hidden">
+        <GlowButton href="/trial" variant="primary" className="min-h-11 w-full">
+          Try Luna Free
+        </GlowButton>
+      </div>
 
       {/* ── HERO ── */}
-      <section className="relative flex min-h-screen items-center overflow-hidden px-6 py-20 pt-28">
+      <section className="relative flex min-h-screen items-center overflow-hidden px-6 pb-28 pt-28 md:pb-20">
         {/* Hero lifestyle photo — full bleed with dark overlay */}
         <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
           <Image
@@ -271,7 +297,36 @@ export default function LandingPage() {
               </div>
             </FadeUp>
 
+            <FadeUp delay={0.52}>
+              <div className="mt-7 grid max-w-2xl gap-3 sm:grid-cols-3 md:mx-auto lg:mx-0">
+                {HERO_PROOF.map((proof) => (
+                  <div
+                    key={proof.label}
+                    className="rounded-2xl border border-luna-cream/12 bg-luna-ink/45 p-4 text-left shadow-xl shadow-black/10 backdrop-blur-xl"
+                  >
+                    <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.12em] text-luna-aurora-mint">
+                      <proof.icon className="h-4 w-4" aria-hidden="true" />
+                      {proof.label}
+                    </div>
+                    <p className="text-sm leading-5 text-luna-cream/82">{proof.value}</p>
+                  </div>
+                ))}
+              </div>
+            </FadeUp>
+
             <TrustStrip className="mt-9 md:mx-auto lg:mx-0" delay={0.6} />
+            <FadeUp delay={0.66}>
+              <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-white/62 md:justify-center lg:justify-start">
+                <span className="inline-flex items-center gap-1.5">
+                  <LockKeyhole className="h-3.5 w-3.5 text-luna-aurora-mint" aria-hidden="true" />
+                  Private by design
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <ShieldCheck className="h-3.5 w-3.5 text-luna-aurora-mint" aria-hidden="true" />
+                  Not a medical device
+                </span>
+              </div>
+            </FadeUp>
           </div>
 
           <FadeUp delay={0.3} className="lg:justify-self-end">

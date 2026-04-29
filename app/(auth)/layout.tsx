@@ -73,6 +73,16 @@ export default function AuthLayout({
           <div className="mb-8 flex justify-center lg:hidden">
             <Logo size={40} />
           </div>
+          <div className="mb-8 rounded-2xl border border-luna-aurora-mint/20 bg-luna-aurora-mint/10 p-4">
+            <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-luna-cream">
+              <ShieldCheck className="h-4 w-4 text-luna-aurora-mint" aria-hidden="true" />
+              Private before you begin
+            </div>
+            <p className="text-sm leading-6 text-white/62">
+              No credit card to start. Your check-ins stay protected, and Luna is not a
+              replacement for a clinician.
+            </p>
+          </div>
           {children}
           <div className="mt-8 flex items-center justify-center gap-2 text-xs text-white/50">
             <ShieldCheck className="h-4 w-4 text-luna-aurora-mint" aria-hidden="true" />

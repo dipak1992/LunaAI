@@ -266,6 +266,9 @@ export default function PricingPage() {
                 >
                   {loading === plan.id ? 'Opening...' : plan.ctaLabel}
                 </button>
+                <p className="mt-4 text-center text-xs leading-5 text-luna-ink/55">
+                  Cancel anytime. Private by design. Luna is not a medical device.
+                </p>
               </article>
             </FadeUp>
           ))}

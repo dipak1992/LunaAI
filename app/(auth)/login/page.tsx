@@ -104,12 +104,22 @@ export default function LoginPage() {
         </motion.div>
       </form>
 
+      {/* Trust strip */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.8 }}
+        className="mt-8 text-xs text-white/40 text-center"
+      >
+        Free forever • No credit card • Your data stays yours
+      </motion.p>
+
       {/* Link to signup */}
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6, duration: 0.8 }}
-        className="mt-10 text-[0.9375rem] text-white/70 text-center"
+        className="mt-6 text-[0.9375rem] text-white/70 text-center"
       >
         New here?{' '}
         <Link

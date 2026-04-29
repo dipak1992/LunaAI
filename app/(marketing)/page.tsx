@@ -478,7 +478,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <MedicalAdvisors />
+      {/* MedicalAdvisors hidden until real advisors are onboarded */}
+      {/* <MedicalAdvisors /> */}
       <Testimonials />
       <PrivacyPromise />
       <PressStrip />

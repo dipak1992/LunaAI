@@ -121,7 +121,8 @@ export default function Testimonials() {
           ))}
         </div>
 
-        <div className="mt-12 text-center">
+        {/* Rating hidden until verified real reviews are collected */}
+        {/* <div className="mt-12 text-center">
           <div
             className="inline-flex items-center justify-center gap-1 text-luna-aurora-pink"
             aria-label="4.8 out of 5 stars"
@@ -131,7 +132,7 @@ export default function Testimonials() {
             ))}
           </div>
           <p className="mt-3 text-sm text-white/70">4.8 ★ average rating from 1,200+ women</p>
-        </div>
+        </div> */}
       </div>
     </section>
   );

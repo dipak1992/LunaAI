@@ -3,11 +3,10 @@
 import { Lock, Moon, Stethoscope } from 'lucide-react';
 import FadeUp from '@/components/ui/FadeUp';
 
-// TODO: Verify the 5,000+ women metric before launch or replace with an accurate number.
 const TRUST_ITEMS = [
   {
     icon: Stethoscope,
-    text: 'Built with OB-GYNs',
+    text: 'Informed by menopause specialists',
   },
   {
     icon: Lock,
@@ -15,7 +14,7 @@ const TRUST_ITEMS = [
   },
   {
     icon: Moon,
-    text: 'Trusted by 5,000+ women',
+    text: 'Join women finding clarity',
   },
 ];
 

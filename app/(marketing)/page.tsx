@@ -234,15 +234,16 @@ export default function LandingPage() {
             style={{ opacity: 0.22 }}
           />
           <Image
-            src="/images/hero-lifestyle.png"
+            src="/images/mobile/hero.jpg"
             alt=""
             fill
             priority
             sizes="100vw"
+            unoptimized
             className="object-cover md:hidden"
             style={{
-              objectPosition: '58% center',
-              opacity: 0.34,
+              objectPosition: 'center center',
+              opacity: 0.38,
             }}
           />
           {/* Dark gradient overlay — heavier at top/bottom, lighter in center */}
@@ -752,15 +753,31 @@ export default function LandingPage() {
             alt=""
             fill
             sizes="100vw"
-            className="object-cover object-center"
+            className="hidden object-cover object-center md:block"
             style={{ opacity: 0.28 }}
+          />
+          <Image
+            src="/images/mobile/cta.jpg"
+            alt=""
+            fill
+            sizes="100vw"
+            unoptimized
+            className="object-cover object-center md:hidden"
+            style={{ opacity: 0.36 }}
           />
           {/* Heavy dark overlay — 70% to keep text readable */}
           <div
-            className="absolute inset-0"
+            className="absolute inset-0 hidden md:block"
             style={{
               background:
                 'linear-gradient(180deg, rgba(10,14,39,0.80) 0%, rgba(10,14,39,0.60) 50%, rgba(10,14,39,0.85) 100%)',
+            }}
+          />
+          <div
+            className="absolute inset-0 md:hidden"
+            style={{
+              background:
+                'linear-gradient(180deg, rgba(10,14,39,0.82) 0%, rgba(10,14,39,0.58) 42%, rgba(10,14,39,0.9) 100%)',
             }}
           />
         </div>

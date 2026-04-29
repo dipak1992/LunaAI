@@ -23,6 +23,7 @@ interface VoiceCheckInModalProps {
   onClose: () => void;
   onComplete?: (result: VoiceCheckInResult) => void;
   userName?: string;
+  initialMode?: InputMode;
 }
 
 type ModalView = 'record' | 'result' | 'error';
@@ -40,6 +41,7 @@ export function VoiceCheckInModal({
   onClose,
   onComplete,
   userName = 'friend',
+  initialMode = 'voice',
 }: VoiceCheckInModalProps) {
   const [view, setView] = useState<ModalView>('record');
   const [result, setResult] = useState<VoiceCheckInResult | null>(null);
@@ -131,11 +133,12 @@ export function VoiceCheckInModal({
       setTextInput('');
       setSelectedTags([]);
       setSubmittingText(false);
+      setInputMode(initialMode);
       recorder.reset();
     }, 0);
     return () => window.clearTimeout(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, initialMode]);
 
   // When audioBlob is ready (state = 'processing'), submit to API
   useEffect(() => {

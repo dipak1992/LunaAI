@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowLeft, User, CreditCard, LogOut } from 'lucide-react';
+import { ArrowLeft, Bell, CreditCard, Database, LogOut, Shield, User } from 'lucide-react';
 import Logo from '@/components/brand/Logo';
 import ManageSubscriptionButton from '@/components/subscription/ManageSubscriptionButton';
 import { createClient } from '@/lib/supabase/client';
@@ -100,7 +100,7 @@ export default function SettingsPage() {
           <section className="mb-8">
             <div className="flex items-center gap-2 mb-4">
               <User size={18} className="text-white/74" />
-              <h2 className="text-lg text-white/90 font-medium">Profile</h2>
+              <h2 className="text-lg text-white/90 font-medium">Profile & preferences</h2>
             </div>
 
             <div className="app-card p-5 sm:p-6 space-y-5">
@@ -140,7 +140,7 @@ export default function SettingsPage() {
           <section className="mb-8">
             <div className="flex items-center gap-2 mb-4">
               <CreditCard size={18} className="text-white/74" />
-              <h2 className="text-lg text-white/90 font-medium">Billing</h2>
+              <h2 className="text-lg text-white/90 font-medium">Billing & plan</h2>
             </div>
 
             <div className="app-card p-5 sm:p-6 space-y-4">
@@ -167,6 +167,64 @@ export default function SettingsPage() {
             </div>
           </section>
 
+          {/* Privacy section */}
+          <section className="mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <Shield size={18} className="text-white/74" />
+              <h2 className="text-lg text-white/90 font-medium">Privacy controls</h2>
+            </div>
+
+            <div className="app-card divide-y divide-white/10 overflow-hidden">
+              <PlaceholderRow
+                icon={<Database className="h-4 w-4" aria-hidden="true" />}
+                title="Data export"
+                description="Download check-ins, transcripts, and Luna memory."
+                status="Coming soon"
+              />
+              <PlaceholderRow
+                icon={<Shield className="h-4 w-4" aria-hidden="true" />}
+                title="Transcript retention"
+                description="Choose how long voice and text transcripts are kept."
+                status="Coming soon"
+              />
+              <PlaceholderRow
+                icon={<User className="h-4 w-4" aria-hidden="true" />}
+                title="AI memory"
+                description="Review or clear what Luna remembers about your patterns."
+                status="Coming soon"
+              />
+            </div>
+          </section>
+
+          {/* Reminders section */}
+          <section className="mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <Bell size={18} className="text-white/74" />
+              <h2 className="text-lg text-white/90 font-medium">Reminders</h2>
+            </div>
+
+            <div className="app-card divide-y divide-white/10 overflow-hidden">
+              <PlaceholderRow
+                icon={<Bell className="h-4 w-4" aria-hidden="true" />}
+                title="Morning check-in"
+                description="A gentle nudge to log how your day is starting."
+                status="Off"
+              />
+              <PlaceholderRow
+                icon={<Bell className="h-4 w-4" aria-hidden="true" />}
+                title="Evening sleep reflection"
+                description="Track sleep signals before patterns fade."
+                status="Off"
+              />
+              <PlaceholderRow
+                icon={<Bell className="h-4 w-4" aria-hidden="true" />}
+                title="Weekly insight"
+                description="A calm summary of what Luna noticed this week."
+                status="Off"
+              />
+            </div>
+          </section>
+
           {/* Sign out */}
           <section>
             <form action={logout}>
@@ -181,6 +239,35 @@ export default function SettingsPage() {
           </section>
         </motion.div>
       </main>
+    </div>
+  );
+}
+
+function PlaceholderRow({
+  icon,
+  title,
+  description,
+  status,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  status: string;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-4 px-5 py-4 sm:px-6">
+      <div className="flex min-w-0 gap-3">
+        <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-luna-aurora-mint">
+          {icon}
+        </span>
+        <div>
+          <p className="text-sm font-medium text-white/92">{title}</p>
+          <p className="mt-0.5 text-xs leading-5 text-white/66">{description}</p>
+        </div>
+      </div>
+      <span className="shrink-0 rounded-full border border-white/10 bg-white/[0.05] px-2.5 py-1 text-[11px] font-medium text-white/68">
+        {status}
+      </span>
     </div>
   );
 }

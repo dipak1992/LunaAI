@@ -5,6 +5,8 @@ import { TextStreamChatTransport } from 'ai';
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { UIMessage } from 'ai';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 import AuroraBackground from '@/components/marketing/AuroraBackground';
 import Message from '@/components/chat/Message';
 import TypingIndicator from '@/components/chat/TypingIndicator';
@@ -89,8 +91,17 @@ export default function ChatClient({ initialMessages }: Props) {
       </div>
 
       {/* Header */}
-      <header className="relative z-10 flex items-center justify-center border-b border-luna-whisper/10 bg-luna-night/60 px-6 py-4 backdrop-blur-xl">
+      <header className="relative z-10 flex items-center justify-between border-b border-luna-whisper/10 bg-luna-night/60 px-4 py-4 backdrop-blur-xl sm:px-6">
+        <Link
+          href="/dashboard"
+          className="flex items-center gap-2 rounded-full border border-luna-whisper/10 bg-white/[0.04] px-3 py-2 text-sm text-luna-whisper/76 transition-colors hover:text-luna-cream"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          <span className="hidden sm:inline">Dashboard</span>
+          <span className="sm:hidden">Back</span>
+        </Link>
         <Logo size={30} animated={false} />
+        <div className="w-[82px] sm:w-[116px]" aria-hidden="true" />
       </header>
 
       {/* Messages */}

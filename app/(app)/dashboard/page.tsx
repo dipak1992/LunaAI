@@ -10,6 +10,8 @@ import {
   BookMarked,
   Cloud,
   CloudSun,
+  Keyboard,
+  LockKeyhole,
   HeartPulse,
   Menu,
   MessageCircle,
@@ -19,6 +21,7 @@ import {
   Sun,
   X,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { VoiceCheckInModal } from '@/components/dashboard/VoiceCheckInModal';
 import Logo from '@/components/brand/Logo';
 import ForecastStrip from '@/components/forecast/ForecastStrip';
@@ -49,6 +52,7 @@ interface LatestLog {
 
 export default function DashboardPage() {
   const [modalOpen, setModalOpen] = useState(false);
+  const [checkInMode, setCheckInMode] = useState<'voice' | 'text'>('voice');
   const [lastResult, setLastResult] = useState<VoiceCheckInResult | null>(null);
   const [userName, setUserName] = useState<string>('');
   const [menuOpen, setMenuOpen] = useState(false);
@@ -132,6 +136,12 @@ export default function DashboardPage() {
     : topTrigger
       ? `Soothe ${topTrigger}`
       : 'Check in when ready';
+  const checkInsUntilForecast = Math.max(0, 7 - (checkInCount ?? 0));
+
+  const openCheckIn = (mode: 'voice' | 'text') => {
+    setCheckInMode(mode);
+    setModalOpen(true);
+  };
 
   return (
     <div className="app-shell min-h-screen aurora-bg-subtle flex flex-col">
@@ -232,25 +242,25 @@ export default function DashboardPage() {
 	          </motion.div>
 
           <motion.div
-            className="mt-5 grid grid-cols-2 gap-2 sm:hidden"
+            className="mt-5 grid grid-cols-2 gap-2 sm:mt-6 sm:grid-cols-4"
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, delay: 0.15 }}
+            transition={{ duration: 0.45, delay: 0.18 }}
           >
             <TodayMetric
               icon={<CloudSun className="h-4 w-4" aria-hidden="true" />}
               label="Weather"
-              value={weatherScore ? `${weatherScore}/10` : 'New'}
+              value={weatherScore ? `${weatherScore}/10` : 'Start today'}
             />
             <TodayMetric
               icon={<Moon className="h-4 w-4" aria-hidden="true" />}
               label="Sleep"
-              value={sleep ? `${sleep}/10` : 'Tap to log'}
+              value={sleep ? `${sleep}/10` : 'Not logged'}
             />
             <TodayMetric
               icon={<HeartPulse className="h-4 w-4" aria-hidden="true" />}
               label="Mood"
-              value={mood ? capitalize(mood) : 'Open'}
+              value={mood ? capitalize(mood) : 'Not logged'}
             />
             <TodayMetric
               icon={<BatteryMedium className="h-4 w-4" aria-hidden="true" />}
@@ -292,14 +302,55 @@ export default function DashboardPage() {
                 requirement="1 check-in unlocks your first Today snapshot. 7 check-ins start shaping a forecast."
                 reassurance="Transcript saved privately. You control your data."
                 actionLabel="Start check-in"
-                onAction={() => setModalOpen(true)}
+                onAction={() => openCheckIn('voice')}
               />
             </motion.div>
           )}
 
+          <motion.div
+            className="mt-5 grid gap-2 sm:mt-7 sm:grid-cols-3"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.25 }}
+          >
+            <ActionButton
+              icon={Mic}
+              label="Speak check-in"
+              description="Voice"
+              onClick={() => openCheckIn('voice')}
+              primary
+            />
+            <ActionButton
+              icon={Keyboard}
+              label="Type instead"
+              description="Text"
+              onClick={() => openCheckIn('text')}
+            />
+            <Link
+              href="/chat"
+              className="flex min-h-16 items-center gap-3 rounded-lg border border-luna-ink/10 bg-white/74 px-4 py-3 text-left transition-colors hover:bg-white"
+            >
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-luna-storm/12 text-luna-storm">
+                <MessageCircle className="h-4 w-4" aria-hidden="true" />
+              </span>
+              <span>
+                <span className="block text-sm font-semibold leading-5 text-luna-ink">Ask Luna</span>
+                <span className="block text-xs leading-5 text-luna-ink/60">Open chat</span>
+              </span>
+            </Link>
+          </motion.div>
+
+          <div className="mx-auto mt-4 flex max-w-md items-start justify-center gap-2 rounded-lg border border-luna-ink/10 bg-white/60 px-3 py-2 text-xs leading-5 text-luna-ink/66">
+            <LockKeyhole className="mt-0.5 h-3.5 w-3.5 shrink-0 text-luna-storm" aria-hidden="true" />
+            <span>
+              Transcript saved privately. You control your data.
+              {checkInsUntilForecast > 0 && ` ${checkInsUntilForecast} more check-${checkInsUntilForecast === 1 ? 'in' : 'ins'} until forecast patterns get useful.`}
+            </span>
+          </div>
+
           {/* Central orb trigger */}
           <motion.button
-            onClick={() => setModalOpen(true)}
+            onClick={() => openCheckIn('voice')}
             className="voice-orb mx-auto mt-5 flex h-24 w-24 cursor-pointer items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-luna-aurora-pink focus-visible:ring-offset-2 focus-visible:ring-offset-luna-deep sm:mt-8 sm:h-36 sm:w-36"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -388,6 +439,7 @@ export default function DashboardPage() {
         onClose={() => setModalOpen(false)}
         onComplete={handleComplete}
         userName={userName || undefined}
+        initialMode={checkInMode}
       />
     </div>
   );
@@ -414,6 +466,44 @@ function TodayMetric({
         {value}
       </span>
     </div>
+  );
+}
+
+function ActionButton({
+  icon: Icon,
+  label,
+  description,
+  onClick,
+  primary = false,
+}: {
+  icon: LucideIcon;
+  label: string;
+  description: string;
+  onClick: () => void;
+  primary?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex min-h-16 items-center gap-3 rounded-lg border px-4 py-3 text-left transition-colors ${
+        primary
+          ? 'border-luna-ink bg-luna-ink text-white hover:bg-luna-ink/88'
+          : 'border-luna-ink/10 bg-white/74 text-luna-ink hover:bg-white'
+      }`}
+    >
+      <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
+        primary ? 'bg-white/12 text-white' : 'bg-luna-aurora-mint/18 text-luna-storm'
+      }`}>
+        <Icon className="h-4 w-4" aria-hidden="true" />
+      </span>
+      <span>
+        <span className="block text-sm font-semibold leading-5">{label}</span>
+        <span className={`block text-xs leading-5 ${primary ? 'text-white/70' : 'text-luna-ink/60'}`}>
+          {description}
+        </span>
+      </span>
+    </button>
   );
 }
 

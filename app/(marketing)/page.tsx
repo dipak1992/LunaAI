@@ -175,15 +175,34 @@ export default function LandingPage() {
 
       {/* ── HERO ── */}
       <section className="relative flex min-h-screen items-center overflow-hidden px-6 py-20 pt-28">
-        {/* Warm hero background glow — simulates lifestyle warmth without requiring a photo */}
-        <div
-          className="pointer-events-none absolute inset-0 z-0"
-          aria-hidden="true"
-          style={{
-            background:
-              'radial-gradient(ellipse at 60% 40%, rgba(255,212,163,0.07) 0%, transparent 55%), radial-gradient(ellipse at 20% 70%, rgba(233,184,255,0.08) 0%, transparent 50%)',
-          }}
-        />
+        {/* Hero lifestyle photo — full bleed with dark overlay */}
+        <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+          <Image
+            src="/images/hero-lifestyle.jpg"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
+            style={{ opacity: 0.22 }}
+          />
+          {/* Dark gradient overlay — heavier at top/bottom, lighter in center */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(180deg, rgba(10,14,39,0.75) 0%, rgba(10,14,39,0.45) 40%, rgba(10,14,39,0.55) 70%, rgba(10,14,39,0.85) 100%)',
+            }}
+          />
+          {/* Warm colour tint to blend with aurora palette */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse at 60% 40%, rgba(255,212,163,0.07) 0%, transparent 55%), radial-gradient(ellipse at 20% 70%, rgba(233,184,255,0.08) 0%, transparent 50%)',
+            }}
+          />
+        </div>
         <div className="mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-2">
           <div className="text-left md:text-center lg:text-left">
             <FadeUp delay={0}>
@@ -585,46 +604,68 @@ export default function LandingPage() {
 
       {/* ── FINAL CTA ── */}
       <section className="relative overflow-hidden px-6 py-40 text-center">
-        {/* Candle glow */}
+        {/* CTA scene photo — silhouette at dusk with heavy dark overlay */}
+        <div className="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+          <Image
+            src="/images/cta-scene.jpg"
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover object-center"
+            style={{ opacity: 0.28 }}
+          />
+          {/* Heavy dark overlay — 70% to keep text readable */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(180deg, rgba(10,14,39,0.80) 0%, rgba(10,14,39,0.60) 50%, rgba(10,14,39,0.85) 100%)',
+            }}
+          />
+        </div>
+        {/* Candle glow on top of photo */}
         <div
-          className="pointer-events-none absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 blur-[100px]"
+          className="pointer-events-none absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 blur-[100px] z-10"
           style={{
             background:
               'radial-gradient(circle, #FFD4A3 0%, #FF9AAE 40%, #C8A8E9 70%, transparent 100%)',
           }}
         />
 
-        <FadeUp>
-          <h2 className="relative mb-8 font-serif text-5xl leading-tight md:text-6xl lg:text-7xl">
-            Your story is waiting{' '}
-            <br className="hidden md:block" />
-            to be{' '}
-            <span
-              className="italic"
-              style={{
-                background:
-                  'linear-gradient(135deg, #FF9AAE 0%, #C8A8E9 50%, #8FB8E8 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
-            >
-              understood.
-            </span>
-          </h2>
-        </FadeUp>
+        {/* Content sits above photo + glow layers */}
+        <div className="relative z-20">
+          <FadeUp>
+            <h2 className="relative mb-8 font-serif text-5xl leading-tight md:text-6xl lg:text-7xl">
+              Your story is waiting{' '}
+              <br className="hidden md:block" />
+              to be{' '}
+              <span
+                className="italic"
+                style={{
+                  background:
+                    'linear-gradient(135deg, #FF9AAE 0%, #C8A8E9 50%, #8FB8E8 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
+                understood.
+              </span>
+            </h2>
+          </FadeUp>
 
-        <FadeUp delay={0.2}>
-          <GlowButton href="/signup" variant="primary">
-            Begin — it&rsquo;s free
-          </GlowButton>
-        </FadeUp>
+          <FadeUp delay={0.2}>
+            <GlowButton href="/signup" variant="primary">
+              Begin — it&rsquo;s free
+            </GlowButton>
+          </FadeUp>
 
-        <FadeUp delay={0.35}>
-          <p className="mt-6 text-sm text-white/55">
-            No credit card. No noise. Just you, heard.
-          </p>
-        </FadeUp>
+          <FadeUp delay={0.35}>
+            <p className="mt-6 text-sm text-white/55">
+              No credit card. No noise. Just you, heard.
+            </p>
+          </FadeUp>
+        </div>
       </section>
 
       <Footer />

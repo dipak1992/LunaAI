@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import MarketingPage from '@/components/marketing/MarketingPage';
 
 export const metadata = {
@@ -46,6 +47,30 @@ export default function SciencePage() {
         Luna reflects rather than advises. She names patterns, offers gentle
         observations, and defers medical decisions to clinicians.
       </p>
+
+      {/* AI Pipeline Diagram */}
+      <div className="not-prose my-10 overflow-hidden rounded-2xl border border-white/8">
+        <div className="relative w-full" style={{ aspectRatio: '3 / 1' }}>
+          <Image
+            src="/images/science-flow.jpg"
+            alt="Luna AI pipeline: Voice → Transcription → Pattern Detection → Forecast → Insights"
+            fill
+            sizes="(min-width: 768px) 768px, 100vw"
+            className="object-cover object-center"
+          />
+          {/* Subtle dark vignette to blend with page */}
+          <div
+            className="absolute inset-0 rounded-2xl"
+            style={{
+              background:
+                'linear-gradient(180deg, rgba(10,14,39,0.15) 0%, transparent 30%, transparent 70%, rgba(10,14,39,0.25) 100%)',
+            }}
+          />
+        </div>
+        <p className="bg-white/3 px-5 py-3 text-center text-xs text-white/40 tracking-wide">
+          Voice → Transcription → Pattern Detection → Forecast → Insights
+        </p>
+      </div>
 
       <h2>What Luna Uses</h2>
       <ul>

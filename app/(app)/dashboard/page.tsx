@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { BarChart2, BookMarked, MessageCircle, Settings, Menu, X } from 'lucide-react';
@@ -189,25 +190,46 @@ export default function DashboardPage() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="w-full glass rounded-2xl p-6 sm:p-8 text-center"
+            className="w-full glass rounded-2xl overflow-hidden text-center"
             style={{
               background: 'linear-gradient(135deg, rgba(233,184,255,0.06) 0%, rgba(255,158,199,0.04) 100%)',
             }}
           >
-            <p className="text-3xl mb-4">🌙</p>
-            <h2 className="font-serif text-xl sm:text-2xl text-white mb-3">
-              Luna is ready to listen.
-            </h2>
-            <p className="text-white/60 text-sm sm:text-base leading-relaxed max-w-sm mx-auto">
-              Your first whisper starts your story. She&apos;ll remember how you feel today,
-              and help you understand your patterns over time.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6 text-xs text-white/40">
-              <span>🎙️ Voice or text</span>
-              <span className="hidden sm:inline">•</span>
-              <span>🔒 Private & secure</span>
-              <span className="hidden sm:inline">•</span>
-              <span>✨ Haiku after each check-in</span>
+            {/* Illustration banner */}
+            <div className="relative w-full" style={{ aspectRatio: '2 / 1' }}>
+              <Image
+                src="/images/dashboard-empty.jpg"
+                alt="Luna is ready to listen"
+                fill
+                sizes="(min-width: 640px) 672px, 100vw"
+                className="object-cover object-center"
+                style={{ opacity: 0.75 }}
+              />
+              {/* Bottom fade into card body */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    'linear-gradient(180deg, transparent 40%, rgba(10,14,39,0.85) 100%)',
+                }}
+              />
+            </div>
+            {/* Card body */}
+            <div className="px-6 pb-6 sm:px-8 sm:pb-8 -mt-8 relative z-10">
+              <h2 className="font-serif text-xl sm:text-2xl text-white mb-3">
+                Luna is ready to listen.
+              </h2>
+              <p className="text-white/60 text-sm sm:text-base leading-relaxed max-w-sm mx-auto">
+                Your first whisper starts your story. She&apos;ll remember how you feel today,
+                and help you understand your patterns over time.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6 text-xs text-white/40">
+                <span>🎙️ Voice or text</span>
+                <span className="hidden sm:inline">•</span>
+                <span>🔒 Private & secure</span>
+                <span className="hidden sm:inline">•</span>
+                <span>✨ Haiku after each check-in</span>
+              </div>
             </div>
           </motion.div>
         )}

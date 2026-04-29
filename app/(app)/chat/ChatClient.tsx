@@ -102,7 +102,7 @@ export default function ChatClient({ initialMessages }: Props) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1 }}
-              className="mt-20 text-center"
+              className="mt-16 text-center"
             >
               <div className="mb-8 flex justify-center">
                 <Logo size={64} animated={false} iconOnly />
@@ -113,6 +113,30 @@ export default function ChatClient({ initialMessages }: Props) {
               <p className="mx-auto max-w-md font-serif text-lg text-luna-whisper/70">
                 How is the weather in your body today?
               </p>
+
+              {/* Prompt suggestion chips */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                className="mt-10 flex flex-wrap justify-center gap-2 max-w-lg mx-auto"
+              >
+                {[
+                  "I've been having hot flashes",
+                  "I can't sleep well lately",
+                  "My mood has been all over the place",
+                  "I feel foggy and exhausted",
+                  "Tell me about perimenopause",
+                ].map((prompt) => (
+                  <button
+                    key={prompt}
+                    onClick={() => handleSend(prompt)}
+                    className="px-4 py-2 rounded-full text-sm text-luna-whisper/70 border border-luna-whisper/15 bg-white/3 hover:bg-white/8 hover:text-luna-cream hover:border-luna-whisper/30 transition-all duration-200"
+                  >
+                    {prompt}
+                  </button>
+                ))}
+              </motion.div>
             </motion.div>
           )}
 

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { BarChart2, BookMarked, MessageCircle, Settings, Menu, X } from 'lucide-react';
 import { VoiceCheckInModal } from '@/components/dashboard/VoiceCheckInModal';
 import Logo from '@/components/brand/Logo';
@@ -14,18 +15,27 @@ import { createClient } from '@/lib/supabase/client';
 import { WelcomeBanner } from '@/components/trial/WelcomeBanner';
 import type { VoiceCheckInResult } from '@/types/voice';
 
+const NAV_ITEMS = [
+  { href: '/chat', icon: MessageCircle, label: 'Chat' },
+  { href: '/insights', icon: BarChart2, label: 'Insights' },
+  { href: '/haikus', icon: BookMarked, label: 'Haikus' },
+  { href: '/settings', icon: Settings, label: 'Settings' },
+];
+
 export default function DashboardPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [lastResult, setLastResult] = useState<VoiceCheckInResult | null>(null);
   const [userName, setUserName] = useState<string>('');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [checkInCount, setCheckInCount] = useState<number | null>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     async function fetchUser() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        // Try profile name first, then user_metadata
+        // Fetch profile name
         const { data: profile } = await supabase
           .from('profiles')
           .select('name')
@@ -33,6 +43,13 @@ export default function DashboardPage() {
           .single();
         const name = profile?.name || user.user_metadata?.name || '';
         setUserName(name);
+
+        // Fetch check-in count for empty state + streak
+        const { count } = await supabase
+          .from('symptom_logs')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', user.id);
+        setCheckInCount(count ?? 0);
       }
     }
     fetchUser();
@@ -41,6 +58,8 @@ export default function DashboardPage() {
   const handleComplete = (result: VoiceCheckInResult) => {
     setLastResult(result);
     setModalOpen(false);
+    // Increment count after a check-in
+    setCheckInCount((prev) => (prev ?? 0) + 1);
   };
 
   const greeting = () => {
@@ -50,6 +69,8 @@ export default function DashboardPage() {
     return 'Good evening';
   };
 
+  const isFirstTime = checkInCount === 0;
+
   return (
     <div className="min-h-screen aurora-bg flex flex-col">
       {/* Header */}
@@ -58,36 +79,25 @@ export default function DashboardPage() {
 
         {/* Desktop nav */}
         <nav className="hidden sm:flex items-center gap-2">
-          <Link
-            href="/chat"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-full glass text-white/80 hover:text-white transition-all duration-200 text-[0.9375rem]"
-          >
-            <MessageCircle size={16} />
-            <span>Chat</span>
-          </Link>
-          <Link
-            href="/insights"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-full glass text-white/80 hover:text-white transition-all duration-200 text-[0.9375rem]"
-          >
-            <BarChart2 size={16} />
-            <span>Insights</span>
-          </Link>
-          <Link
-            href="/haikus"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-full glass text-white/80 hover:text-white transition-all duration-200 text-[0.9375rem]"
-          >
-            <BookMarked size={16} />
-            <span>Haikus</span>
-          </Link>
+          {NAV_ITEMS.map(({ href, icon: Icon, label }) => {
+            const isActive = pathname === href;
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-full transition-all duration-200 text-[0.9375rem] ${
+                  isActive
+                    ? 'bg-white/10 text-white border border-white/15'
+                    : 'glass text-white/80 hover:text-white'
+                }`}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                <Icon size={16} />
+                <span>{label}</span>
+              </Link>
+            );
+          })}
           <SoundToggle />
-          <Link
-            href="/settings"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-full glass text-white/80 hover:text-white transition-all duration-200 text-[0.9375rem]"
-            aria-label="Settings"
-          >
-            <Settings size={16} />
-            <span>Settings</span>
-          </Link>
         </nav>
 
         {/* Mobile menu button */}
@@ -107,38 +117,24 @@ export default function DashboardPage() {
           animate={{ opacity: 1, y: 0 }}
           className="sm:hidden border-b border-white/5 bg-luna-ink/95 backdrop-blur-xl px-4 py-3 flex flex-wrap gap-2"
         >
-          <Link
-            href="/chat"
-            onClick={() => setMenuOpen(false)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-full glass text-white/80 hover:text-white text-[0.9375rem]"
-          >
-            <MessageCircle size={16} />
-            Chat
-          </Link>
-          <Link
-            href="/insights"
-            onClick={() => setMenuOpen(false)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-full glass text-white/80 hover:text-white text-[0.9375rem]"
-          >
-            <BarChart2 size={16} />
-            Insights
-          </Link>
-          <Link
-            href="/haikus"
-            onClick={() => setMenuOpen(false)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-full glass text-white/80 hover:text-white text-[0.9375rem]"
-          >
-            <BookMarked size={16} />
-            Haikus
-          </Link>
-          <Link
-            href="/settings"
-            onClick={() => setMenuOpen(false)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-full glass text-white/80 hover:text-white text-[0.9375rem]"
-          >
-            <Settings size={16} />
-            Settings
-          </Link>
+          {NAV_ITEMS.map(({ href, icon: Icon, label }) => {
+            const isActive = pathname === href;
+            return (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMenuOpen(false)}
+                className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-[0.9375rem] transition-all ${
+                  isActive
+                    ? 'bg-white/10 text-white border border-white/15'
+                    : 'glass text-white/80 hover:text-white'
+                }`}
+              >
+                <Icon size={16} />
+                {label}
+              </Link>
+            );
+          })}
           <SoundToggle />
         </motion.nav>
       )}
@@ -161,12 +157,60 @@ export default function DashboardPage() {
             </p>
           )}
           <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl text-aurora mb-2">
-            How are you today?
+            {isFirstTime ? 'Your journey begins here.' : 'How are you today?'}
           </h1>
           <p className="text-white/75 text-base sm:text-[1.0625rem]">
-            Tap the orb to begin your daily check-in with Luna
+            {isFirstTime
+              ? 'Tap the orb and speak freely — Luna is listening'
+              : 'Tap the orb to begin your daily check-in with Luna'}
           </p>
         </motion.div>
+
+        {/* Streak indicator — only show after first check-in */}
+        {checkInCount !== null && checkInCount > 0 && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/8 text-sm text-white/60"
+          >
+            <span className="text-base">🌙</span>
+            <span>
+              {checkInCount === 1
+                ? 'Day 1 of your journey with Luna'
+                : `${checkInCount} whispers shared with Luna`}
+            </span>
+          </motion.div>
+        )}
+
+        {/* First-time empty state */}
+        {isFirstTime && checkInCount !== null && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="w-full glass rounded-2xl p-6 sm:p-8 text-center"
+            style={{
+              background: 'linear-gradient(135deg, rgba(233,184,255,0.06) 0%, rgba(255,158,199,0.04) 100%)',
+            }}
+          >
+            <p className="text-3xl mb-4">🌙</p>
+            <h2 className="font-serif text-xl sm:text-2xl text-white mb-3">
+              Luna is ready to listen.
+            </h2>
+            <p className="text-white/60 text-sm sm:text-base leading-relaxed max-w-sm mx-auto">
+              Your first whisper starts your story. She&apos;ll remember how you feel today,
+              and help you understand your patterns over time.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6 text-xs text-white/40">
+              <span>🎙️ Voice or text</span>
+              <span className="hidden sm:inline">•</span>
+              <span>🔒 Private & secure</span>
+              <span className="hidden sm:inline">•</span>
+              <span>✨ Haiku after each check-in</span>
+            </div>
+          </motion.div>
+        )}
 
         {/* Central orb trigger */}
         <motion.button
@@ -233,19 +277,21 @@ export default function DashboardPage() {
           </motion.div>
         )}
 
-        {/* 7-day forecast */}
-        <motion.div
-          className="w-full"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
-          <ForecastStrip />
-        </motion.div>
+        {/* 7-day forecast — only show after first check-in */}
+        {!isFirstTime && (
+          <motion.div
+            className="w-full"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <ForecastStrip />
+          </motion.div>
+        )}
 
         <TodayHaiku />
 
-        <SeasonReportButton />
+        {!isFirstTime && <SeasonReportButton />}
       </main>
 
       {/* Voice Check-In Modal */}

@@ -82,7 +82,7 @@ export default function CrisisModal({
             </button>
 
             <div className="relative">
-              <p className="text-xs uppercase tracking-[0.25em] text-luna-aurora-pink/70">
+              <p className="text-xs uppercase tracking-[0.14em] text-luna-aurora-pink/80">
                 {isEmergency ? 'You are not alone' : 'Gentle support'}
               </p>
               <h2 className="mt-3 font-serif text-3xl text-luna-cream">

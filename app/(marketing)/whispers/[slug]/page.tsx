@@ -76,8 +76,16 @@ export default async function WhisperPostPage({ params }: PageProps) {
         publishedAt={post.publishedAt}
         author={post.author}
       />
-      <main className="min-h-screen pt-28 pb-20 px-6">
-        <article className="max-w-2xl mx-auto">
+      <main className="relative min-h-screen bg-luna-ink px-6 pb-20 pt-28">
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-hidden="true"
+          style={{
+            background:
+              'radial-gradient(ellipse at 20% 0%, rgba(168,216,201,0.07), transparent 38%), radial-gradient(ellipse at 80% 10%, rgba(255,212,163,0.05), transparent 34%)',
+          }}
+        />
+        <article className="relative mx-auto max-w-2xl">
           <Link
             href="/whispers"
             className="inline-flex items-center gap-1.5 text-sm text-white/40 hover:text-white/80 transition-colors mb-8"
@@ -88,25 +96,25 @@ export default async function WhisperPostPage({ params }: PageProps) {
 
           <header className="mb-10">
             <div className="flex items-center gap-3 mb-3">
-              <time className="text-xs text-white/30">
+              <time className="text-xs text-white/45">
                 {new Date(post.publishedAt).toLocaleDateString('en-US', {
                   month: 'long',
                   day: 'numeric',
                   year: 'numeric',
                 })}
               </time>
-              <span className="text-xs text-white/20">&middot;</span>
-              <span className="text-xs text-white/30">{post.readTime}</span>
+              <span className="text-xs text-white/30">&middot;</span>
+              <span className="text-xs text-white/45">{post.readTime}</span>
             </div>
             <h1 className="font-fraunces text-3xl md:text-4xl text-aurora mb-4">
               {post.title}
             </h1>
-            <p className="text-white/50 text-base">{post.description}</p>
+            <p className="text-white/65 text-base">{post.description}</p>
             <div className="flex flex-wrap gap-2 mt-4">
               {post.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-2.5 py-0.5 rounded-full text-xs bg-white/5 text-white/40 border border-white/10"
+                  className="px-2.5 py-0.5 rounded-full text-xs bg-white/5 text-white/55 border border-white/10"
                 >
                   {tag}
                 </span>

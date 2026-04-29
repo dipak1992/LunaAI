@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { CloudSun, Moon, PenLine } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 interface SoftGateModalProps {
@@ -139,15 +140,24 @@ export function SoftGateModal({ open, onClose, sessionId, haiku }: SoftGateModal
                   but only if you create a home here.
                 </p>
 
-                <div className="flex flex-col gap-2 text-white/40 text-sm">
-                  <span>✨ Daily haikus written just for you</span>
-                  <span>🌤️ Emotional weather forecasts</span>
-                  <span>🌙 A companion who remembers</span>
+                <div className="flex flex-col gap-2 text-white/60 text-sm">
+                  <span className="inline-flex items-center justify-center gap-2">
+                    <PenLine className="h-4 w-4" aria-hidden="true" />
+                    Daily haikus written just for you
+                  </span>
+                  <span className="inline-flex items-center justify-center gap-2">
+                    <CloudSun className="h-4 w-4" aria-hidden="true" />
+                    Emotional weather forecasts
+                  </span>
+                  <span className="inline-flex items-center justify-center gap-2">
+                    <Moon className="h-4 w-4" aria-hidden="true" />
+                    A companion who remembers
+                  </span>
                 </div>
 
                 <motion.button
                   onClick={() => setStep('form')}
-                  className="mt-4 w-full px-6 py-4 rounded-full bg-luna-cream text-luna-ink font-medium text-base hover:bg-white transition-colors"
+                  className="mt-4 w-full px-6 py-4 rounded-full bg-luna-cream text-luna-ink font-semibold text-base hover:bg-white transition-colors"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -226,7 +236,7 @@ export function SoftGateModal({ open, onClose, sessionId, haiku }: SoftGateModal
                 <motion.button
                   onClick={handleSignup}
                   disabled={isPending || !email || !password}
-                  className="w-full px-6 py-4 rounded-full bg-luna-cream text-luna-ink font-medium text-base hover:bg-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="w-full px-6 py-4 rounded-full bg-luna-cream text-luna-ink font-semibold text-base hover:bg-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >

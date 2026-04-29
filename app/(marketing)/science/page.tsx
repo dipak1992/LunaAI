@@ -67,7 +67,7 @@ export default function SciencePage() {
             }}
           />
         </div>
-        <p className="bg-white/3 px-5 py-3 text-center text-xs text-white/40 tracking-wide">
+        <p className="bg-white/3 px-5 py-3 text-center text-xs text-white/55 tracking-[0.08em]">
           Voice → Transcription → Pattern Detection → Forecast → Insights
         </p>
       </div>

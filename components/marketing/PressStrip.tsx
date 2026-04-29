@@ -15,7 +15,7 @@ export default function PressStrip() {
       <div className="mx-auto max-w-5xl">
         <FadeUp>
           <div className="text-center">
-            <p className="mb-6 text-sm tracking-widest text-white/60 uppercase">
+            <p className="mb-6 text-sm tracking-[0.14em] text-white/70 uppercase">
               Trusted &amp; Recognized
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">

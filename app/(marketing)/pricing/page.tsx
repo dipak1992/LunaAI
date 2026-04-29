@@ -3,10 +3,8 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, Minus, Plus } from 'lucide-react';
 import { useState } from 'react';
-import AuroraBackground from '@/components/marketing/AuroraBackground';
 import Footer from '@/components/marketing/Footer';
 import Header from '@/components/marketing/Header';
-import StarField from '@/components/marketing/StarField';
 import FadeUp from '@/components/ui/FadeUp';
 import type { BillingCycle } from '@/lib/subscription/tiers';
 
@@ -130,13 +128,19 @@ export default function PricingPage() {
 
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-luna-ink text-luna-cream">
-      <AuroraBackground />
-      <StarField />
+      <div
+        className="pointer-events-none absolute inset-0"
+        aria-hidden="true"
+        style={{
+          background:
+            'radial-gradient(ellipse at 50% 0%, rgba(168,216,201,0.08), transparent 42%), radial-gradient(ellipse at 15% 20%, rgba(250,247,242,0.04), transparent 32%)',
+        }}
+      />
       <Header />
 
       <section className="relative px-6 pb-16 pt-36 text-center md:pb-20 md:pt-44">
         <FadeUp>
-          <p className="mb-4 text-xs uppercase tracking-[0.25em] text-white/35">Pricing</p>
+          <p className="mb-4 text-xs uppercase tracking-[0.14em] text-white/55">Pricing</p>
           <h1 className="mx-auto max-w-3xl font-serif text-5xl leading-tight md:text-7xl">
             Choose your <span className="italic text-luna-aurora-pink">moon.</span>
           </h1>
@@ -180,30 +184,30 @@ export default function PricingPage() {
           {PLANS.map((plan, index) => (
             <FadeUp key={plan.id} delay={index * 0.08}>
               <article
-                className={`relative flex h-full flex-col rounded-3xl border p-7 backdrop-blur-xl ${
+                className={`relative flex h-full flex-col rounded-2xl border p-7 backdrop-blur-xl ${
                   plan.featured
-                    ? 'border-luna-aurora-pink/40 bg-white/[0.08]'
+                    ? 'border-luna-cream/35 bg-luna-cream/[0.08] ring-1 ring-luna-cream/20'
                     : 'border-white/10 bg-white/[0.04]'
                 }`}
                 style={plan.featured ? {
-                  boxShadow: '0 0 60px rgba(255,154,174,0.12), 0 4px 40px rgba(233,184,255,0.15)',
+                  boxShadow: '0 24px 70px rgba(0,0,0,0.28), 0 0 0 1px rgba(250,247,242,0.06)',
                 } : undefined}
               >
                 {plan.featured && (
-                  <div className="absolute right-5 top-5 rounded-full bg-luna-cream px-3 py-1 text-xs font-medium text-luna-ink">
+                  <div className="absolute right-5 top-5 rounded-full bg-luna-cream px-3 py-1 text-xs font-semibold text-luna-ink">
                     Most chosen
                   </div>
                 )}
 
                 <div className="pr-24">
                   <h2 className="font-serif text-3xl">{plan.name}</h2>
-                  <p className="mt-2 text-sm text-white/45">{plan.tagline}</p>
+                  <p className="mt-2 text-sm text-white/65">{plan.tagline}</p>
                 </div>
 
                 <div className="mt-8 flex items-end gap-2">
                   <span className="font-serif text-5xl">${plan.price[cycle]}</span>
                   {plan.price[cycle] > 0 && (
-                    <span className="pb-2 text-sm text-white/45">
+                    <span className="pb-2 text-sm text-white/65">
                       /{cycle === 'monthly' ? 'mo' : 'yr'}
                     </span>
                   )}
@@ -222,9 +226,9 @@ export default function PricingPage() {
                   type="button"
                   onClick={() => handleCheckout(plan.id)}
                   disabled={loading === plan.id}
-                  className={`mt-8 rounded-full px-6 py-4 text-sm font-medium transition-all disabled:opacity-60 ${
+                  className={`mt-8 rounded-full px-6 py-4 text-sm font-semibold transition-all disabled:opacity-60 ${
                     plan.featured
-                      ? 'bg-gradient-to-r from-luna-aurora-pink via-luna-aurora-lilac to-luna-aurora-blue text-luna-ink hover:scale-[1.02]'
+                      ? 'bg-luna-cream text-luna-ink shadow-lg shadow-luna-cream/10 hover:scale-[1.02] hover:bg-white'
                       : 'border border-white/15 text-luna-cream hover:border-white/30 hover:bg-white/[0.04]'
                   }`}
                 >
@@ -240,14 +244,14 @@ export default function PricingPage() {
         <div className="mx-auto max-w-3xl">
           <FadeUp>
             <div className="mb-8 text-center">
-              <p className="mb-3 text-xs uppercase tracking-[0.25em] text-white/30">Questions</p>
+              <p className="mb-3 text-xs uppercase tracking-[0.14em] text-white/55">Questions</p>
               <h2 className="font-serif text-4xl">
                 Gently <span className="italic text-white/60">answered.</span>
               </h2>
             </div>
           </FadeUp>
 
-          <div className="divide-y divide-white/10 rounded-3xl border border-white/10 bg-white/[0.03]">
+          <div className="divide-y divide-white/10 rounded-2xl border border-white/10 bg-white/[0.03]">
             {FAQS.map((faq) => (
               <FAQItem key={faq.q} q={faq.q} a={faq.a} />
             ))}

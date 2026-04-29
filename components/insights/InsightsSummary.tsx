@@ -118,7 +118,7 @@ export default function InsightsSummary({ data }: InsightsSummaryProps) {
         >
           <span className="text-2xl">⚡</span>
           <div>
-            <p className="text-xs text-white/40 uppercase tracking-widest mb-0.5">
+            <p className="text-xs text-white/55 uppercase tracking-[0.14em] mb-0.5">
               Most frequent trigger
             </p>
             <p className="text-white/90 font-medium capitalize">{biggestTrigger}</p>

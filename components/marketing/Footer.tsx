@@ -54,7 +54,7 @@ export default function Footer() {
           {/* Link columns */}
           {COLUMNS.map((col) => (
             <div key={col.title}>
-              <p className="mb-4 text-[0.8125rem] tracking-[0.25em] uppercase text-white/55">
+              <p className="mb-4 text-[0.8125rem] tracking-[0.14em] uppercase text-white/65">
                 {col.title}
               </p>
               <ul className="space-y-3">
@@ -78,7 +78,7 @@ export default function Footer() {
           <p className="text-sm text-white/55">
             &copy; {new Date().getFullYear()} Luna. Made with care.
           </p>
-          <p className="text-sm text-white/45">
+          <p className="text-sm text-white/55">
             Not a medical device. Always consult your clinician.
           </p>
         </div>

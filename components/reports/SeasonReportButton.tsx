@@ -47,7 +47,7 @@ export default function SeasonReportButton() {
     <>
       <div className="w-full rounded-2xl border border-luna-whisper/10 bg-luna-whisper/[0.02] p-5">
         <div className="mb-4">
-          <p className="text-xs uppercase tracking-widest text-luna-whisper/40">Season report</p>
+          <p className="text-xs uppercase tracking-[0.14em] text-luna-whisper/60">Season report</p>
           <p className="font-serif text-base italic text-luna-cream">
             A 30-day PDF for reflection or your clinician.
           </p>
@@ -56,7 +56,7 @@ export default function SeasonReportButton() {
           type="button"
           onClick={handleGenerate}
           disabled={loading}
-          className="flex w-full items-center justify-center gap-2 rounded-full bg-luna-cream px-5 py-3 text-sm font-medium text-luna-ink transition-transform hover:scale-[1.02] disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-full bg-luna-cream px-5 py-3 text-sm font-semibold text-luna-ink transition-transform hover:scale-[1.02] disabled:opacity-60"
         >
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileText className="h-4 w-4" />}
           {loading ? 'Writing your season...' : 'Generate Season Report'}

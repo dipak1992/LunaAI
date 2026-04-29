@@ -26,17 +26,17 @@ export default function MarketingPage({
 
       <section className="relative px-6 pb-16 pt-36 text-center md:pb-20 md:pt-44">
         <FadeUp>
-          <p className="mb-4 text-xs uppercase tracking-[0.25em] text-white/35">{eyebrow}</p>
+          <p className="mb-4 text-xs uppercase tracking-[0.14em] text-white/55">{eyebrow}</p>
           <h1 className="mx-auto max-w-3xl font-serif text-5xl leading-tight md:text-7xl">
             {title}
           </h1>
           {subtitle && (
-            <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-white/50">
+            <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-white/65">
               {subtitle}
             </p>
           )}
           {lastUpdated && (
-            <p className="mt-5 text-xs uppercase tracking-[0.22em] text-white/30">
+            <p className="mt-5 text-xs uppercase tracking-[0.14em] text-white/50">
               Last updated: {lastUpdated}
             </p>
           )}

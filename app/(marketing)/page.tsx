@@ -30,7 +30,6 @@ import Footer from '@/components/marketing/Footer';
 import AuroraBackground from '@/components/marketing/AuroraBackground';
 import StarField from '@/components/marketing/StarField';
 import TrustStrip from '@/components/marketing/TrustStrip';
-import MedicalAdvisors from '@/components/marketing/MedicalAdvisors';
 import Testimonials from '@/components/marketing/Testimonials';
 import PrivacyPromise from '@/components/marketing/PrivacyPromise';
 import PressStrip from '@/components/marketing/PressStrip';
@@ -206,7 +205,7 @@ export default function LandingPage() {
         <div className="mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-2">
           <div className="text-left md:text-center lg:text-left">
             <FadeUp delay={0}>
-              <p className="mb-5 text-sm tracking-widest text-luna-aurora-lilac uppercase opacity-80">
+              <p className="mb-5 text-sm tracking-[0.14em] text-luna-aurora-lilac uppercase opacity-90">
                 She is not a season ending. She is a sky rearranging.
               </p>
             </FadeUp>
@@ -242,7 +241,7 @@ export default function LandingPage() {
                 <button
                   type="button"
                   onClick={() => setDemoModalOpen(true)}
-                  className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-luna-aurora-lilac/40 px-8 py-4 font-sans text-base font-medium text-luna-cream transition-all duration-500 hover:border-luna-aurora-mint/70 hover:bg-luna-cream/5 sm:w-auto"
+                  className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-luna-aurora-lilac/40 px-8 py-4 font-sans text-base font-semibold text-luna-cream transition-all duration-500 hover:border-luna-aurora-mint/70 hover:bg-luna-cream/5 sm:w-auto"
                 >
                   <Play className="h-4 w-4" aria-hidden />
                   <span>Watch 30-sec demo</span>
@@ -292,7 +291,7 @@ export default function LandingPage() {
 
               <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[30%] bg-gradient-to-t from-luna-ink to-transparent" />
 
-              <div className="absolute top-4 left-4 inline-flex items-center gap-2 rounded-full border border-luna-aurora-mint/30 bg-luna-ink/50 px-3 py-2 text-xs tracking-widest text-luna-cream uppercase backdrop-blur-md">
+              <div className="absolute top-4 left-4 inline-flex items-center gap-2 rounded-full border border-luna-aurora-mint/30 bg-luna-ink/50 px-3 py-2 text-xs tracking-[0.14em] text-luna-cream uppercase backdrop-blur-md">
                 <motion.span
                   className="h-2 w-2 rounded-full bg-luna-aurora-mint"
                   animate={
@@ -372,7 +371,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-4xl">
           <FadeUp>
             <div className="mb-20 text-center">
-              <p className="mb-4 text-sm tracking-[0.25em] uppercase text-white/60">
+              <p className="mb-4 text-sm tracking-[0.14em] uppercase text-white/70">
                 How it works
               </p>
               <h2 className="font-serif text-4xl md:text-5xl">
@@ -400,7 +399,7 @@ export default function LandingPage() {
                       {i + 1}
                     </span>
                   </div>
-                  <p className="mb-1 text-sm tracking-[0.2em] uppercase text-white/60">
+                  <p className="mb-1 text-sm tracking-[0.14em] uppercase text-white/70">
                     Step {i + 1}
                   </p>
                   <h3 className="mb-3 font-serif text-2xl">{s.title}</h3>
@@ -426,7 +425,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-6xl">
           <FadeUp>
             <div className="mb-16 text-center">
-              <p className="mb-4 text-sm tracking-[0.25em] uppercase text-white/60">
+              <p className="mb-4 text-sm tracking-[0.14em] uppercase text-white/70">
                 Why Luna
               </p>
               <h2 className="font-serif text-4xl md:text-5xl">
@@ -439,7 +438,7 @@ export default function LandingPage() {
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {FEATURES.map((f, i) => (
               <FadeUp key={f.title} delay={i * 0.1}>
-                <div className="group rounded-3xl border border-white/5 bg-white/[0.03] p-8 backdrop-blur-sm transition-all duration-500 hover:border-white/10 hover:bg-white/[0.05]">
+                <div className="group rounded-2xl border border-white/5 bg-white/[0.03] p-8 backdrop-blur-sm transition-all duration-500 hover:border-white/10 hover:bg-white/[0.05]">
                   <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5">
                     <f.icon className="h-5 w-5 text-white/80" />
                   </div>
@@ -456,7 +455,7 @@ export default function LandingPage() {
       <section className="relative px-6 py-32">
         <div className="mx-auto max-w-2xl text-center">
           <FadeUp>
-            <p className="mb-4 text-sm tracking-[0.25em] uppercase text-white/60">
+            <p className="mb-4 text-sm tracking-[0.14em] uppercase text-white/70">
               Try the whisper
             </p>
             <h2 className="mb-16 font-serif text-4xl md:text-5xl">
@@ -544,7 +543,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-5xl">
           <FadeUp>
             <div className="mb-16 text-center">
-              <p className="mb-4 text-sm tracking-[0.25em] uppercase text-white/60">
+              <p className="mb-4 text-sm tracking-[0.14em] uppercase text-white/70">
                 Pricing
               </p>
               <h2 className="font-serif text-4xl md:text-5xl">
@@ -557,7 +556,7 @@ export default function LandingPage() {
             {PLANS.map((p, i) => (
               <FadeUp key={p.name} delay={i * 0.1}>
                 <div
-                  className={`relative flex flex-col rounded-3xl p-8 transition-all duration-500 ${
+                  className={`relative flex flex-col rounded-2xl p-8 transition-all duration-500 ${
                     p.featured
                       ? 'border border-white/20 bg-white/[0.07]'
                       : 'border border-white/5 bg-white/[0.03]'
@@ -569,7 +568,7 @@ export default function LandingPage() {
                     </span>
                   )}
 
-                  <p className="mb-2 text-sm tracking-[0.2em] uppercase text-white/65">
+                  <p className="mb-2 text-sm tracking-[0.14em] uppercase text-white/70">
                     {p.name}
                   </p>
                   <div className="mb-6 flex items-baseline gap-1">

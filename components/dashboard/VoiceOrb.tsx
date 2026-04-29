@@ -12,11 +12,11 @@ interface VoiceOrbProps {
 }
 
 const STATE_COLORS: Record<RecordingState, string> = {
-  idle: 'from-luna-purple via-luna-pink to-luna-rose',
-  requesting: 'from-luna-purple via-luna-pink to-luna-rose',
-  recording: 'from-luna-rose via-luna-pink to-luna-purple',
-  processing: 'from-luna-gold via-luna-rose to-luna-pink',
-  done: 'from-luna-teal via-luna-purple to-luna-pink',
+  idle: 'from-luna-sunset via-luna-aurora-pink to-luna-storm',
+  requesting: 'from-luna-sunset via-luna-aurora-pink to-luna-storm',
+  recording: 'from-luna-aurora-pink via-luna-rose to-luna-storm',
+  processing: 'from-luna-sunset via-luna-aurora-pink to-luna-aurora-lilac',
+  done: 'from-luna-aurora-mint via-luna-aurora-lilac to-luna-aurora-pink',
   error: 'from-red-500 via-luna-rose to-red-400',
 };
 
@@ -45,13 +45,13 @@ export function VoiceOrb({ state, audioLevel, onClick, disabled = false, size = 
         {isRecording && (
           <>
             <motion.div
-              className="absolute rounded-full border border-luna-pink/30"
+              className="absolute rounded-full border border-luna-aurora-pink/30"
               style={{ width: size + 16, height: size + 16 }}
               animate={{ scale: [1, 1.4, 1], opacity: [0.6, 0, 0.6] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             />
             <motion.div
-              className="absolute rounded-full border border-luna-purple/20"
+              className="absolute rounded-full border border-luna-aurora-lilac/20"
               style={{ width: size + 32, height: size + 32 }}
               animate={{ scale: [1, 1.5, 1], opacity: [0.4, 0, 0.4] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
@@ -62,7 +62,7 @@ export function VoiceOrb({ state, audioLevel, onClick, disabled = false, size = 
         {/* Processing spinner */}
         {isProcessing && (
           <motion.div
-            className="absolute rounded-full border-2 border-transparent border-t-luna-gold"
+            className="absolute rounded-full border-2 border-transparent border-t-luna-sunset"
             style={{ width: size + 16, height: size + 16 }}
             animate={{ rotate: 360 }}
             transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
@@ -77,7 +77,7 @@ export function VoiceOrb({ state, audioLevel, onClick, disabled = false, size = 
             relative rounded-full bg-gradient-to-br ${STATE_COLORS[state]}
             shadow-lg cursor-pointer select-none
             disabled:cursor-not-allowed disabled:opacity-70
-            focus:outline-none focus-visible:ring-2 focus-visible:ring-luna-pink focus-visible:ring-offset-2 focus-visible:ring-offset-luna-deep
+            focus:outline-none focus-visible:ring-2 focus-visible:ring-luna-aurora-pink focus-visible:ring-offset-2 focus-visible:ring-offset-luna-deep
           `}
           style={{ width: size, height: size }}
           animate={{ scale: dynamicScale }}

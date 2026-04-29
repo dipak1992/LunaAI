@@ -28,12 +28,20 @@ export default function WhispersPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen pt-28 pb-20 px-6">
-        <div className="max-w-3xl mx-auto">
+      <main className="relative min-h-screen bg-luna-ink px-6 pb-20 pt-28">
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-hidden="true"
+          style={{
+            background:
+              'radial-gradient(ellipse at 20% 0%, rgba(168,216,201,0.07), transparent 38%), radial-gradient(ellipse at 80% 10%, rgba(255,212,163,0.05), transparent 34%)',
+          }}
+        />
+        <div className="relative mx-auto max-w-3xl">
           <h1 className="font-fraunces text-4xl md:text-5xl text-aurora mb-4">
             Whispers
           </h1>
-          <p className="text-white/50 text-lg mb-12 max-w-xl">
+          <p className="text-white/65 text-lg mb-12 max-w-xl">
             Gentle wisdom on menopause — the science, the stories, and the seasons
             of change.
           </p>
@@ -46,27 +54,27 @@ export default function WhispersPage() {
                 className="block glass-hover rounded-2xl p-6 transition-all duration-300 group"
               >
                 <div className="flex items-center gap-3 mb-2">
-                  <time className="text-xs text-white/30">
+                  <time className="text-xs text-white/45">
                     {new Date(post.publishedAt).toLocaleDateString('en-US', {
                       month: 'short',
                       day: 'numeric',
                       year: 'numeric',
                     })}
                   </time>
-                  <span className="text-xs text-white/20">&middot;</span>
-                  <span className="text-xs text-white/30">{post.readTime}</span>
+                  <span className="text-xs text-white/30">&middot;</span>
+                  <span className="text-xs text-white/45">{post.readTime}</span>
                 </div>
                 <h2 className="font-fraunces text-xl text-white/90 group-hover:text-aurora transition-colors duration-300 mb-2">
                   {post.title}
                 </h2>
-                <p className="text-sm text-white/50 line-clamp-2">
+                <p className="text-sm text-white/65 line-clamp-2">
                   {post.description}
                 </p>
                 <div className="flex flex-wrap gap-2 mt-3">
                   {post.tags.slice(0, 3).map((tag) => (
                     <span
                       key={tag}
-                      className="px-2 py-0.5 rounded-full text-xs bg-white/5 text-white/40 border border-white/10"
+                      className="px-2 py-0.5 rounded-full text-xs bg-white/5 text-white/55 border border-white/10"
                     >
                       {tag}
                     </span>

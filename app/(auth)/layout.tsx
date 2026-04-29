@@ -7,7 +7,7 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="aurora-bg min-h-screen w-full overflow-y-auto flex flex-col items-center justify-start sm:justify-center px-5 py-10 sm:py-16">
+    <div className="aurora-bg-subtle min-h-screen w-full overflow-y-auto flex flex-col items-center justify-start sm:justify-center px-5 py-10 sm:py-16">
       {/* Back to home */}
       <div className="w-full max-w-md mb-8 sm:mb-10">
         <Link
@@ -36,7 +36,7 @@ export default function AuthLayout({
       <div
         className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] rounded-full pointer-events-none opacity-20"
         style={{
-          background: 'radial-gradient(circle, rgba(233,184,255,0.3) 0%, rgba(255,158,199,0.15) 40%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(168,216,201,0.18) 0%, rgba(255,212,163,0.08) 40%, transparent 70%)',
         }}
       />
     </div>

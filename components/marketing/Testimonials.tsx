@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Quote, Star } from 'lucide-react';
+import { Quote } from 'lucide-react';
 import FadeUp from '@/components/ui/FadeUp';
 
 // TODO: All testimonials are PLACEHOLDER text. Replace with REAL quotes collected
@@ -58,20 +58,20 @@ export default function Testimonials() {
       <div className="relative z-10 mx-auto max-w-6xl">
         <FadeUp>
           <div className="mx-auto mb-14 max-w-3xl text-center">
-            <p className="mb-4 text-sm tracking-[0.25em] text-luna-aurora-lilac uppercase">
+            <p className="mb-4 text-sm tracking-[0.14em] text-luna-aurora-lilac uppercase">
               Stories from the Journey
             </p>
             <h2 className="font-serif text-4xl font-normal text-luna-cream md:text-5xl">
               She stopped feeling alone.
             </h2>
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/80">
+            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-white/85">
               Real words from women walking the path. Names and details shared with permission.
             </p>
           </div>
         </FadeUp>
 
         <FadeUp>
-          <blockquote className="glass-card mx-auto max-w-3xl rounded-3xl p-10 text-center md:p-14">
+          <blockquote className="glass-card mx-auto max-w-3xl rounded-2xl p-10 text-center md:p-14">
             <Quote className="mx-auto h-8 w-8 text-luna-aurora-lilac/50" aria-hidden="true" />
             <p className="mt-6 font-serif text-2xl leading-snug text-luna-cream italic md:text-3xl">
               &ldquo;{FEATURED_TESTIMONIAL.quote}&rdquo;

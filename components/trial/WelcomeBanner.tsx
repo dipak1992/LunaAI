@@ -3,6 +3,7 @@
 import { Suspense } from 'react';
 import { motion } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
+import { Moon } from 'lucide-react';
 
 /**
  * Inner component that reads search params.
@@ -19,7 +20,11 @@ function WelcomeBannerInner({ name }: { name?: string }) {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.3 }}
-      className="w-full bg-gradient-to-r from-luna-purple/15 via-luna-pink/10 to-luna-purple/15 border border-white/10 rounded-2xl p-5 sm:p-6 text-center"
+      className="w-full border border-white/10 rounded-2xl p-5 sm:p-6 text-center"
+      style={{
+        background:
+          'linear-gradient(135deg, rgba(168,216,201,0.08), rgba(250,247,242,0.04))',
+      }}
     >
       <motion.p
         initial={{ opacity: 0 }}
@@ -27,7 +32,10 @@ function WelcomeBannerInner({ name }: { name?: string }) {
         transition={{ delay: 0.6 }}
         className="text-white text-lg sm:text-xl mb-2"
       >
-        Welcome home{name ? `, ${name}` : ''} 🌙
+        <span className="inline-flex items-center justify-center gap-2">
+          Welcome home{name ? `, ${name}` : ''}
+          <Moon className="h-5 w-5 text-luna-aurora-mint" aria-hidden="true" />
+        </span>
       </motion.p>
       <motion.p
         initial={{ opacity: 0 }}

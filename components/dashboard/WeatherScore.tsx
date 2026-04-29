@@ -1,6 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { Cloud, CloudSun, Moon, Sun, Zap } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import type { EmotionalTone } from '@/types/voice';
 
 interface WeatherScoreProps {
@@ -11,46 +13,46 @@ interface WeatherScoreProps {
 
 const TONE_CONFIG: Record<
   EmotionalTone,
-  { emoji: string; label: string; color: string; description: string }
+  { icon: LucideIcon; label: string; color: string; description: string }
 > = {
   radiant: {
-    emoji: '☀️',
+    icon: Sun,
     label: 'Radiant',
-    color: 'text-luna-gold',
+    color: 'text-luna-sunset',
     description: 'You are glowing today',
   },
   hopeful: {
-    emoji: '🌤️',
+    icon: CloudSun,
     label: 'Hopeful',
     color: 'text-luna-aurora-blue',
     description: 'Brighter skies ahead',
   },
   steady: {
-    emoji: '⛅',
+    icon: CloudSun,
     label: 'Steady',
     color: 'text-luna-mist',
     description: 'Holding your ground',
   },
   tender: {
-    emoji: '🌸',
+    icon: Cloud,
     label: 'Tender',
-    color: 'text-luna-pink',
+    color: 'text-luna-aurora-pink',
     description: 'Gentle with yourself',
   },
   heavy: {
-    emoji: '🌧️',
+    icon: Cloud,
     label: 'Heavy',
-    color: 'text-luna-purple',
+    color: 'text-luna-aurora-lilac',
     description: 'Carrying a lot today',
   },
   stormy: {
-    emoji: '⛈️',
+    icon: Zap,
     label: 'Stormy',
     color: 'text-luna-rose',
     description: 'This too shall pass',
   },
   exhausted: {
-    emoji: '🌑',
+    icon: Moon,
     label: 'Exhausted',
     color: 'text-luna-mist/60',
     description: 'Rest is sacred',
@@ -58,10 +60,10 @@ const TONE_CONFIG: Record<
 };
 
 function getScoreGradient(score: number): string {
-  if (score >= 8) return 'from-luna-gold to-luna-aurora-pink';
-  if (score >= 6) return 'from-luna-aurora-blue to-luna-purple';
-  if (score >= 4) return 'from-luna-purple to-luna-pink';
-  return 'from-luna-rose to-luna-purple';
+  if (score >= 8) return 'from-luna-sunset to-luna-aurora-pink';
+  if (score >= 6) return 'from-luna-aurora-blue to-luna-aurora-lilac';
+  if (score >= 4) return 'from-luna-aurora-lilac to-luna-aurora-pink';
+  return 'from-luna-rose to-luna-storm';
 }
 
 function getScoreLabel(score: number): string {
@@ -76,6 +78,7 @@ export function WeatherScore({ score, emotionalTone, className = '' }: WeatherSc
   const config = TONE_CONFIG[emotionalTone] ?? TONE_CONFIG.steady;
   const gradient = getScoreGradient(score);
   const scoreLabel = getScoreLabel(score);
+  const ToneIcon = config.icon;
   const circumference = 2 * Math.PI * 36; // r=36
   const dashOffset = circumference - (score / 10) * circumference;
 
@@ -109,8 +112,8 @@ export function WeatherScore({ score, emotionalTone, className = '' }: WeatherSc
           />
           <defs>
             <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="var(--color-luna-pink)" />
-              <stop offset="100%" stopColor="var(--color-luna-gold)" />
+              <stop offset="0%" stopColor="var(--color-luna-aurora-pink)" />
+              <stop offset="100%" stopColor="var(--color-luna-sunset)" />
             </linearGradient>
           </defs>
         </svg>
@@ -125,7 +128,7 @@ export function WeatherScore({ score, emotionalTone, className = '' }: WeatherSc
           >
             {score}
           </motion.span>
-          <span className="text-[10px] text-luna-mist/50 uppercase tracking-widest">/ 10</span>
+          <span className="text-[10px] text-luna-mist/60 uppercase tracking-[0.12em]">/ 10</span>
         </div>
       </div>
 
@@ -136,8 +139,9 @@ export function WeatherScore({ score, emotionalTone, className = '' }: WeatherSc
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.6 }}
       >
-        <p className={`text-lg font-semibold ${config.color}`}>
-          {config.emoji} {scoreLabel}
+        <p className={`inline-flex items-center justify-center gap-2 text-lg font-semibold ${config.color}`}>
+          <ToneIcon className="h-5 w-5" aria-hidden="true" />
+          {scoreLabel}
         </p>
         <p className="text-sm text-luna-mist/60 mt-0.5">{config.description}</p>
       </motion.div>

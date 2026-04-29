@@ -80,7 +80,7 @@ export default function HaikuCard({
         {(formattedDate || id) && (
           <div className="mb-5 flex items-center justify-between gap-4">
             {formattedDate ? (
-              <p className="text-xs uppercase tracking-[0.25em] text-luna-ink/45">
+              <p className="text-xs uppercase tracking-[0.14em] text-luna-ink/60">
                 {formattedDate}
               </p>
             ) : (

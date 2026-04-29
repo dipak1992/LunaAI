@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Activity, Sparkles } from 'lucide-react';
 import { Modal } from '@/components/ui/Modal';
 import { VoiceOrb } from '@/components/dashboard/VoiceOrb';
 import { WeatherScore } from '@/components/dashboard/WeatherScore';
@@ -201,7 +202,7 @@ export function VoiceCheckInModal({
                     'Speak freely — share how your body feels, your mood, your sleep, anything on your mind.'}
                   {recorder.state === 'requesting' && 'Requesting microphone access…'}
                   {recorder.state === 'recording' && (
-                    <span className="text-luna-pink">
+                    <span className="text-luna-aurora-pink">
                       Recording… {formatDuration(recorder.duration)}
                     </span>
                   )}
@@ -253,11 +254,11 @@ export function VoiceCheckInModal({
 
                 {/* Luna's response */}
                 <div className="glass rounded-xl p-4">
-                  <p className="text-xs text-luna-pink/70 uppercase tracking-widest mb-2">
+                  <p className="text-xs text-luna-aurora-pink/75 uppercase tracking-[0.14em] mb-2">
                     Luna says
                   </p>
                   <p className="text-luna-mist/90 text-sm leading-relaxed italic font-fraunces">
-                    "{result.lunaResponse}"
+                    &ldquo;{result.lunaResponse}&rdquo;
                   </p>
                 </div>
 
@@ -288,17 +289,19 @@ export function VoiceCheckInModal({
                     {result.triggers.map((t) => (
                       <span
                         key={t}
-                        className="px-2 py-0.5 rounded-full text-xs bg-luna-rose/20 text-luna-rose border border-luna-rose/30"
+                        className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs bg-luna-rose/20 text-luna-rose border border-luna-rose/30"
                       >
-                        ⚡ {t}
+                        <Activity className="h-3 w-3" aria-hidden="true" />
+                        {t}
                       </span>
                     ))}
                     {result.remedies.map((r) => (
                       <span
                         key={r}
-                        className="px-2 py-0.5 rounded-full text-xs bg-luna-teal/20 text-luna-teal border border-luna-teal/30"
+                        className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs bg-luna-aurora-mint/20 text-luna-aurora-mint border border-luna-aurora-mint/30"
                       >
-                        ✦ {r}
+                        <Sparkles className="h-3 w-3" aria-hidden="true" />
+                        {r}
                       </span>
                     ))}
                   </div>
@@ -314,7 +317,7 @@ export function VoiceCheckInModal({
                   </button>
                   <button
                     onClick={handleClose}
-                    className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-luna-purple to-luna-pink text-white text-sm font-medium hover:opacity-90 transition-opacity"
+                    className="flex-1 py-2.5 rounded-xl bg-luna-cream text-luna-ink text-sm font-semibold hover:bg-white transition-colors"
                   >
                     Done
                   </button>
@@ -350,7 +353,7 @@ export function VoiceCheckInModal({
                   </button>
                   <button
                     onClick={handleRetry}
-                    className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-luna-purple to-luna-pink text-white text-sm font-medium hover:opacity-90 transition-opacity"
+                    className="flex-1 py-2.5 rounded-xl bg-luna-cream text-luna-ink text-sm font-semibold hover:bg-white transition-colors"
                   >
                     Try again
                   </button>
@@ -386,7 +389,7 @@ function AudioLevelBars({ level }: { level: number }) {
         return (
           <motion.div
             key={i}
-            className="w-1 rounded-full bg-gradient-to-t from-luna-purple to-luna-pink"
+            className="w-1 rounded-full bg-gradient-to-t from-luna-aurora-lilac to-luna-aurora-pink"
             animate={{ height }}
             transition={{ duration: 0.1, ease: 'easeOut' }}
           />

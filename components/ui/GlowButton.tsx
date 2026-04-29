@@ -20,7 +20,7 @@ export default function GlowButton({
   className = '',
 }: GlowButtonProps) {
   const base =
-    'relative inline-flex items-center justify-center px-8 py-4 rounded-full font-sans font-medium text-base transition-all duration-500 cursor-pointer';
+    'relative inline-flex items-center justify-center px-8 py-4 rounded-full font-sans font-semibold text-base transition-all duration-500 cursor-pointer';
 
   const styles =
     variant === 'primary'

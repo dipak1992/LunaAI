@@ -130,7 +130,7 @@ export default function UpgradeModal({
                   type="button"
                   onClick={() => upgrade('full_moon')}
                   disabled={loadingTier !== null}
-                  className="w-full rounded-full bg-gradient-to-r from-luna-aurora-pink via-luna-aurora-lilac to-luna-aurora-blue px-6 py-4 text-sm font-medium text-luna-ink transition-transform hover:scale-[1.02] disabled:opacity-60"
+                  className="w-full rounded-full bg-luna-cream px-6 py-4 text-sm font-semibold text-luna-ink transition-transform hover:scale-[1.02] hover:bg-white disabled:opacity-60"
                 >
                   {loadingTier === 'full_moon' ? 'Opening...' : 'Full Moon - $19/mo'}
                 </button>

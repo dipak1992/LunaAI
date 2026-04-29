@@ -30,7 +30,7 @@ export default function MedicalAdvisors() {
       <div className="mx-auto max-w-6xl">
         <FadeUp>
           <div className="mx-auto mb-14 max-w-3xl text-center">
-            <p className="mb-4 font-serif text-sm tracking-widest text-luna-aurora-lilac uppercase italic">
+            <p className="mb-4 font-serif text-sm tracking-[0.14em] text-luna-aurora-lilac uppercase italic">
               Grounded in Medicine
             </p>
             <h2 className="font-serif text-4xl font-normal text-luna-cream md:text-5xl">
@@ -46,7 +46,7 @@ export default function MedicalAdvisors() {
         <div className="grid gap-8 md:grid-cols-2">
           {ADVISORS.map((advisor, index) => (
             <FadeUp key={`${advisor.name}-${index}`} delay={index * 0.2}>
-              <article className="glass-card h-full rounded-3xl p-8">
+              <article className="glass-card h-full rounded-2xl p-8">
                 <Image
                   src={advisor.image}
                   alt={`${advisor.name}, OB-GYN`}

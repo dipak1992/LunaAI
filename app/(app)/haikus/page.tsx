@@ -56,7 +56,7 @@ export default function HaikuCollectionPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
-          <p className="mb-3 text-xs uppercase tracking-[0.25em] text-white/30">
+          <p className="mb-3 text-xs uppercase tracking-[0.14em] text-white/55">
             Your collection
           </p>
           <h1 className="font-serif text-4xl text-luna-cream md:text-5xl">

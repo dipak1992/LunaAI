@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowLeft, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Moon, RefreshCw } from 'lucide-react';
 import Logo from '@/components/brand/Logo';
 import InsightsSummary from '@/components/insights/InsightsSummary';
 import CalendarHeatmap from '@/components/insights/CalendarHeatmap';
@@ -273,7 +273,7 @@ export default function InsightsPage() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
               >
-                <div className="text-4xl mb-3">🌙</div>
+                <Moon className="mx-auto mb-3 h-9 w-9 text-luna-aurora-mint/80" aria-hidden="true" />
                 <h3 className="font-fraunces text-xl text-white/70 mb-2">
                   No data yet
                 </h3>

@@ -74,7 +74,7 @@ export default function Header() {
             </Link>
             <Link
               href="/signup"
-              className="rounded-full bg-luna-cream px-5 py-2.5 text-sm font-medium text-luna-ink hover:bg-white transition-colors duration-300"
+              className="rounded-full bg-luna-cream px-5 py-2.5 text-sm font-semibold text-luna-ink hover:bg-white transition-colors duration-300"
             >
               Begin free
             </Link>
@@ -140,7 +140,7 @@ export default function Header() {
                 <Link
                   href="/signup"
                   onClick={() => setMenuOpen(false)}
-                  className="block w-full text-center rounded-full bg-luna-cream px-5 py-3 text-sm font-medium text-luna-ink hover:bg-white transition-colors duration-300"
+                  className="block w-full text-center rounded-full bg-luna-cream px-5 py-3 text-sm font-semibold text-luna-ink hover:bg-white transition-colors duration-300"
                 >
                   Begin free
                 </Link>

@@ -184,7 +184,7 @@ export default function ChatClient({ initialMessages }: Props) {
             onSubmit={handleSend}
             disabled={isLoading}
           />
-          <p className="mt-3 text-center text-[11px] uppercase tracking-widest text-luna-whisper/30">
+          <p className="mt-3 text-center text-[11px] uppercase tracking-[0.14em] text-luna-whisper/50">
             Luna remembers. Never prescribes. Always with you.
           </p>
         </div>

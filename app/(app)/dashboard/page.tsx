@@ -5,7 +5,21 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChart2, BookMarked, MessageCircle, Settings, Menu, X } from 'lucide-react';
+import {
+  BarChart2,
+  BookMarked,
+  Cloud,
+  CloudSun,
+  LockKeyhole,
+  Menu,
+  MessageCircle,
+  Mic,
+  Moon,
+  Settings,
+  Sparkles,
+  Sun,
+  X,
+} from 'lucide-react';
 import { VoiceCheckInModal } from '@/components/dashboard/VoiceCheckInModal';
 import Logo from '@/components/brand/Logo';
 import ForecastStrip from '@/components/forecast/ForecastStrip';
@@ -73,7 +87,7 @@ export default function DashboardPage() {
   const isFirstTime = checkInCount === 0;
 
   return (
-    <div className="min-h-screen aurora-bg flex flex-col">
+    <div className="min-h-screen aurora-bg-subtle flex flex-col">
       {/* Header */}
       <header className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-white/5">
         <Logo size={28} />
@@ -173,9 +187,9 @@ export default function DashboardPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/8 text-sm text-white/60"
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/8 text-sm text-white/70"
           >
-            <span className="text-base">🌙</span>
+            <Moon className="h-4 w-4 text-luna-aurora-mint" aria-hidden="true" />
             <span>
               {checkInCount === 1
                 ? 'Day 1 of your journey with Luna'
@@ -219,16 +233,25 @@ export default function DashboardPage() {
               <h2 className="font-serif text-xl sm:text-2xl text-white mb-3">
                 Luna is ready to listen.
               </h2>
-              <p className="text-white/60 text-sm sm:text-base leading-relaxed max-w-sm mx-auto">
+              <p className="text-white/70 text-sm sm:text-base leading-relaxed max-w-sm mx-auto">
                 Your first whisper starts your story. She&apos;ll remember how you feel today,
                 and help you understand your patterns over time.
               </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6 text-xs text-white/40">
-                <span>🎙️ Voice or text</span>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6 text-xs text-white/55">
+                <span className="inline-flex items-center gap-1.5">
+                  <Mic className="h-3.5 w-3.5" aria-hidden="true" />
+                  Voice or text
+                </span>
                 <span className="hidden sm:inline">•</span>
-                <span>🔒 Private & secure</span>
+                <span className="inline-flex items-center gap-1.5">
+                  <LockKeyhole className="h-3.5 w-3.5" aria-hidden="true" />
+                  Private & secure
+                </span>
                 <span className="hidden sm:inline">•</span>
-                <span>✨ Haiku after each check-in</span>
+                <span className="inline-flex items-center gap-1.5">
+                  <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+                  Haiku after each check-in
+                </span>
               </div>
             </div>
           </motion.div>
@@ -237,7 +260,7 @@ export default function DashboardPage() {
         {/* Central orb trigger */}
         <motion.button
           onClick={() => setModalOpen(true)}
-          className="voice-orb w-32 h-32 sm:w-36 sm:h-36 rounded-full flex items-center justify-center cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-luna-pink focus-visible:ring-offset-2 focus-visible:ring-offset-luna-deep"
+          className="voice-orb w-32 h-32 sm:w-36 sm:h-36 rounded-full flex items-center justify-center cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-luna-aurora-pink focus-visible:ring-offset-2 focus-visible:ring-offset-luna-deep"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.2, type: 'spring', stiffness: 200 }}
@@ -270,16 +293,16 @@ export default function DashboardPage() {
             transition={{ duration: 0.5 }}
           >
             <div className="flex items-center justify-between mb-3">
-              <p className="text-[0.875rem] text-white/70 uppercase tracking-widest">
+              <p className="text-[0.875rem] text-white/70 uppercase tracking-[0.14em]">
                 Latest check-in
               </p>
-              <span className="text-lg">
-                {lastResult.weatherScore >= 8
-                  ? '☀️'
-                  : lastResult.weatherScore >= 5
-                  ? '⛅'
-                  : '🌧️'}
-              </span>
+              {lastResult.weatherScore >= 8 ? (
+                <Sun className="h-5 w-5 text-luna-sunset" aria-hidden="true" />
+              ) : lastResult.weatherScore >= 5 ? (
+                <CloudSun className="h-5 w-5 text-luna-aurora-blue" aria-hidden="true" />
+              ) : (
+                <Cloud className="h-5 w-5 text-luna-aurora-lilac" aria-hidden="true" />
+              )}
             </div>
             <p className="text-white/90 text-base leading-relaxed italic font-serif">
               &ldquo;{lastResult.lunaResponse}&rdquo;

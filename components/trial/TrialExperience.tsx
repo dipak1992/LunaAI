@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Edit3, Mic, Moon } from 'lucide-react';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { VoiceOrb } from '@/components/dashboard/VoiceOrb';
 import { formatDuration } from '@/lib/utils/audio';
@@ -113,13 +114,6 @@ export function TrialExperience() {
     }
   }, [recorder]);
 
-  // Watch for audio blob ready
-  const handleAudioReady = useCallback(() => {
-    if (recorder.audioBlob && recorder.state === 'processing') {
-      submitAudio(recorder.audioBlob);
-    }
-  }, [recorder.audioBlob, recorder.state, submitAudio]);
-
   // Effect: when audioBlob is set and state is processing, submit
   if (recorder.audioBlob && recorder.state === 'processing' && !isSubmitting && !result) {
     submitAudio(recorder.audioBlob);
@@ -139,11 +133,11 @@ export function TrialExperience() {
             className="flex flex-col items-center text-center gap-6 py-8"
           >
             <motion.div
-              className="w-16 h-16 rounded-full bg-gradient-to-br from-luna-purple/30 to-luna-pink/30 flex items-center justify-center"
+              className="w-16 h-16 rounded-full bg-luna-cream/10 border border-luna-cream/15 flex items-center justify-center"
               animate={{ scale: [1, 1.05, 1] }}
               transition={{ duration: 3, repeat: Infinity }}
             >
-              <span className="text-3xl">🌙</span>
+              <Moon className="h-7 w-7 text-luna-aurora-mint" aria-hidden="true" />
             </motion.div>
 
             <h1 className="text-2xl sm:text-3xl text-white">
@@ -161,7 +155,7 @@ export function TrialExperience() {
 
             <motion.button
               onClick={() => setState('record')}
-              className="mt-4 px-8 py-4 rounded-full bg-luna-cream text-luna-ink font-medium text-base hover:bg-white transition-colors"
+              className="mt-4 px-8 py-4 rounded-full bg-luna-cream text-luna-ink font-semibold text-base hover:bg-white transition-colors"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
             >
@@ -184,23 +178,25 @@ export function TrialExperience() {
             <div className="flex items-center gap-3 bg-white/5 rounded-full px-1 py-1">
               <button
                 onClick={() => setInputMode('voice')}
-                className={`px-4 py-2 rounded-full text-sm transition-all ${
+                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm transition-all ${
                   inputMode === 'voice'
                     ? 'bg-white/10 text-white'
                     : 'text-white/50 hover:text-white/70'
                 }`}
               >
-                🎙️ Voice
+                <Mic className="h-4 w-4" aria-hidden="true" />
+                Voice
               </button>
               <button
                 onClick={() => setInputMode('text')}
-                className={`px-4 py-2 rounded-full text-sm transition-all ${
+                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm transition-all ${
                   inputMode === 'text'
                     ? 'bg-white/10 text-white'
                     : 'text-white/50 hover:text-white/70'
                 }`}
               >
-                ✍️ Type
+                <Edit3 className="h-4 w-4" aria-hidden="true" />
+                Type
               </button>
             </div>
 
@@ -246,7 +242,7 @@ export function TrialExperience() {
                 <motion.button
                   onClick={submitText}
                   disabled={!textInput.trim() || isSubmitting}
-                  className="px-6 py-3 rounded-full bg-luna-cream text-luna-ink font-medium text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white transition-colors"
+                  className="px-6 py-3 rounded-full bg-luna-cream text-luna-ink font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white transition-colors"
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                 >
@@ -328,7 +324,7 @@ export function TrialExperience() {
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.5 }}
-                    className="bg-gradient-to-br from-luna-purple/10 to-luna-pink/10 border border-white/10 rounded-2xl p-6 w-full"
+                    className="bg-luna-cream/[0.04] border border-luna-cream/10 rounded-2xl p-6 w-full"
                   >
                     <p className="text-white/40 text-xs uppercase tracking-wider mb-4">
                       Your haiku
@@ -367,7 +363,7 @@ export function TrialExperience() {
 
                   <motion.button
                     onClick={() => setShowGate(true)}
-                    className="px-8 py-4 rounded-full bg-luna-cream text-luna-ink font-medium text-base hover:bg-white transition-colors"
+                    className="px-8 py-4 rounded-full bg-luna-cream text-luna-ink font-semibold text-base hover:bg-white transition-colors"
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
                   >

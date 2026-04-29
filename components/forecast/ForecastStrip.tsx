@@ -123,7 +123,7 @@ export default function ForecastStrip() {
           <button
             type="button"
             onClick={() => promptUpgrade('forecast')}
-            className="rounded-full bg-luna-cream px-5 py-2 text-sm font-medium text-luna-ink transition-transform hover:scale-[1.03]"
+            className="rounded-full bg-luna-cream px-5 py-2 text-sm font-semibold text-luna-ink transition-transform hover:scale-[1.03]"
           >
             Unlock forecast
           </button>
@@ -175,7 +175,7 @@ export default function ForecastStrip() {
             </p>
             <button
               onClick={() => triggerGeneration(true)}
-              className="rounded-full bg-luna-cream px-5 py-2 text-sm font-medium text-luna-ink transition-transform hover:scale-[1.03]"
+              className="rounded-full bg-luna-cream px-5 py-2 text-sm font-semibold text-luna-ink transition-transform hover:scale-[1.03]"
             >
               Generate forecast
             </button>
@@ -195,7 +195,7 @@ export default function ForecastStrip() {
         {/* Header */}
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <p className="text-xs uppercase tracking-widest text-luna-whisper/40">
+            <p className="text-xs uppercase tracking-[0.14em] text-luna-whisper/60">
               Next 7 days
             </p>
             <p className="font-serif text-base italic text-luna-cream">

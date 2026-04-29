@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowLeft, Moon, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Lightbulb, Moon, RefreshCw, TrendingUp } from 'lucide-react';
 import Logo from '@/components/brand/Logo';
 import InsightsSummary from '@/components/insights/InsightsSummary';
 import CalendarHeatmap from '@/components/insights/CalendarHeatmap';
@@ -193,6 +193,8 @@ export default function InsightsPage() {
               <InsightsSummary data={data} />
             </motion.div>
 
+            <InterpretationCards data={data} />
+
             {/* Calendar heatmap */}
             <Section
               title="Check-in Calendar"
@@ -297,4 +299,63 @@ export default function InsightsPage() {
       </main>
     </div>
   );
+}
+
+function InterpretationCards({ data }: { data: InsightsPayload }) {
+  const latestDay = [...data.days].sort((a, b) => b.log_date.localeCompare(a.log_date))[0];
+  const trigger = data.triggers[0];
+  const averageScore = average(data.days.map((day) => day.avg_weather_score));
+  const averageSleep = average(data.days.map((day) => day.avg_sleep));
+  const averageSeverity = average(data.days.map((day) => day.avg_severity));
+
+  const cards = [
+    {
+      icon: Lightbulb,
+      title: 'What to watch',
+      body: trigger
+        ? `${trigger.trigger_name} has appeared ${trigger.occurrences} time${trigger.occurrences === 1 ? '' : 's'} in this range. It may be worth planning around.`
+        : 'No repeated trigger is clear yet. A few more check-ins will make this sharper.',
+    },
+    {
+      icon: TrendingUp,
+      title: 'Body weather',
+      body: averageScore
+        ? `Your average wellbeing score is ${averageScore}/10${latestDay?.avg_weather_score ? `, with the latest logged day at ${latestDay.avg_weather_score}/10` : ''}.`
+        : 'Wellbeing trends will appear after one logged weather score.',
+    },
+    {
+      icon: Moon,
+      title: 'Recovery signal',
+      body: averageSleep && averageSeverity
+        ? `Sleep is averaging ${averageSleep}/10 while symptom severity averages ${averageSeverity}/10. Look for days where those move together.`
+        : averageSleep
+          ? `Sleep is averaging ${averageSleep}/10. Add symptom severity to compare recovery with flare days.`
+          : 'Add sleep and severity during check-ins to see recovery patterns.',
+    },
+  ];
+
+  return (
+    <motion.div
+      className="grid gap-3 sm:grid-cols-3"
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.08 }}
+    >
+      {cards.map(({ icon: Icon, title, body }) => (
+        <div key={title} className="rounded-lg border border-white/10 bg-white/[0.055] p-4">
+          <div className="mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-[0.14em] text-white/68">
+            <Icon className="h-4 w-4 text-luna-aurora-mint" aria-hidden="true" />
+            {title}
+          </div>
+          <p className="text-sm leading-6 text-white/82">{body}</p>
+        </div>
+      ))}
+    </motion.div>
+  );
+}
+
+function average(values: Array<number | null>): number | null {
+  const valid = values.filter((value): value is number => value !== null);
+  if (!valid.length) return null;
+  return Math.round((valid.reduce((sum, value) => sum + value, 0) / valid.length) * 10) / 10;
 }

@@ -36,6 +36,22 @@ const QUICK_CHECK_INS = [
   'low energy',
 ];
 
+const MOOD_OPTIONS = ['steady', 'anxious', 'tired', 'hopeful'];
+
+interface ManualCheckIn {
+  mood: string | null;
+  energyLevel: number | null;
+  sleepQuality: number | null;
+  severity: number | null;
+}
+
+const EMPTY_MANUAL_CHECK_IN: ManualCheckIn = {
+  mood: null,
+  energyLevel: null,
+  sleepQuality: null,
+  severity: null,
+};
+
 export function VoiceCheckInModal({
   open,
   onClose,
@@ -54,6 +70,7 @@ export function VoiceCheckInModal({
   const [inputMode, setInputMode] = useState<InputMode>('voice');
   const [textInput, setTextInput] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [manualCheckIn, setManualCheckIn] = useState<ManualCheckIn>(EMPTY_MANUAL_CHECK_IN);
   const [submittingText, setSubmittingText] = useState(false);
   const {
     open: upgradeOpen,
@@ -132,6 +149,7 @@ export function VoiceCheckInModal({
       setShowSparkles(false);
       setTextInput('');
       setSelectedTags([]);
+      setManualCheckIn(EMPTY_MANUAL_CHECK_IN);
       setSubmittingText(false);
       setInputMode(initialMode);
       recorder.reset();
@@ -151,7 +169,8 @@ export function VoiceCheckInModal({
 
   const submitText = useCallback(async () => {
     const text = textInput.trim();
-    if ((!text && selectedTags.length === 0) || submittingText) return;
+    const hasManualInput = Object.values(manualCheckIn).some((value) => value !== null);
+    if ((!text && selectedTags.length === 0 && !hasManualInput) || submittingText) return;
 
     setSubmitError(null);
     setSubmittingText(true);
@@ -160,7 +179,7 @@ export function VoiceCheckInModal({
       const res = await fetch('/api/voice-checkin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, quickTags: selectedTags }),
+        body: JSON.stringify({ text, quickTags: selectedTags, manual: manualCheckIn }),
       });
 
       await handleCheckInResponse(res);
@@ -172,7 +191,7 @@ export function VoiceCheckInModal({
     } finally {
       setSubmittingText(false);
     }
-  }, [handleCheckInResponse, haptics, selectedTags, submittingText, textInput]);
+  }, [handleCheckInResponse, haptics, manualCheckIn, selectedTags, submittingText, textInput]);
 
   const handleOrbClick = useCallback(() => {
     if (recorder.state === 'idle' || recorder.state === 'error') {
@@ -192,6 +211,7 @@ export function VoiceCheckInModal({
     setSubmitError(null);
     setTextInput('');
     setSelectedTags([]);
+    setManualCheckIn(EMPTY_MANUAL_CHECK_IN);
     setSubmittingText(false);
     setView('record');
   }, [recorder]);
@@ -340,6 +360,60 @@ export function VoiceCheckInModal({
 	                      })}
 	                    </div>
 
+                      <div className="w-full space-y-3 rounded-lg border border-white/10 bg-white/[0.035] p-3">
+                        <div>
+                          <p className="mb-2 text-xs font-medium uppercase tracking-[0.14em] text-luna-mist/62">
+                            Quick manual log
+                          </p>
+                          <div className="grid grid-cols-2 gap-2">
+                            {MOOD_OPTIONS.map((mood) => {
+                              const selected = manualCheckIn.mood === mood;
+                              return (
+                                <button
+                                  key={mood}
+                                  type="button"
+                                  onClick={() =>
+                                    setManualCheckIn((current) => ({
+                                      ...current,
+                                      mood: selected ? null : mood,
+                                    }))
+                                  }
+                                  className={`min-h-10 rounded-lg border px-3 text-sm capitalize transition-all ${
+                                    selected
+                                      ? 'border-luna-aurora-mint/50 bg-luna-aurora-mint/15 text-luna-cream'
+                                      : 'border-white/10 bg-white/[0.03] text-luna-mist/68 hover:border-white/20 hover:text-luna-mist'
+                                  }`}
+                                >
+                                  {mood}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        <ManualSlider
+                          label="Energy"
+                          value={manualCheckIn.energyLevel}
+                          onChange={(value) =>
+                            setManualCheckIn((current) => ({ ...current, energyLevel: value }))
+                          }
+                        />
+                        <ManualSlider
+                          label="Sleep"
+                          value={manualCheckIn.sleepQuality}
+                          onChange={(value) =>
+                            setManualCheckIn((current) => ({ ...current, sleepQuality: value }))
+                          }
+                        />
+                        <ManualSlider
+                          label="Symptom severity"
+                          value={manualCheckIn.severity}
+                          onChange={(value) =>
+                            setManualCheckIn((current) => ({ ...current, severity: value }))
+                          }
+                        />
+                      </div>
+
 	                    <textarea
 	                      value={textInput}
 	                      onChange={(event) => setTextInput(event.target.value)}
@@ -352,7 +426,12 @@ export function VoiceCheckInModal({
 	                    <button
 	                      type="button"
 	                      onClick={submitText}
-	                      disabled={submittingText || (!textInput.trim() && selectedTags.length === 0)}
+	                      disabled={
+                          submittingText ||
+                          (!textInput.trim() &&
+                            selectedTags.length === 0 &&
+                            !Object.values(manualCheckIn).some((value) => value !== null))
+                        }
 	                      className="flex min-h-12 w-full items-center justify-center rounded-full bg-luna-cream px-5 text-sm font-semibold text-luna-ink transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-45"
 	                    >
 	                      {submittingText ? 'Saving check-in...' : 'Save check-in'}
@@ -524,6 +603,33 @@ function AudioLevelBars({ level }: { level: number }) {
         );
       })}
     </div>
+  );
+}
+
+function ManualSlider({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: number | null;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 flex items-center justify-between text-xs text-luna-mist/68">
+        <span>{label}</span>
+        <span className="font-medium text-luna-mist/86">{value ?? 'Set'}</span>
+      </span>
+      <input
+        type="range"
+        min={1}
+        max={10}
+        value={value ?? 5}
+        onChange={(event) => onChange(Number(event.target.value))}
+        className="w-full accent-luna-aurora-pink"
+      />
+    </label>
   );
 }
 

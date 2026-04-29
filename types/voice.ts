@@ -10,6 +10,10 @@ export interface VoiceCheckInResult {
   emotionalTone: EmotionalTone;
   triggers: string[];
   remedies: string[];
+  severity?: number | null;
+  mood?: string | null;
+  energyLevel?: number | null;
+  sleepQuality?: number | null;
   logId: string;
 }
 

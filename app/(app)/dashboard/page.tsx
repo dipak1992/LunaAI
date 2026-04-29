@@ -8,8 +8,11 @@ import {
   BarChart2,
   BatteryMedium,
   BookMarked,
+  CalendarDays,
+  ClipboardList,
   Cloud,
   CloudSun,
+  FileText,
   Keyboard,
   LockKeyhole,
   HeartPulse,
@@ -19,6 +22,7 @@ import {
   Moon,
   Settings,
   Sun,
+  TrendingUp,
   X,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -32,6 +36,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import { createClient } from '@/lib/supabase/client';
 import { WelcomeBanner } from '@/components/trial/WelcomeBanner';
 import type { VoiceCheckInResult } from '@/types/voice';
+import type { InsightsPayload } from '@/types/insights';
 
 const NAV_ITEMS = [
   { href: '/chat', icon: MessageCircle, label: 'Chat' },
@@ -41,14 +46,34 @@ const NAV_ITEMS = [
 ];
 
 interface LatestLog {
+  id: string;
+  log_date: string;
   weather_score: number | null;
   mood: string | null;
   sleep_quality: number | null;
   energy_level: number | null;
+  severity: number | null;
+  symptoms: unknown;
   triggers: string[] | null;
   luna_response: string | null;
+  ai_summary: string | null;
   created_at: string;
 }
+
+type TimelineLog = Pick<
+  LatestLog,
+  | 'id'
+  | 'log_date'
+  | 'weather_score'
+  | 'mood'
+  | 'sleep_quality'
+  | 'energy_level'
+  | 'severity'
+  | 'triggers'
+  | 'luna_response'
+  | 'ai_summary'
+  | 'created_at'
+>;
 
 export default function DashboardPage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -58,6 +83,8 @@ export default function DashboardPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [checkInCount, setCheckInCount] = useState<number | null>(null);
   const [latestLog, setLatestLog] = useState<LatestLog | null>(null);
+  const [recentLogs, setRecentLogs] = useState<TimelineLog[]>([]);
+  const [insights, setInsights] = useState<InsightsPayload | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -83,12 +110,25 @@ export default function DashboardPage() {
 
         const { data: latest } = await supabase
           .from('symptom_logs')
-          .select('weather_score, mood, sleep_quality, energy_level, triggers, luna_response, created_at')
+          .select('id, log_date, weather_score, mood, sleep_quality, energy_level, severity, symptoms, triggers, luna_response, ai_summary, created_at')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
           .limit(1)
           .maybeSingle();
         setLatestLog((latest as LatestLog | null) ?? null);
+
+        const { data: recent } = await supabase
+          .from('symptom_logs')
+          .select('id, log_date, weather_score, mood, sleep_quality, energy_level, severity, triggers, luna_response, ai_summary, created_at')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(6);
+        setRecentLogs((recent as TimelineLog[] | null) ?? []);
+
+        const insightsRes = await fetch('/api/insights?days=30', { cache: 'no-store' });
+        if (insightsRes.ok) {
+          setInsights((await insightsRes.json()) as InsightsPayload);
+        }
       }
     }
     fetchUser();
@@ -106,14 +146,35 @@ export default function DashboardPage() {
   const handleComplete = (result: VoiceCheckInResult) => {
     setLastResult(result);
     setLatestLog({
+      id: result.logId,
+      log_date: new Date().toISOString().slice(0, 10),
       weather_score: result.weatherScore,
-      mood: result.emotionalTone,
-      sleep_quality: null,
-      energy_level: null,
+      mood: result.mood ?? result.emotionalTone,
+      sleep_quality: result.sleepQuality ?? null,
+      energy_level: result.energyLevel ?? null,
+      severity: result.severity ?? null,
+      symptoms: [],
       triggers: result.triggers,
       luna_response: result.lunaResponse,
+      ai_summary: result.aiSummary,
       created_at: new Date().toISOString(),
     });
+    setRecentLogs((current) => [
+      {
+        id: result.logId,
+        log_date: new Date().toISOString().slice(0, 10),
+        weather_score: result.weatherScore,
+        mood: result.mood ?? result.emotionalTone,
+        sleep_quality: result.sleepQuality ?? null,
+        energy_level: result.energyLevel ?? null,
+        severity: result.severity ?? null,
+        triggers: result.triggers,
+        luna_response: result.lunaResponse,
+        ai_summary: result.aiSummary,
+        created_at: new Date().toISOString(),
+      },
+      ...current,
+    ].slice(0, 6));
     setModalOpen(false);
     // Increment count after a check-in
     setCheckInCount((prev) => (prev ?? 0) + 1);
@@ -128,15 +189,22 @@ export default function DashboardPage() {
 
   const isFirstTime = checkInCount === 0;
   const weatherScore = lastResult?.weatherScore ?? latestLog?.weather_score ?? null;
-  const mood = lastResult?.emotionalTone ?? latestLog?.mood ?? null;
+  const mood = latestLog?.mood ?? lastResult?.emotionalTone ?? null;
   const sleep = latestLog?.sleep_quality ?? null;
+  const energy = latestLog?.energy_level ?? null;
+  const severity = latestLog?.severity ?? null;
   const topTrigger = lastResult?.triggers[0] ?? latestLog?.triggers?.[0] ?? null;
+  const topInsightTrigger = insights?.triggers[0]?.trigger_name ?? topTrigger;
   const nextAction = isFirstTime
     ? 'Start with 30 seconds'
-    : topTrigger
-      ? `Soothe ${topTrigger}`
-      : 'Check in when ready';
+    : topInsightTrigger
+      ? `Soothe ${topInsightTrigger}`
+      : severity && severity >= 7
+        ? 'Try a relief reset'
+        : 'Check in when ready';
   const checkInsUntilForecast = Math.max(0, 7 - (checkInCount ?? 0));
+  const reportReadyCount = Math.min(checkInCount ?? 0, 14);
+  const reportReadiness = Math.round((reportReadyCount / 14) * 100);
 
   const openCheckIn = (mode: 'voice' | 'text') => {
     setCheckInMode(mode);
@@ -264,7 +332,34 @@ export default function DashboardPage() {
             />
             <TodayMetric
               icon={<BatteryMedium className="h-4 w-4" aria-hidden="true" />}
-              label="Next"
+              label="Energy"
+              value={energy ? `${energy}/10` : 'Not logged'}
+            />
+          </motion.div>
+
+          <motion.div
+            className="mt-3 grid gap-2 sm:grid-cols-3"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.22 }}
+          >
+            <TodayStatusCard
+              icon={TrendingUp}
+              label="What Luna noticed"
+              value={
+                topInsightTrigger
+                  ? `${capitalize(topInsightTrigger)} is your clearest recent pattern.`
+                  : latestLog?.ai_summary ?? 'A check-in will give Luna something to compare.'
+              }
+            />
+            <TodayStatusCard
+              icon={HeartPulse}
+              label="Symptom load"
+              value={severity ? `${severity}/10 severity logged today.` : 'No severity logged yet today.'}
+            />
+            <TodayStatusCard
+              icon={ClipboardList}
+              label="Next action"
               value={nextAction}
             />
           </motion.div>
@@ -346,6 +441,24 @@ export default function DashboardPage() {
               Transcript saved privately. You control your data.
               {checkInsUntilForecast > 0 && ` ${checkInsUntilForecast} more check-${checkInsUntilForecast === 1 ? 'in' : 'ins'} until forecast patterns get useful.`}
             </span>
+          </div>
+
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <ReportReadinessMeter
+              percentage={reportReadiness}
+              count={checkInCount ?? 0}
+            />
+            <div className="rounded-lg border border-luna-ink/10 bg-white/70 p-4 text-left">
+              <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-luna-ink">
+                <CalendarDays className="h-4 w-4 text-luna-storm" aria-hidden="true" />
+                30-day momentum
+              </div>
+              <p className="text-sm leading-6 text-luna-ink/68">
+                {insights
+                  ? `${insights.total_check_ins} check-ins, ${insights.streak} day streak, ${insights.triggers.length ? `${insights.triggers[0].trigger_name} showing most often` : 'patterns still forming'}.`
+                  : 'Luna is gathering your recent pattern summary.'}
+              </p>
+            </div>
           </div>
 
           {/* Central orb trigger */}
@@ -431,6 +544,10 @@ export default function DashboardPage() {
 
           {!isFirstTime && <SeasonReportButton />}
         </aside>
+
+        <section className="lg:col-span-2">
+          <CheckInTimeline logs={recentLogs} />
+        </section>
       </main>
 
       {/* Voice Check-In Modal */}
@@ -443,6 +560,123 @@ export default function DashboardPage() {
       />
     </div>
   );
+}
+
+function TodayStatusCard({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-lg border border-luna-ink/10 bg-white/70 p-4 text-left">
+      <div className="mb-2 flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.12em] text-luna-ink/54">
+        <Icon className="h-4 w-4" aria-hidden="true" />
+        {label}
+      </div>
+      <p className="text-sm leading-6 text-luna-ink/74">{value}</p>
+    </div>
+  );
+}
+
+function ReportReadinessMeter({
+  percentage,
+  count,
+}: {
+  percentage: number;
+  count: number;
+}) {
+  return (
+    <div className="rounded-lg border border-luna-ink/10 bg-white/70 p-4 text-left">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2 text-sm font-semibold text-luna-ink">
+          <FileText className="h-4 w-4 text-luna-storm" aria-hidden="true" />
+          Report readiness
+        </div>
+        <span className="text-sm font-semibold text-luna-ink">{percentage}%</span>
+      </div>
+      <div className="h-2 rounded-full bg-luna-ink/10">
+        <div
+          className="h-full rounded-full bg-luna-storm"
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+      <p className="mt-3 text-xs leading-5 text-luna-ink/66">
+        {count >= 14
+          ? 'Ready for a useful clinician summary.'
+          : `${Math.max(0, 14 - count)} more check-${14 - count === 1 ? 'in' : 'ins'} for a stronger clinician summary.`}
+      </p>
+    </div>
+  );
+}
+
+function CheckInTimeline({ logs }: { logs: TimelineLog[] }) {
+  return (
+    <div className="app-card p-5 sm:p-6">
+      <div className="app-section-title">
+        <div>
+          <h2>Recent check-ins</h2>
+          <p>Your saved timeline from symptom logs</p>
+        </div>
+      </div>
+      {logs.length === 0 ? (
+        <EmptyState
+          icon={<CalendarDays className="h-5 w-5" aria-hidden="true" />}
+          title="No saved check-ins yet"
+          description="Your check-ins will appear here as a simple timeline."
+          requirement="1 check-in starts the timeline. 14 make reports more useful."
+          actionLabel="Start check-in"
+          actionHref="/dashboard?checkin=true"
+        />
+      ) : (
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {logs.map((log) => (
+            <article key={log.id} className="rounded-lg border border-white/10 bg-white/[0.04] p-4">
+              <div className="mb-2 flex items-center justify-between gap-3">
+                <p className="text-xs font-medium uppercase tracking-[0.14em] text-white/68">
+                  {formatTimelineDate(log.created_at)}
+                </p>
+                {log.weather_score && (
+                  <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-white/82">
+                    {log.weather_score}/10
+                  </span>
+                )}
+              </div>
+              <p className="text-sm leading-6 text-white/82">
+                {log.ai_summary ?? log.luna_response ?? 'Check-in saved.'}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {log.mood && <TimelinePill label={capitalize(log.mood)} />}
+                {log.energy_level && <TimelinePill label={`Energy ${log.energy_level}`} />}
+                {log.sleep_quality && <TimelinePill label={`Sleep ${log.sleep_quality}`} />}
+                {log.triggers?.slice(0, 2).map((trigger) => (
+                  <TimelinePill key={trigger} label={trigger} />
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TimelinePill({ label }: { label: string }) {
+  return (
+    <span className="rounded-full border border-white/10 bg-white/[0.045] px-2 py-0.5 text-xs text-white/70">
+      {label}
+    </span>
+  );
+}
+
+function formatTimelineDate(value: string): string {
+  return new Date(value).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+  });
 }
 
 function TodayMetric({

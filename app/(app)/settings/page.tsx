@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowLeft, Bell, CreditCard, Database, LogOut, Shield, User } from 'lucide-react';
+import { ArrowLeft, Bell, Brain, Check, CreditCard, Database, Download, LogOut, Shield, User } from 'lucide-react';
 import Logo from '@/components/brand/Logo';
 import ManageSubscriptionButton from '@/components/subscription/ManageSubscriptionButton';
 import { createClient } from '@/lib/supabase/client';
 import { logout } from '@/lib/actions/auth';
+import { TIER_LIMITS, type SubscriptionTier } from '@/lib/subscription/tiers';
 
 interface Profile {
   name: string | null;
@@ -22,6 +23,9 @@ export default function SettingsPage() {
   const [name, setName] = useState('');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [saveTranscripts, setSaveTranscripts] = useState(true);
+  const [aiMemory, setAiMemory] = useState(true);
+  const [weeklyInsight, setWeeklyInsight] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -69,6 +73,8 @@ export default function SettingsPage() {
       default: return 'New Moon (Free)';
     }
   };
+  const tier = (profile?.subscription_tier ?? 'free') as SubscriptionTier;
+  const limits = TIER_LIMITS[tier] ?? TIER_LIMITS.free;
 
   return (
     <div className="app-shell min-h-screen aurora-bg flex flex-col">
@@ -165,6 +171,27 @@ export default function SettingsPage() {
                 <ManageSubscriptionButton />
               </div>
             </div>
+
+            <div className="app-card mt-3 p-5 sm:p-6">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-sm font-semibold text-white/92">What you have unlocked</p>
+                  <p className="text-xs leading-5 text-white/66">{tierLabel(tier)} benefits</p>
+                </div>
+                <Link
+                  href="/pricing"
+                  className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1.5 text-xs font-medium text-white/74 transition-colors hover:text-white"
+                >
+                  Compare
+                </Link>
+              </div>
+              <div className="grid gap-2">
+                <BenefitRow enabled label={limits.checkins_per_week ? `${limits.checkins_per_week} check-ins per week` : 'Unlimited check-ins'} />
+                <BenefitRow enabled={limits.forecast_enabled} label="7-day forecast" />
+                <BenefitRow enabled={limits.long_term_memory} label="Long-term Luna memory" />
+                <BenefitRow enabled={limits.doctor_reports} label="Clinician-ready reports" />
+              </div>
+            </div>
           </section>
 
           {/* Privacy section */}
@@ -175,22 +202,24 @@ export default function SettingsPage() {
             </div>
 
             <div className="app-card divide-y divide-white/10 overflow-hidden">
-              <PlaceholderRow
+              <ToggleRow
                 icon={<Database className="h-4 w-4" aria-hidden="true" />}
-                title="Data export"
-                description="Download check-ins, transcripts, and Luna memory."
-                status="Coming soon"
+                title="Save transcripts"
+                description="Keep text and voice transcripts in your private history."
+                checked={saveTranscripts}
+                onChange={setSaveTranscripts}
               />
-              <PlaceholderRow
-                icon={<Shield className="h-4 w-4" aria-hidden="true" />}
-                title="Transcript retention"
-                description="Choose how long voice and text transcripts are kept."
-                status="Coming soon"
-              />
-              <PlaceholderRow
-                icon={<User className="h-4 w-4" aria-hidden="true" />}
+              <ToggleRow
+                icon={<Brain className="h-4 w-4" aria-hidden="true" />}
                 title="AI memory"
-                description="Review or clear what Luna remembers about your patterns."
+                description="Allow Luna to remember repeated patterns across visits."
+                checked={aiMemory}
+                onChange={setAiMemory}
+              />
+              <PlaceholderRow
+                icon={<Download className="h-4 w-4" aria-hidden="true" />}
+                title="Export or delete data"
+                description="Download or remove check-ins, transcripts, and memories."
                 status="Coming soon"
               />
             </div>
@@ -216,11 +245,12 @@ export default function SettingsPage() {
                 description="Track sleep signals before patterns fade."
                 status="Off"
               />
-              <PlaceholderRow
+              <ToggleRow
                 icon={<Bell className="h-4 w-4" aria-hidden="true" />}
                 title="Weekly insight"
                 description="A calm summary of what Luna noticed this week."
-                status="Off"
+                checked={weeklyInsight}
+                onChange={setWeeklyInsight}
               />
             </div>
           </section>
@@ -239,6 +269,63 @@ export default function SettingsPage() {
           </section>
         </motion.div>
       </main>
+    </div>
+  );
+}
+
+function BenefitRow({ enabled, label }: { enabled: boolean; label: string }) {
+  return (
+    <div className="flex items-center gap-2 text-sm text-white/78">
+      <span className={`flex h-5 w-5 items-center justify-center rounded-full ${
+        enabled ? 'bg-luna-aurora-mint/20 text-luna-aurora-mint' : 'bg-white/[0.05] text-white/38'
+      }`}>
+        <Check className="h-3.5 w-3.5" aria-hidden="true" />
+      </span>
+      <span className={enabled ? 'text-white/82' : 'text-white/48'}>{label}</span>
+    </div>
+  );
+}
+
+function ToggleRow({
+  icon,
+  title,
+  description,
+  checked,
+  onChange,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-4 px-5 py-4 sm:px-6">
+      <div className="flex min-w-0 gap-3">
+        <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-luna-aurora-mint">
+          {icon}
+        </span>
+        <div>
+          <p className="text-sm font-medium text-white/92">{title}</p>
+          <p className="mt-0.5 text-xs leading-5 text-white/66">{description}</p>
+        </div>
+      </div>
+      <button
+        type="button"
+        onClick={() => onChange(!checked)}
+        className={`relative h-7 w-12 shrink-0 rounded-full border transition-colors ${
+          checked
+            ? 'border-luna-aurora-mint/40 bg-luna-aurora-mint/30'
+            : 'border-white/10 bg-white/[0.05]'
+        }`}
+        aria-pressed={checked}
+      >
+        <span
+          className={`absolute top-1 h-5 w-5 rounded-full bg-white transition-transform ${
+            checked ? 'translate-x-5' : 'translate-x-1'
+          }`}
+        />
+      </button>
     </div>
   );
 }

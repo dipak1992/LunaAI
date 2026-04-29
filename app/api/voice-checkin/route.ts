@@ -18,6 +18,18 @@ import { logCrisisEvent } from '@/lib/safety/log-crisis';
 export const runtime = 'nodejs';
 export const maxDuration = 60; // seconds
 
+interface ManualCheckInBody {
+  mood?: string | null;
+  energyLevel?: number | null;
+  sleepQuality?: number | null;
+  severity?: number | null;
+}
+
+function clampScore(value: unknown): number | null {
+  if (typeof value !== 'number' || Number.isNaN(value)) return null;
+  return Math.min(10, Math.max(1, Math.round(value)));
+}
+
 export async function POST(req: NextRequest) {
   try {
     // ── Auth ──────────────────────────────────────────────────────────────
@@ -57,12 +69,25 @@ export async function POST(req: NextRequest) {
     const openai = getOpenAIClient();
     const contentType = req.headers.get('content-type') ?? '';
     let transcript = '';
+    let manual: ManualCheckInBody | null = null;
 
     if (contentType.includes('application/json')) {
-      const body = (await req.json()) as { text?: string; quickTags?: string[] };
+      const body = (await req.json()) as {
+        text?: string;
+        quickTags?: string[];
+        manual?: ManualCheckInBody;
+      };
       const text = body.text?.trim();
       const tags = Array.isArray(body.quickTags) ? body.quickTags.filter(Boolean) : [];
-      transcript = [text, tags.length ? `Quick check-in tags: ${tags.join(', ')}` : '']
+      manual = body.manual ?? null;
+      const manualSummary = [
+        manual?.mood ? `Mood: ${manual.mood}` : '',
+        clampScore(manual?.energyLevel) ? `Energy: ${clampScore(manual?.energyLevel)}/10` : '',
+        clampScore(manual?.sleepQuality) ? `Sleep: ${clampScore(manual?.sleepQuality)}/10` : '',
+        clampScore(manual?.severity) ? `Symptom severity: ${clampScore(manual?.severity)}/10` : '',
+      ].filter(Boolean).join(', ');
+
+      transcript = [text, tags.length ? `Quick check-in tags: ${tags.join(', ')}` : '', manualSummary]
         .filter(Boolean)
         .join('\n\n')
         .trim();
@@ -142,6 +167,16 @@ export async function POST(req: NextRequest) {
 
     const rawContent = completion.choices[0]?.message?.content ?? '{}';
     const extracted = validateExtraction(JSON.parse(rawContent));
+    const manualMood = typeof manual?.mood === 'string' && manual.mood.trim()
+      ? manual.mood.trim()
+      : null;
+    const manualEnergy = clampScore(manual?.energyLevel);
+    const manualSleep = clampScore(manual?.sleepQuality);
+    const manualSeverity = clampScore(manual?.severity);
+    const finalMood = manualMood ?? extracted.mood;
+    const finalEnergy = manualEnergy ?? extracted.energy_level;
+    const finalSleep = manualSleep ?? extracted.sleep_quality;
+    const finalSeverity = manualSeverity ?? extracted.severity;
 
     // ── Persist to Supabase ───────────────────────────────────────────────
     const today = new Date().toISOString().split('T')[0];
@@ -159,10 +194,10 @@ export async function POST(req: NextRequest) {
         triggers: extracted.triggers,
         remedies: extracted.remedies,
         symptoms: extracted.symptoms,
-        severity: extracted.severity,
-        mood: extracted.mood,
-        energy_level: extracted.energy_level,
-        sleep_quality: extracted.sleep_quality,
+        severity: finalSeverity,
+        mood: finalMood,
+        energy_level: finalEnergy,
+        sleep_quality: finalSleep,
       })
       .select('id')
       .single();
@@ -192,6 +227,10 @@ export async function POST(req: NextRequest) {
         emotionalTone: extracted.emotional_tone,
         triggers: extracted.triggers,
         remedies: extracted.remedies,
+        severity: finalSeverity,
+        mood: finalMood,
+        energyLevel: finalEnergy,
+        sleepQuality: finalSleep,
         logId: logRow?.id ?? null,
       },
     );

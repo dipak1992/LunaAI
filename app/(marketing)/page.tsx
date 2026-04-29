@@ -41,7 +41,7 @@ import GlowButton from '@/components/ui/GlowButton';
 import FadeUp from '@/components/ui/FadeUp';
 
 const HERO_VIDEO_SRC = '/videos/hero.MOV';
-const HERO_VIDEO_POSTER = '/images/luna-hero-poster.png';
+const HERO_VIDEO_POSTER = '/images/luna-hero-poster-updated.png';
 
 const FEATURES = [
   {

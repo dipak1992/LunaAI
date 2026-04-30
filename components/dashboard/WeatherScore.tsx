@@ -30,7 +30,7 @@ const TONE_CONFIG: Record<
   steady: {
     icon: CloudSun,
     label: 'Steady',
-    color: 'text-luna-mist',
+    color: 'text-white/80',
     description: 'Holding your ground',
   },
   tender: {
@@ -54,7 +54,7 @@ const TONE_CONFIG: Record<
   exhausted: {
     icon: Moon,
     label: 'Exhausted',
-    color: 'text-luna-mist/60',
+    color: 'text-white/50',
     description: 'Rest is sacred',
   },
 };
@@ -128,7 +128,7 @@ export function WeatherScore({ score, emotionalTone, className = '' }: WeatherSc
           >
             {score}
           </motion.span>
-          <span className="text-[10px] text-luna-mist/60 uppercase tracking-[0.12em]">/ 10</span>
+          <span className="text-[10px] text-white/50 uppercase tracking-[0.12em]">/ 10</span>
         </div>
       </div>
 
@@ -143,12 +143,12 @@ export function WeatherScore({ score, emotionalTone, className = '' }: WeatherSc
           <ToneIcon className="h-5 w-5" aria-hidden="true" />
           {scoreLabel}
         </p>
-        <p className="text-sm text-luna-mist/60 mt-0.5">{config.description}</p>
+        <p className="text-sm text-white/55 mt-0.5">{config.description}</p>
       </motion.div>
 
       {/* Tone badge */}
       <motion.div
-        className="px-3 py-1 rounded-full glass text-xs text-luna-mist/70 tracking-wide"
+        className="px-3 py-1 rounded-full glass text-xs text-white/65 tracking-wide"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.4, delay: 0.8 }}

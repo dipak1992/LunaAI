@@ -98,7 +98,8 @@ export function Modal({
               tabIndex={-1}
               className={`
                 relative w-full ${maxWidth}
-                glass rounded-2xl shadow-2xl
+                bg-[#0F0F1E] glass rounded-2xl shadow-2xl
+                border border-white/10
                 focus:outline-none
               `}
               initial={{ opacity: 0, scale: 0.95, y: 16 }}

@@ -244,10 +244,10 @@ export function VoiceCheckInModal({
         {/* Header */}
 	        <div className="flex items-center justify-between px-5 pt-5 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
           <div>
-            <h2 className="font-fraunces text-xl text-luna-mist">
+            <h2 className="font-fraunces text-xl text-white/90">
               {view === 'result' ? 'Your check-in' : 'How are you feeling?'}
             </h2>
-            <p className="text-sm text-luna-mist/50 mt-0.5">
+            <p className="text-sm text-white/50 mt-0.5">
               {view === 'result'
                 ? 'Luna heard you'
                 : `Good ${getTimeOfDay()}, ${userName}`}
@@ -255,7 +255,7 @@ export function VoiceCheckInModal({
           </div>
           <button
             onClick={handleClose}
-            className="p-2 rounded-full text-luna-mist/40 hover:text-luna-mist/80 hover:bg-white/5 transition-colors"
+            className="p-2 rounded-full text-white/40 hover:text-white/80 hover:bg-white/5 transition-colors"
             aria-label="Close"
           >
             <svg width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -292,7 +292,7 @@ export function VoiceCheckInModal({
 	                      className={`flex min-h-11 items-center justify-center gap-2 rounded-xl text-sm transition-all ${
 	                        inputMode === value
 	                          ? 'bg-luna-cream text-luna-ink'
-	                          : 'text-luna-mist/60 hover:bg-white/5 hover:text-luna-mist'
+	                          : 'text-white/60 hover:bg-white/5 hover:text-white/90'
 	                      }`}
 	                    >
 	                      <Icon className="h-4 w-4" aria-hidden="true" />
@@ -302,7 +302,7 @@ export function VoiceCheckInModal({
 	                </div>
 
 	                {/* Prompt text */}
-	                <p className="text-center text-luna-mist/70 text-sm leading-relaxed max-w-xs">
+	                <p className="text-center text-white/70 text-sm leading-relaxed max-w-xs">
 	                  {inputMode === 'voice' && recorder.state === 'idle' &&
 	                    'Speak freely — share how your body feels, your mood, your sleep, anything on your mind.'}
 	                  {inputMode === 'voice' && recorder.state === 'requesting' && 'Requesting microphone access…'}
@@ -333,7 +333,7 @@ export function VoiceCheckInModal({
 	                    )}
 
 	                    {recorder.state === 'idle' && (
-	                      <p className="text-xs text-luna-mist/35 text-center">
+	                      <p className="text-xs text-white/35 text-center">
 	                        Tap once to start. Tap again to stop.
 	                      </p>
 	                    )}
@@ -351,7 +351,7 @@ export function VoiceCheckInModal({
 	                            className={`min-h-11 rounded-xl border px-3 text-sm capitalize transition-all ${
 	                              selected
 	                                ? 'border-luna-aurora-pink/50 bg-luna-aurora-pink/15 text-luna-cream'
-	                                : 'border-white/10 bg-white/[0.03] text-luna-mist/65 hover:border-white/20 hover:text-luna-mist'
+	                                : 'border-white/10 bg-white/[0.03] text-white/65 hover:border-white/20 hover:text-white/90'
 	                            }`}
 	                          >
 	                            {tag}
@@ -362,7 +362,7 @@ export function VoiceCheckInModal({
 
                       <div className="w-full space-y-3 rounded-lg border border-white/10 bg-white/[0.035] p-3">
                         <div>
-                          <p className="mb-2 text-xs font-medium uppercase tracking-[0.14em] text-luna-mist/62">
+                          <p className="mb-2 text-xs font-medium uppercase tracking-[0.14em] text-white/62">
                             Quick manual log
                           </p>
                           <div className="grid grid-cols-2 gap-2">
@@ -381,7 +381,7 @@ export function VoiceCheckInModal({
                                   className={`min-h-10 rounded-lg border px-3 text-sm capitalize transition-all ${
                                     selected
                                       ? 'border-luna-aurora-mint/50 bg-luna-aurora-mint/15 text-luna-cream'
-                                      : 'border-white/10 bg-white/[0.03] text-luna-mist/68 hover:border-white/20 hover:text-luna-mist'
+                                      : 'border-white/10 bg-white/[0.03] text-white/68 hover:border-white/20 hover:text-white/90'
                                   }`}
                                 >
                                   {mood}
@@ -420,7 +420,7 @@ export function VoiceCheckInModal({
 	                      placeholder="Anything else Luna should know?"
 	                      rows={3}
 	                      disabled={submittingText}
-	                      className="min-h-24 w-full resize-none rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm leading-6 text-luna-mist placeholder:text-luna-mist/35 transition-colors focus:border-luna-aurora-pink/40 disabled:opacity-60"
+	                      className="min-h-24 w-full resize-none rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm leading-6 text-white/90 placeholder:text-white/35 transition-colors focus:border-luna-aurora-pink/40 disabled:opacity-60"
 	                    />
 
 	                    <button
@@ -464,14 +464,14 @@ export function VoiceCheckInModal({
                   <p className="text-xs text-luna-aurora-pink/75 uppercase tracking-[0.14em] mb-2">
                     Luna says
                   </p>
-                  <p className="text-luna-mist/90 text-sm leading-relaxed italic font-fraunces">
+                  <p className="text-white/90 text-sm leading-relaxed italic font-fraunces">
                     &ldquo;{result.lunaResponse}&rdquo;
                   </p>
                 </div>
 
                 {/* Transcript */}
 	                <details className="group hidden sm:block">
-                  <summary className="text-xs text-luna-mist/40 cursor-pointer hover:text-luna-mist/60 transition-colors list-none flex items-center gap-1">
+                  <summary className="text-xs text-white/40 cursor-pointer hover:text-white/60 transition-colors list-none flex items-center gap-1">
                     <svg
                       width={12}
                       height={12}
@@ -485,7 +485,7 @@ export function VoiceCheckInModal({
                     </svg>
                     View transcript
                   </summary>
-                  <p className="mt-2 text-xs text-luna-mist/50 leading-relaxed pl-4 border-l border-white/10">
+                  <p className="mt-2 text-xs text-white/50 leading-relaxed pl-4 border-l border-white/10">
                     {result.transcript}
                   </p>
                 </details>
@@ -518,7 +518,7 @@ export function VoiceCheckInModal({
                 <div className="flex gap-3 pt-2">
                   <button
                     onClick={handleRetry}
-                    className="flex-1 py-2.5 rounded-xl border border-white/10 text-luna-mist/60 text-sm hover:bg-white/5 transition-colors"
+                    className="flex-1 py-2.5 rounded-xl border border-white/10 text-white/60 text-sm hover:bg-white/5 transition-colors"
                   >
                     Check in again
                   </button>
@@ -548,13 +548,13 @@ export function VoiceCheckInModal({
                   </svg>
                 </div>
                 <div className="text-center">
-                  <p className="text-luna-mist/80 text-sm">{submitError ?? recorder.error ?? 'Something went wrong.'}</p>
-                  <p className="text-luna-mist/40 text-xs mt-1">Please try again</p>
+                  <p className="text-white/80 text-sm">{submitError ?? recorder.error ?? 'Something went wrong.'}</p>
+                  <p className="text-white/40 text-xs mt-1">Please try again</p>
                 </div>
                 <div className="flex gap-3 w-full">
                   <button
                     onClick={handleClose}
-                    className="flex-1 py-2.5 rounded-xl border border-white/10 text-luna-mist/60 text-sm hover:bg-white/5 transition-colors"
+                    className="flex-1 py-2.5 rounded-xl border border-white/10 text-white/60 text-sm hover:bg-white/5 transition-colors"
                   >
                     Cancel
                   </button>
@@ -617,9 +617,9 @@ function ManualSlider({
 }) {
   return (
     <label className="block">
-      <span className="mb-1.5 flex items-center justify-between text-xs text-luna-mist/68">
+      <span className="mb-1.5 flex items-center justify-between text-xs text-white/68">
         <span>{label}</span>
-        <span className="font-medium text-luna-mist/86">{value ?? 'Set'}</span>
+        <span className="font-medium text-white/86">{value ?? 'Set'}</span>
       </span>
       <input
         type="range"

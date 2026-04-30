@@ -63,8 +63,8 @@ export default function TodayHaiku() {
       transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="mb-3 flex items-center justify-between">
-        <p className="text-xs uppercase tracking-[0.14em] text-luna-mist/60">Today&apos;s haiku</p>
-        <Link href="/haikus" className="text-xs text-luna-mist/40 transition-colors hover:text-luna-mist/75">
+        <p className="text-xs uppercase tracking-[0.14em] text-white/55">Today&apos;s haiku</p>
+        <Link href="/haikus" className="text-xs text-white/40 transition-colors hover:text-white/70">
           Collection
         </Link>
       </div>

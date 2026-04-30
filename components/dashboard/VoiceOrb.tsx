@@ -105,7 +105,7 @@ export function VoiceOrb({ state, audioLevel, onClick, disabled = false, size = 
       {/* State label */}
       <motion.p
         key={state}
-        className="text-sm text-luna-mist/70 tracking-wide"
+        className="text-sm text-white/70 tracking-wide"
         initial={{ opacity: 0, y: 4 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}

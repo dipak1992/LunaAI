@@ -515,12 +515,12 @@ export default function LandingPage() {
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {FEATURES.map((f, i) => (
               <FadeUp key={f.title} delay={i * 0.1}>
-                <div className="group rounded-2xl border border-white/5 bg-white/[0.03] p-8 backdrop-blur-sm transition-all duration-500 hover:border-white/10 hover:bg-white/[0.05]">
-                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5">
-                    <f.icon className="h-5 w-5 text-white/80" />
+                <div className="group relative rounded-2xl border border-white/[0.06] bg-white/[0.04] p-8 backdrop-blur-sm transition-all duration-500 hover:border-white/[0.14] hover:bg-white/[0.06] hover:shadow-lg hover:shadow-luna-aurora-lilac/5 hover:-translate-y-1">
+                  <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/[0.08] transition-colors duration-500 group-hover:bg-white/[0.12]">
+                    <f.icon className="h-5 w-5 text-white/80 transition-colors duration-500 group-hover:text-luna-aurora-mint" />
                   </div>
                   <h3 className="mb-3 font-serif text-xl">{f.title}</h3>
-                  <p className="text-[0.9375rem] leading-relaxed text-white/75">{f.desc}</p>
+                  <p className="text-[0.9375rem] leading-relaxed text-white/70">{f.desc}</p>
                 </div>
               </FadeUp>
             ))}
@@ -634,12 +634,12 @@ export default function LandingPage() {
                 <div
                   className={`relative flex flex-col rounded-2xl p-8 transition-all duration-500 ${
                     p.featured
-                      ? 'border border-luna-storm/20 bg-white shadow-2xl shadow-luna-storm/10'
-                      : 'border border-luna-ink/10 bg-white/55'
+                      ? 'border-2 border-luna-storm/25 bg-white shadow-2xl shadow-luna-storm/15 scale-[1.02] md:scale-105'
+                      : 'border border-luna-ink/10 bg-white/60 hover:shadow-lg hover:shadow-luna-storm/5'
                   }`}
                 >
                   {p.featured && (
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-luna-storm px-4 py-1 text-xs tracking-wide text-luna-cream">
+                    <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-luna-storm px-5 py-1.5 text-xs font-semibold tracking-wide text-luna-cream shadow-lg shadow-luna-storm/20">
                       Most chosen
                     </span>
                   )}
@@ -676,6 +676,16 @@ export default function LandingPage() {
               </FadeUp>
             ))}
           </div>
+
+          {/* Guarantee badge */}
+          <FadeUp delay={0.4}>
+            <div className="mt-10 flex justify-center">
+              <div className="guarantee-badge">
+                <ShieldCheck className="h-4 w-4" aria-hidden />
+                <span>30-day gentle guarantee — cancel anytime, no questions</span>
+              </div>
+            </div>
+          </FadeUp>
         </div>
       </section>
 

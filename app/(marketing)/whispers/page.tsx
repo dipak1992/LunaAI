@@ -4,6 +4,8 @@ import { ArrowRight, BookOpen, Clock } from 'lucide-react';
 import { getAllPosts } from '@/lib/whispers/posts';
 import Header from '@/components/marketing/Header';
 import Footer from '@/components/marketing/Footer';
+import AuroraBackground from '@/components/marketing/AuroraBackground';
+import StarField from '@/components/marketing/StarField';
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'https://luna.app';
 
@@ -31,7 +33,9 @@ export default function WhispersPage() {
   return (
     <>
       <Header />
-      <main className="relative min-h-screen bg-luna-ink px-6 pb-24 pt-28">
+      <main className="relative min-h-screen overflow-x-hidden bg-luna-ink px-6 pb-24 pt-28 text-luna-cream">
+        <AuroraBackground />
+        <StarField />
         <div
           className="pointer-events-none absolute inset-0"
           aria-hidden="true"
@@ -120,7 +124,7 @@ export default function WhispersPage() {
               <Link
                 key={post.slug}
                 href={`/whispers/${post.slug}`}
-                className="group block rounded-2xl border border-white/10 bg-white/[0.04] p-6 transition-all duration-300 hover:border-luna-cream/25 hover:bg-luna-cream hover:text-luna-ink"
+                className="group block rounded-2xl border border-white/[0.08] bg-white/[0.04] p-6 backdrop-blur-sm transition-all duration-400 hover:border-luna-cream/25 hover:bg-luna-cream hover:text-luna-ink hover:-translate-y-1 hover:shadow-xl hover:shadow-black/15"
               >
                 <div className="flex items-center gap-3 mb-2">
                   <time className="text-xs text-white/50 group-hover:text-luna-ink/55">

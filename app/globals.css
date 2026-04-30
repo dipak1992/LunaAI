@@ -245,10 +245,10 @@
 
   body {
     background-color: #0A0E27;
-    color: rgba(255 255 255 / 0.95);
+    color: rgba(255 255 255 / 0.92);
     font-family: var(--font-sans);
     font-size: 1.0625rem;
-    line-height: 1.7;
+    line-height: 1.75;
     font-weight: 400;
     font-feature-settings: 'rlig' 1, 'calt' 1, 'ss01' 1;
     overflow-x: hidden;
@@ -262,7 +262,7 @@
     color: white;
   }
 
-  h1 { font-size: 3rem; }
+  h1 { font-size: 2.75rem; }
   h2 { font-size: 2.25rem; }
   h3 { font-size: 1.875rem; }
   h4 { font-size: 1.5rem; }
@@ -275,7 +275,7 @@
   }
 
   @media (min-width: 1024px) {
-    h1 { font-size: 4.5rem; }
+    h1 { font-size: 4.5rem; font-weight: 300; }
   }
 
   p {
@@ -328,33 +328,33 @@
 
   /* ── Glass Cards ── */
   .glass {
-    background: rgba(255 255 255 / 0.055);
+    background: rgba(255 255 255 / 0.06);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255 255 255 / 0.1);
-    border-radius: 0.5rem;
+    border: 1px solid rgba(255 255 255 / 0.08);
+    border-radius: 0.75rem;
   }
 
   .glass-hover {
-    background: rgba(255 255 255 / 0.04);
+    background: rgba(255 255 255 / 0.05);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255 255 255 / 0.08);
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     transition: all 500ms var(--ease-luna);
   }
   .glass-hover:hover {
-    background: rgba(255 255 255 / 0.06);
+    background: rgba(255 255 255 / 0.08);
     border-color: rgba(255 255 255 / 0.18);
-    box-shadow: var(--shadow-luna);
+    box-shadow: var(--shadow-luna), 0 0 0 1px rgba(255,158,199,0.08);
   }
 
   .glass-card {
-    background: rgba(255 255 255 / 0.04);
+    background: rgba(255 255 255 / 0.05);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255 255 255 / 0.08);
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
     padding: 2rem;
   }
   @media (min-width: 768px) {
@@ -437,15 +437,16 @@
     padding: 1rem 2rem;
     border-radius: 9999px;
     font-weight: 600;
-    letter-spacing: 0.025em;
+    font-size: 0.9375rem;
+    letter-spacing: 0.03em;
     background: #FAF7F2;
     color: #0B0B14;
     transition: all var(--duration-400) var(--ease-luna);
     box-shadow: var(--shadow-luna);
   }
   .btn-primary:hover {
-    transform: scale(1.02);
-    box-shadow: var(--shadow-luna-lg), 0 0 30px rgba(250,247,242,0.2);
+    transform: scale(1.03) translateY(-1px);
+    box-shadow: var(--shadow-luna-lg), 0 0 40px rgba(250,247,242,0.3), 0 0 80px rgba(233,184,255,0.15);
   }
   .btn-primary:active { transform: scale(0.98); }
   .btn-primary::before {
@@ -459,7 +460,7 @@
     z-index: -1;
     transition: opacity var(--duration-400);
   }
-  .btn-primary:hover::before { opacity: 0.8; }
+  .btn-primary:hover::before { opacity: 0.85; }
 
   .btn-secondary {
     padding: 1rem 2rem;
@@ -494,7 +495,7 @@
   }
 
   .text-whisper {
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     letter-spacing: var(--letter-spacing-whisper);
     text-transform: uppercase;
     color: rgba(255 255 255 / 0.7);
@@ -594,7 +595,10 @@
     padding: 6rem 1.5rem;
   }
   @media (min-width: 768px) {
-    .section { padding: 8rem 1.5rem; }
+    .section { padding: 8rem 2rem; }
+  }
+  @media (min-width: 1280px) {
+    .section { padding: 10rem 2rem; }
   }
 
   .section-hero {
@@ -641,11 +645,90 @@
   /* ── Labels ── */
   .label-whisper {
     display: block;
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     letter-spacing: var(--letter-spacing-whisper);
     text-transform: uppercase;
     color: #FF9EC7;
     margin-bottom: 1rem;
+  }
+
+  /* ── Section Backgrounds (variety) ── */
+  .section-warm {
+    position: relative;
+    background:
+      radial-gradient(ellipse at 30% 50%, rgba(255,212,163,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 30%, rgba(255,158,199,0.03) 0%, transparent 50%);
+  }
+
+  .section-cool {
+    position: relative;
+    background:
+      radial-gradient(ellipse at 50% 50%, rgba(143,184,232,0.04) 0%, transparent 50%),
+      radial-gradient(ellipse at 20% 80%, rgba(168,216,201,0.03) 0%, transparent 50%);
+  }
+
+  .section-glow {
+    position: relative;
+  }
+  .section-glow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(233,184,255,0.4), rgba(255,158,199,0.4), transparent);
+  }
+
+  /* ── Trust Strip ── */
+  .trust-strip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.8125rem;
+    color: rgba(255 255 255 / 0.55);
+    letter-spacing: 0.02em;
+  }
+  .trust-strip span::before {
+    content: '✓ ';
+    color: var(--color-luna-aurora-mint);
+  }
+
+  /* ── Guarantee Badge ── */
+  .guarantee-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    background: rgba(168,216,201,0.08);
+    border: 1px solid rgba(168,216,201,0.2);
+    font-size: 0.8125rem;
+    color: var(--color-luna-aurora-mint);
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Sticky Mobile CTA ── */
+  .sticky-mobile-cta {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    padding: 0.75rem 1.25rem;
+    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+    background: rgba(11,11,20,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255 255 255 / 0.08);
+    transform: translateY(100%);
+    transition: transform 0.4s var(--ease-luna);
+  }
+  .sticky-mobile-cta.visible {
+    transform: translateY(0);
   }
 }
 
@@ -843,8 +926,8 @@
    ======================================== */
 
 @media (max-width: 768px) {
-  h1 { font-size: 3rem; }
-  h2 { font-size: 2.25rem; }
+  h1 { font-size: 2.5rem; }
+  h2 { font-size: 2rem; }
 
   .section { padding: 5rem 1.25rem; }
 
@@ -853,6 +936,10 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
+}
+
+@media (max-width: 375px) {
+  h1 { font-size: 2.25rem; }
 }
 
 /* ========================================

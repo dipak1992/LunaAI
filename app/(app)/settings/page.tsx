@@ -100,12 +100,30 @@ export default function SettingsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="font-serif text-2xl sm:text-3xl text-white mb-8">
-            Settings
-          </h1>
+          {/* Page title with avatar */}
+          <div className="mb-8 flex items-center gap-4">
+            {/* Avatar/initials circle */}
+            <div
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-lg font-semibold text-white"
+              style={{
+                background: 'linear-gradient(135deg, rgba(200,168,233,0.4) 0%, rgba(255,154,174,0.4) 100%)',
+                border: '1px solid rgba(255,255,255,0.12)',
+              }}
+            >
+              {name ? name.charAt(0).toUpperCase() : email ? email.charAt(0).toUpperCase() : '?'}
+            </div>
+            <div>
+              <h1 className="font-serif text-2xl sm:text-3xl text-white">
+                Settings
+              </h1>
+              {name && <p className="text-sm text-white/55 mt-0.5">{name}</p>}
+            </div>
+          </div>
 
           {/* Profile section */}
           <section className="mb-8">
+            {/* Aurora section divider */}
+            <div className="divider-aurora mb-4" />
             <div className="flex items-center gap-2 mb-4">
               <User size={18} className="text-white/74" />
               <h2 className="text-lg text-white/90 font-medium">Profile & preferences</h2>
@@ -146,6 +164,7 @@ export default function SettingsPage() {
 
           {/* Billing section */}
           <section className="mb-8">
+            <div className="divider-aurora mb-4" />
             <div className="flex items-center gap-2 mb-4">
               <CreditCard size={18} className="text-white/74" />
               <h2 className="text-lg text-white/90 font-medium">Billing & plan</h2>
@@ -198,6 +217,7 @@ export default function SettingsPage() {
 
           {/* Privacy section */}
           <section className="mb-8">
+            <div className="divider-aurora mb-4" />
             <div className="flex items-center gap-2 mb-4">
               <Shield size={18} className="text-white/74" />
               <h2 className="text-lg text-white/90 font-medium">Privacy controls</h2>
@@ -229,6 +249,7 @@ export default function SettingsPage() {
 
           {/* Reminders section */}
           <section className="mb-8">
+            <div className="divider-aurora mb-4" />
             <div className="flex items-center gap-2 mb-4">
               <Bell size={18} className="text-white/74" />
               <h2 className="text-lg text-white/90 font-medium">Reminders</h2>
@@ -266,11 +287,12 @@ export default function SettingsPage() {
           </section>
 
           {/* Sign out */}
-          <section>
+          <section className="mt-10">
+            <div className="divider-aurora mb-6" />
             <form action={logout}>
               <button
                 type="submit"
-                className="flex items-center gap-2 px-4 py-3 rounded-lg text-white/74 hover:text-white hover:bg-white/5 transition-colors text-base w-full"
+                className="flex items-center gap-2 px-4 py-3 rounded-lg border border-red-500/20 bg-red-500/[0.06] text-red-400/80 hover:text-red-300 hover:bg-red-500/[0.10] hover:border-red-500/30 transition-all duration-200 text-base w-full"
               >
                 <LogOut size={18} />
                 Sign out

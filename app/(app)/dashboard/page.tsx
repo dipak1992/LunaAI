@@ -313,9 +313,21 @@ export default function DashboardPage() {
           >
             <div>
               {userName && (
-                <p className="mb-1 text-base text-white/68 sm:text-lg">
-                  {greeting()}, <span className="font-semibold text-white">{userName}</span>
-                </p>
+                <div className="mb-2 flex items-center gap-3">
+                  <p className="text-base text-white/68 sm:text-lg">
+                    {greeting()}, <span className="font-semibold text-white">{userName}</span>
+                  </p>
+                  {weeklyProgress.streak > 0 && (
+                    <span className="inline-flex items-center gap-1 rounded-full border border-luna-aurora-mint/20 bg-luna-aurora-mint/10 px-2.5 py-0.5 text-xs font-semibold text-luna-aurora-mint">
+                      🔥 {weeklyProgress.streak} day streak
+                    </span>
+                  )}
+                  {checkInCount !== null && checkInCount > 0 && weeklyProgress.streak === 0 && (
+                    <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-0.5 text-xs text-white/50">
+                      Day {checkInCount} of your journey
+                    </span>
+                  )}
+                </div>
               )}
               <p className="mb-2 text-xs font-medium uppercase tracking-[0.14em] text-white/48">
                 Today&apos;s body weather
@@ -649,10 +661,29 @@ function WeeklyProgressCard({
         <CalendarDays className="h-4 w-4 text-luna-aurora-mint" aria-hidden="true" />
         Weekly progress
       </div>
-      <p className="text-2xl font-semibold text-white">{progress.checkIns}</p>
+      <div className="flex items-end gap-3">
+        <p className="text-2xl font-semibold text-white">{progress.checkIns}</p>
+        {progress.streak > 0 && (
+          <span className="mb-0.5 inline-flex items-center gap-1 rounded-full bg-luna-aurora-mint/10 px-2 py-0.5 text-xs font-semibold text-luna-aurora-mint">
+            🔥 {progress.streak}d
+          </span>
+        )}
+      </div>
       <p className="text-xs uppercase tracking-[0.14em] text-white/52">check-ins in range</p>
+      {/* Mini streak dots */}
+      <div className="mt-3 flex gap-1">
+        {Array.from({ length: 7 }).map((_, i) => (
+          <div
+            key={i}
+            className={`h-1.5 flex-1 rounded-full ${
+              i < Math.min(progress.streak, 7)
+                ? 'bg-luna-aurora-mint'
+                : 'bg-white/10'
+            }`}
+          />
+        ))}
+      </div>
       <p className="mt-3 text-sm leading-6 text-white/72">
-        {progress.streak > 0 ? `${progress.streak} day soft streak. ` : ''}
         {progress.bestSignal}
       </p>
     </div>

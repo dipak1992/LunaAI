@@ -30,9 +30,25 @@ export default function SignupPage() {
       <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-center mb-3 text-aurora">
         Begin your story
       </h1>
-      <p className="text-poetic text-center mb-8 sm:mb-12 text-white/75">
+      <p className="text-poetic text-center mb-6 text-white/75">
         Every journey through change deserves a companion who listens.
       </p>
+
+      {/* Benefit bullets */}
+      <div className="mb-8 sm:mb-10 flex flex-col gap-2 w-full max-w-xs mx-auto">
+        {[
+          'Voice-first — just speak how you feel',
+          'See your body\'s weather forecast',
+          'Private, safe, and never judging',
+        ].map((benefit) => (
+          <div key={benefit} className="flex items-center gap-2.5 text-sm text-white/70">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-luna-aurora-mint/15">
+              <span className="text-luna-aurora-mint text-xs">✓</span>
+            </span>
+            {benefit}
+          </div>
+        ))}
+      </div>
 
       {/* Form */}
       <form action={handleSubmit} className="w-full space-y-8">

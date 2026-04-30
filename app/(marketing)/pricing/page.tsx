@@ -183,8 +183,8 @@ export default function PricingPage() {
               <span className="relative z-10">
                 {option === 'monthly' ? 'Monthly' : 'Yearly'}
                 {option === 'yearly' && (
-                  <span className="ml-2 rounded-full bg-luna-aurora-mint/30 px-2 py-0.5 text-[10px] uppercase text-luna-cream">
-                    save
+                  <span className="ml-2 rounded-full bg-luna-aurora-mint/30 px-2.5 py-0.5 text-[10px] font-semibold uppercase text-luna-cream">
+                    save 21%
                   </span>
                 )}
               </span>
@@ -209,7 +209,15 @@ export default function PricingPage() {
       </section>
 
       <section className="relative bg-luna-cream px-6 py-24 text-luna-ink">
-        <div className="mx-auto grid max-w-6xl gap-5 lg:grid-cols-3">
+        {/* Subtle warm radial for premium feel */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-hidden="true"
+          style={{
+            background: 'radial-gradient(ellipse at 50% 0%, rgba(107,91,149,0.06) 0%, transparent 50%)',
+          }}
+        />
+        <div className="relative mx-auto grid max-w-6xl gap-5 lg:grid-cols-3">
           {PLANS.map((plan, index) => (
             <FadeUp key={plan.id} delay={index * 0.08}>
               <article
@@ -349,7 +357,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
             transition={{ duration: 0.25 }}
             className="overflow-hidden"
           >
-            <p className="px-6 pb-5 text-sm leading-6 text-white/50">{a}</p>
+            <p className="px-6 pb-5 text-sm leading-7 text-white/65">{a}</p>
           </motion.div>
         )}
       </AnimatePresence>

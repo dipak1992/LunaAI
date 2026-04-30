@@ -57,9 +57,10 @@ export default function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-[0.9375rem] text-white/75 hover:text-white transition-colors duration-300 tracking-wide"
+                  className="relative text-[0.9375rem] text-white/70 hover:text-white transition-colors duration-300 tracking-wide group"
                 >
                   {link.label}
+                  <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-gradient-to-r from-luna-aurora-lilac to-luna-aurora-pink transition-all duration-300 group-hover:w-full" />
                 </Link>
               ))}
           </nav>
@@ -123,20 +124,35 @@ export default function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed top-[60px] left-0 right-0 z-40 bg-luna-ink/95 backdrop-blur-xl border-b border-white/5 md:hidden"
+            className="fixed top-[60px] left-0 right-0 z-40 backdrop-blur-2xl border-b border-white/[0.08] md:hidden"
+            style={{
+              background: 'linear-gradient(180deg, rgba(11,11,20,0.97) 0%, rgba(18,12,30,0.95) 100%)',
+            }}
           >
+            {/* Subtle aurora tint at top */}
+            <div
+              className="pointer-events-none absolute inset-x-0 top-0 h-px"
+              style={{ background: 'linear-gradient(90deg, transparent, rgba(200,168,233,0.3), rgba(255,154,174,0.3), transparent)' }}
+            />
             <nav className="flex flex-col px-6 py-6 gap-1">
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className="py-3 text-[1.0625rem] text-white/85 hover:text-white transition-colors duration-200 border-b border-white/5 last:border-0"
+                  className="py-3.5 text-[1.0625rem] text-white/80 hover:text-white transition-colors duration-200 border-b border-white/[0.06] last:border-0"
                 >
                   {link.label}
                 </Link>
               ))}
-              <div className="pt-4">
+              <div className="pt-5 space-y-3">
+                <Link
+                  href="/login"
+                  onClick={() => setMenuOpen(false)}
+                  className="block w-full text-center rounded-full border border-white/10 bg-white/[0.04] px-5 py-3 text-sm font-medium text-white/80 hover:text-white transition-colors duration-300"
+                >
+                  Sign in
+                </Link>
                 <Link
                   href="/signup"
                   onClick={() => setMenuOpen(false)}

@@ -113,16 +113,39 @@ export default function ChatClient({ initialMessages }: Props) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1 }}
-              className="mt-16 text-center"
+              className="mt-12 text-center"
             >
+              {/* Breathing orb */}
               <div className="mb-8 flex justify-center">
-                <Logo size={64} animated={false} iconOnly />
+                <div className="relative">
+                  {/* Outer breathing ring */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background: 'radial-gradient(circle, rgba(200,168,233,0.2) 0%, transparent 70%)',
+                    }}
+                    animate={{ scale: [1, 1.4, 1], opacity: [0.6, 0.2, 0.6] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                  />
+                  {/* Inner orb */}
+                  <motion.div
+                    className="relative flex h-20 w-20 items-center justify-center rounded-full"
+                    style={{
+                      background: 'radial-gradient(circle at 35% 35%, rgba(255,212,163,0.4) 0%, rgba(200,168,233,0.5) 50%, rgba(143,184,232,0.4) 100%)',
+                      boxShadow: '0 0 40px rgba(200,168,233,0.3)',
+                    }}
+                    animate={{ scale: [1, 1.05, 1] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                  >
+                    <Logo size={36} animated={false} iconOnly />
+                  </motion.div>
+                </div>
               </div>
-              <h2 className="mb-4 font-serif text-3xl italic text-luna-cream md:text-4xl">
-                I&apos;m here.
+              <h2 className="mb-3 font-serif text-3xl italic text-luna-cream md:text-4xl">
+                Luna is here.
               </h2>
               <p className="mx-auto max-w-md font-serif text-lg text-luna-whisper/70">
-                How is the weather in your body today?
+                What&apos;s on your mind today?
               </p>
 
               {/* Prompt suggestion chips */}
@@ -142,7 +165,7 @@ export default function ChatClient({ initialMessages }: Props) {
                   <button
                     key={prompt}
                     onClick={() => handleSend(prompt)}
-                    className="px-4 py-2 rounded-full text-sm text-luna-whisper/70 border border-luna-whisper/15 bg-white/3 hover:bg-white/8 hover:text-luna-cream hover:border-luna-whisper/30 transition-all duration-200"
+                    className="px-4 py-2 rounded-full text-sm text-luna-whisper/70 border border-luna-whisper/15 bg-white/[0.04] hover:bg-white/[0.08] hover:text-luna-cream hover:border-luna-whisper/30 transition-all duration-300 hover:-translate-y-0.5"
                   >
                     {prompt}
                   </button>

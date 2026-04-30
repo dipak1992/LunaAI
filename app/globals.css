@@ -702,6 +702,8 @@
 .aurora-bg {
   position: relative;
   overflow: hidden;
+  background-color: #0B0B14;
+  color: rgba(255, 255, 255, 0.92);
 }
 .aurora-bg::before {
   content: '';
